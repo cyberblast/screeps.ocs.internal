@@ -77,6 +77,24 @@ var mod = {
                     return this._spawns;
                 }
             },
+            'extensions':{
+              configurable:true,
+                get: function () {
+                  if (_.isUndefined(this.memory.extensions))
+                  {
+                      this.saveExtensions();
+                  }
+                    if (_.isUndefined(this._extensions) ) {
+                        this._extensions = {
+                            limit:CONTROLLER_STRUCTURES.extension[this.controller.level],
+                            have:[],
+                        };
+                        var addExtension = id => { addById(this._extensions.have,id);};
+                        _.forEach(this.memory.extensions);
+                    }
+                    return this._extensions;
+                }
+            },
             'towers': {
                 configurable: true,
                 get: function() {
@@ -285,6 +303,45 @@ var mod = {
             this.routePlaner.data = {};
         };
 
+        Room.prototype.extensionTick = function() {
+            const extensionPattern =  [
+                // first circle around spawn
+                [-2, -1], [-2, +1], [+2, -1], [+2, +1], [-1, -2], [+1, -2], [-1, +2], [+1, +2],
+            ];
+
+            if ( this.spawns.length >0 && ! this.spawns[0].my)
+                return; // not my spawn skip
+
+
+            if ( this.constructionSites.filter( s => s.structureType == STRUCTURE_EXTENSION).length >0 )
+                return; // still building extensins skip
+
+            //can build more ?
+            if ( this.extensions.have.length  < this.extensions.limit ) {
+
+                let spos = this.spawns[0].pos;
+                let next = extensionPattern
+                        .map(e => {return [spos.x + e[0], spos.y + e[1]];})
+                        .find(e =>
+                {
+                    let pos = new RoomPosition(e[0], e[1], this.name);
+
+                    let buuildable = ["swamp", "plain"].includes(pos.lookFor('terrain')[0]);
+
+                    let hasStructure = pos.lookFor('structure')
+                        .filter(structure =>
+                            { return structure.structureType !== STRUCTURE_ROAD;}
+                        ).length > 0;
+
+                    let hasConstructionSItes = pos.lookFor('constructionSite').length > 0;
+
+                    return buuildable && !hasStructure && !hasConstructionSItes;
+                });
+
+                if (!_.isUndefined(next))
+                    this.createConstructionSite(next[0], next[1], STRUCTURE_EXTENSION);
+            };
+        };
         Room.prototype.recordMove = function(creep){
             let x = creep.pos.x;
             let y = creep.pos.y;
@@ -298,6 +355,15 @@ var mod = {
                 this.routePlaner.data[cord]=0;
 
             this.routePlaner.data[cord] = this.routePlaner.data[cord] + 1;
+        };
+        Room.prototype.saveExtensions = function () {
+            let extensions = this.find(FIND_MY_STRUCTURES, {
+                filter: {structureType: STRUCTURE_EXTENSION}
+            });
+            if (extensions.length > 0 ) {
+                var id = obj => obj.id;
+                this.memory.extensions = _.map(extensions,id);
+            } else this.memory.extensions = [];
         };
 
         Room.prototype.saveTowers = function(){
@@ -325,7 +391,6 @@ var mod = {
                 this.memory.chargeables = _.map(chargeables, id);
             } else this.memory.chargeables = [];
         };
-
         Room.prototype.loop = function(){
             delete this._sourceEnergyAvailable;
             delete this._ticksToNextRegeneration;
@@ -342,11 +407,14 @@ var mod = {
             delete this._creeps
             delete this._casualties;
             delete this._chargeables;
+            delete this._extensions;
 
             if( Game.time % MEMORY_RESYNC_INTERVAL == 0 ) {
                 this.saveTowers();
                 this.saveSpawns();
+                this.saveExtensions();
                 this.saveChargeables();
+                this.extensionTick();
             }
 
             var that = this;               
