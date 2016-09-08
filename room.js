@@ -287,9 +287,8 @@ var mod = {
             let min = (data.reduce( (_sum, b) => _sum + b.n, 0 ) / data.length) * minDeviation;
                             
             data = data.filter( e => {
-                return e.n > min && 
-                    this.lookForAt(LOOK_STRUCTURES,e.x,e.y).length == 0 &&
-                    this.lookForAt(LOOK_CONSTRUCTION_SITES,e.x,e.y).length == 0;
+                return e.n > min &&
+                    new RoomPosition(e.x,e.y,this.name).isOpen(true);
             });
             
             // build roads on all most frequent used fields
@@ -321,22 +320,8 @@ var mod = {
 
                 let spos = this.spawns[0].pos;
                 let next = extensionPattern
-                        .map(e => {return [spos.x + e[0], spos.y + e[1]];})
-                        .find(e =>
-                {
-                    let pos = new RoomPosition(e[0], e[1], this.name);
-
-                    let buuildable = ["swamp", "plain"].includes(pos.lookFor('terrain')[0]);
-
-                    let hasStructure = pos.lookFor('structure')
-                        .filter(structure =>
-                            { return structure.structureType !== STRUCTURE_ROAD;}
-                        ).length > 0;
-
-                    let hasConstructionSItes = pos.lookFor('constructionSite').length > 0;
-
-                    return buuildable && !hasStructure && !hasConstructionSItes;
-                });
+                        .map(e => new RoomPosition(spos.x + e[0], spos.y + e[1], this.name))
+                        .find(e => e.isOpen());
 
                 if (!_.isUndefined(next))
                     this.createConstructionSite(next[0], next[1], STRUCTURE_EXTENSION);
