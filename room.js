@@ -90,7 +90,7 @@ var mod = {
                             have:[],
                         };
                         var addExtension = id => { addById(this._extensions.have,id);};
-                        _.forEach(this.memory.extensions);
+                        _.forEach(this.memory.extensions,addExtension);
                     }
                     return this._extensions;
                 }
@@ -347,7 +347,7 @@ var mod = {
             });
             if (extensions.length > 0 ) {
                 var id = obj => obj.id;
-                this.memory.extensions = _.map(extensions,id);
+                this.memory.extensions = _.map(extensions, id);
             } else this.memory.extensions = [];
         };
 
