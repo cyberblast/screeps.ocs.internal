@@ -73,6 +73,13 @@ let mod = {
         RoomPosition.prototype.getOpenPositonsInRange = function (range) {
             return this.getPositionsInRange(range).filter( p => p.isOpen());
         };
+
+        // get closesestt point in range to second point .
+        // f.e to build a conteiner 2 blocks away from controller and in closes position to spawn.
+        RoomPosition.prototype.getOpenPosiotionInRangeClosestTo = function( range, topos ) {
+            return topos.findClosestByPath(this.getOpenPositonsInRange(range));
+        };
+
     },
 
 };
