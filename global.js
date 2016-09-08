@@ -3,6 +3,8 @@ var mod = {
         Creep.extend = require('./creep').extend;
         Room.extend = require('./room').extend;
         Spawn.extend = require('./spawn').extend;
+        RoomPosition.extend = require('./room.position').extend;
+
         _.assign(global, params);
         _.assign(global, {
             Extensions: require('./extensions'),
