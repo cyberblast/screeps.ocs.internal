@@ -78,6 +78,25 @@ var mod = {
                 return this._sum;
             }
         });
+
+        //find optimum position for miners deposit conteiner
+        //1. its accesable by most mining spots
+        //2. has shortest path to controller
+        Source.prototype.findConteinerSpot = function () {
+            let accesableSpots = this.pos.getOpenPositonsAtRange(1);
+            let conteinerSpots = this.pos.getOpenPositionsInRange(2);
+            let nextTo = conteinerSpots.map((e,i) => { return {i:i,c: e.getNextToFrom(accesableSpots).length};})
+            .filter(e => e.c >0 ).sort((a,b) => b.c - a.c);
+            let t = nextTo.filter(e => e.c == nextTo[0].c)
+                .map(e => { e.pathLen =conteinerSpots[e.i].findPathTo(this.room.controller.pos,{ignoreCreeps:true}).length; return e; } )
+                .sort((a,b) => a.pathLen - b.pathLen);
+
+
+            //t.forEach(e => console.log(conteinerSpots[e.i],e.c ,e.pathLen));
+
+            return conteinerSpots[t[0].i];
+        }
+
     }
 }
 module.exports = mod;
