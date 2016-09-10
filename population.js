@@ -24,7 +24,7 @@ var mod = {
             targetId: null,
             spawningTime: 0, 
             flagName: null,
-            body: _.countBy(body, 'type')
+            body: _.countBy(body)
         });
         this.countCreep(room, entry);
     }, 
@@ -34,7 +34,7 @@ var mod = {
     }, 
     registerAction: function(creep, action, target, entry) {
         if( entry === undefined ) entry = this.getCreep(creep.name);
-        entry.energyCapacityLeft = creep.carryCapacity - _.sum(creep.carry);
+        entry.carryCapacityLeft = creep.carryCapacity - _.sum(creep.carry);
         let room = creep.room;
         if( room.population === undefined ) {
             room.population = {

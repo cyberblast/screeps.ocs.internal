@@ -53,6 +53,7 @@ var mod = {
     loop: function(){
         this.list = [];
         delete this._hasInvasionFlag;
+        delete this._privateerMaxWeight;
         var register = flag => {
             flag.creeps = {};
             delete flag.targetOf;
@@ -80,13 +81,17 @@ var mod = {
         return _.countBy(this.list, filter).true || 0;
     },
     filter: function(flagColor, pos, local){
-        let that = this;
         if( flagColor == null || this.list.length == 0) 
             return 0;
 
         let filter = flagColor.filter;
         if( local && pos && pos.roomName )
             _.assign(filter, {roomName: pos.roomName});
+        return _.filter(this.list, filter);
+    },
+    filterCustom: function(filter){
+        if( filter == null || this.list.length == 0) 
+            return 0;
         return _.filter(this.list, filter);
     },
     roomDistance: function(roomName1, roomName2, diagonal){
@@ -108,13 +113,22 @@ var mod = {
             } else // count all creeps
                 crowd = flag.targetOf.length;
         } else crowd = 0; // not targetted
-        return range + ( crowd * (rangeModPerCrowd || 10) );
+        return range + ( crowd * (rangeModPerCrowd || 20) );
     }, 
     claimMod: function(range, flagItem){
-        // add reservation amount to range (to prefer those with least reservation)
         var flag = Game.flags[flagItem.name];
-        let ticksToEnd = flag.room && flag.room.controller && flag.room.controller.reservation ? flag.room.controller.reservation.ticksToEnd : 0;
-        return range + ticksToEnd;
+        // add reservation amount to range (to prefer those with least reservation)
+        range += flag.room && flag.room.controller && flag.room.controller.reservation ? flag.room.controller.reservation.ticksToEnd : 0;
+        // add when already assigned
+        let crowd = flag.targetOf ? flag.targetOf.length : 0;
+        return range + ( crowd * 300 );
+    },
+    exploitMod: function(range, flagItem){
+        var flag = Game.flags[flagItem.name];
+        let reserved = flag.targetOf ? _.sum( flag.targetOf.map( t => t.carryCapacityLeft)) : 0;
+        if( flag.room ) 
+            range /= ((flag.room.sourceEnergyAvailable-reserved)/1500);
+        return range;
     },
     hasInvasionFlag: function(){
         if( _.isUndefined(this._hasInvasionFlag) ) {
@@ -122,8 +136,25 @@ var mod = {
         }
         return this._hasInvasionFlag;
     }, 
-    setTest: function(val){
-        this._test = val;
+    privateerMaxWeight: function(spawn){
+        if( _.isUndefined(this._privateerMaxWeight) ) {
+            let flagEntries = FlagDir.filter(FLAG_COLOR.invade.exploit);
+            this._privateerMaxWeight = 0;
+            let base = 2800;
+            let flagWeight = flagEntry => {
+                var flag = Game.flags[flagEntry.name];
+                let room;
+                if( flag && (room = flag.room) ) {
+                    this._privateerMaxWeight += base * room.sources.length * (
+                        (room.controller && (room.controller.my || 
+                        (room.controller.reservation && room.controller.reservation.username == spawn.owner.username))) 
+                        ? 2 : 1);
+                }
+            };
+            _.forEach(flagEntries, flagWeight);
+        }
+        return this._privateerMaxWeight;
+        //return FlagDir.count(FLAG_COLOR.invade.exploit) * 3000;
     }
 }
 module.exports = mod;

@@ -32,15 +32,15 @@ module.exports = {
                 Creep.action.fueling, 
                 Creep.action.storing, 
                 Creep.action.idle];
-            if( creep.room.controller && creep.room.controller.ticksToDowngrade < 2000 ) { // urgent upgrading 
-                priority.unshift(Creep.action.upgrading);
-            }
         }
         if( !creep.room.situation.invasion && _.sum(creep.carry) < creep.carryCapacity) {
             priority.unshift(Creep.action.picking);
         }
         if( _.sum(creep.carry) > creep.carry.energy ) {
             priority.unshift(Creep.action.storing);
+        }
+        if( creep.room.urgentRepairableSites.length > 0 && creep.carry.energy > 0 ) {
+            priority.unshift(Creep.action.fueling); 
         }
         for(var iAction = 0; iAction < priority.length; iAction++) {
             var action = priority[iAction];
