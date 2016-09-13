@@ -5,6 +5,7 @@ setup.minAbsEnergyAvailable = 400;
 setup.maxMulti = 4;
 setup.minControllerLevel = 3;
 setup.globalMeasurement = true;
+setup.measureByHome = true;
 setup.sortedParts = false;
 setup.minEnergyAvailable = function(spawn){
     return 0.8;

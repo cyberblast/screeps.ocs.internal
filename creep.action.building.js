@@ -16,7 +16,7 @@ action.isAddableTarget = function(target) {
     return target.my && (!target.targetOf || target.targetOf.length < this.maxPerTarget);
 };
 action.newTarget = function(creep){
-    var that = this;
+    let that = this;
     var isAddable = target => that.isAddableTarget(target, creep);
     return _.find(creep.room.constructionSites, isAddable);
 };

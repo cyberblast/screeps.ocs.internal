@@ -19,7 +19,7 @@ action.isAddableTarget = function(target){
     );
 };
 action.newTarget = function(creep){
-    var that = this;
+    let that = this;
     if( creep.room.containerOut.length > 0 ) {
         let target = null;
         let maxFree = 0; 

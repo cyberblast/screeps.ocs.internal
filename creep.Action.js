@@ -3,6 +3,7 @@ var Action = function(actionName){
     this.maxPerTarget = 1;
     this.maxPerAction = 1;
     this.targetRange = 1;
+    this.reachedRange = 1;
     this.renewTarget = true;
     this.getTargetId = function(target){ 
         return target.id || target.name;
@@ -35,23 +36,18 @@ var Action = function(actionName){
                 creep.data.actionName = null;
             }
         } 
-        if( range > 1 )
-            this.drive(creep, creep.target.pos, range);
+        this.drive(creep, creep.target.pos, range, this.reachedRange, this.targetRange);
     };
     this.work = function(creep){
         return ERR_INVALID_ARGS;
     };
-    this.drive = function(creep, targetPos, rangeToTarget) {
-        if( !targetPos ) return;
-        // temporary deletion of old path storage as array
-        if( creep.data.path && typeof creep.data.path !== 'string' )
-            creep.data.path = null;
-
-        if( creep.fatigue > 0 ) {
-            return;
-        }
+    this.drive = function(creep, targetPos, range, reachedRange, enoughRange) {
+        // temporary cleanup
+        if( creep.data.path ) delete creep.data.path;
+        if( !targetPos || range <= reachedRange || creep.fatigue > 0 ) return;
         let lastPos = creep.data.lastPos;
         creep.data.lastPos = new RoomPosition(creep.pos.x, creep.pos.y, creep.pos.roomName);
+
         if( creep.data.moveMode == null || 
             (lastPos && // moved
             (lastPos.x != creep.pos.x || lastPos.y != creep.pos.y || lastPos.roomName != creep.pos.roomName)) 
@@ -62,31 +58,37 @@ var Action = function(actionName){
 
             if( creep.data.moveMode == null) 
                 creep.data.moveMode = 'auto';
-            if( creep.data.path && creep.data.path.length > 1 )
-                creep.data.path = creep.data.path.substr(1);
+            if( creep.data.route && creep.data.route.path.length > 1 ){
+                creep.data.route.path.shift();
+                if( lastPos.roomName != creep.pos.roomName )
+                    creep.data.route.path.shift();
+            }
             else 
-                creep.data.path = this.getPath(creep, targetPos, true);
-            if( creep.data.path && creep.data.path.length > 0 ) {
-                let moveResult = creep.move(creep.data.path.charAt(0));
+                creep.data.route = this.getPath(creep.pos, targetPos, reachedRange);
+
+            if( creep.data.route && creep.data.route.path.length > 0 ) {
+                let moveResult = creep.moveByPath([new RoomPosition(creep.data.route.path[0].x,creep.data.route.path[0].y,creep.data.route.path[0].roomName)]);
                 if( moveResult == OK ) { // OK is no guarantee that it will move to the next pos. 
                     creep.data.moveMode = 'auto'; 
                 } else logErrorCode(creep, moveResult);
-            } else {
+            } else if( range > enoughRange ) {
                 creep.say('NO PATH!');
                 creep.data.targetId = null;
             }
         } else if( creep.data.moveMode == 'auto' ) {
             // try again to use path.
-            if( rangeToTarget > this.targetRange ) {
+            if( range > enoughRange ) {
                 if( HONK ) creep.say('HONK', SAY_PUBLIC);
                 creep.data.moveMode = 'evade';
             }
-            if( !creep.data.path || creep.data.path.length == 0 )
-                creep.data.path = this.getPath(creep, targetPos, true);
-            if( creep.data.path && creep.data.path.length > 0 ) {
-                let moveResult = creep.move(creep.data.path.charAt(0));
+            if( !creep.data.route || creep.data.route.path.length == 0 )
+                creep.data.route = this.getPath(creep.pos, targetPos, reachedRange);
+
+            if( creep.data.route && creep.data.route.path.length > 0 ) {
+                //let moveResult = creep.moveByPath(creep.data.route.path);
+                let moveResult = creep.moveByPath([new RoomPosition(creep.data.route.path[0].x,creep.data.route.path[0].y,creep.data.route.path[0].roomName)]);
                 if( moveResult != OK ) logErrorCode(creep, moveResult);
-            } else {
+            } else if( range > enoughRange ) {
                 creep.say('NO PATH!');
                 creep.data.targetId = null;
             }
@@ -94,55 +96,92 @@ var Action = function(actionName){
             // get path (don't ignore creeps)
             // try to move. 
             if( HONK ) creep.say('HONK', SAY_PUBLIC);
-            delete creep.data.path;
-            creep.data.path = this.getPath(creep, targetPos, false);
-            if( creep.data.path && creep.data.path.length > 0 ) {
-                if( creep.data.path.length > 5 ) 
-                    creep.data.path = creep.data.path.substr(0,4);
-                let moveResult = creep.move(creep.data.path.charAt(0));
+            delete creep.data.route;            
+            creep.data.route = this.getPath(creep.pos, targetPos, reachedRange, true);
+
+            if( creep.data.route && creep.data.route.path.length > 0 ) {
+                if( creep.data.route.path.length > 5 ) 
+                    creep.data.route.path = creep.data.route.path.slice(0, 5);
+                //let moveResult = creep.moveByPath(creep.data.route.path);
+                let moveResult = creep.moveByPath([new RoomPosition(creep.data.route.path[0].x,creep.data.route.path[0].y,creep.data.route.path[0].roomName)]);
                 if( moveResult != OK ) logErrorCode(creep, moveResult);
-            } else {
-                creep.say('NO PATH!');
+            } else if( range > enoughRange ) {
+                creep.say('NO PATH!'); 
                 creep.data.targetId = null;
             }
         }
     };
-    this.getPath = function(creep, target, ignoreCreeps) {
-        //different rooms? choose best route through owned or exploitation rooms or highways
-        if (creep.pos.roomName != target.roomName) {
-            var route = Game.map.findRoute(creep.room, target.roomName, {
-                routeCallback(roomName) {
-                    let parsed = /^[WE]([0-9]+)[NS]([0-9]+)$/.exec(roomName);
-                    let isHighway = (parsed[1] % 10 === 0) || (parsed[2] % 10 === 0);
-                    let isMyRoom = Game.rooms[roomName] &&
-                        Game.rooms[roomName].controller &&
-                        Game.rooms[roomName].controller.my;
-                    let isExploitationRoom = FlagDir.find(FLAG_COLOR.invade.exploit, new RoomPosition(25, 28, roomName), true);
-                    if (isHighway || isMyRoom || isExploitationRoom) {
-                        return 1;
-                    } else {
-                        return 30;
-                    }
-                }
-            });
-            if ( route.length > 0 )
-                target = creep.pos.findClosestByRange(route[0].exit);//new RoomPosition(25,25,route[0].room);
+    this.getPath = function(originPos, goalPos, reachedRange = 0, evade = false) {
+        let goals;
+        let setRange = g => {
+            return reachedRange != 0 ? {
+                pos: g, 
+                range: reachedRange
+            } : g;
         }
-
-        let path = creep.room.findPath(creep.pos, target, {
-            serialize: true, 
-            ignoreCreeps: ignoreCreeps
+        if( Array.isArray(goalPos) ) {
+            goals = goalPos.map(setRange);
+        } else {
+            goals = setRange(goalPos);
+        }
+        let that = this;
+        let route = PathFinder.search(
+            originPos, goals, {
+                plainCost: 4,
+                swampCost: 10,
+                heuristicWeight: 1.2,
+                roomCallback: function(roomName) {
+                    let costs = that.staticCostMatrix(roomName);
+                    if( evade && roomName == originPos.roomName ) {
+                        let room = Game.rooms[roomName];
+                        room.find(FIND_CREEPS).forEach(function(creep) {
+                            costs.set(creep.pos.x, creep.pos.y, 0xff);
+                        });
+                    } 
+                    return costs;
+                }
         });
-        if( path && path.length > 4 ) 
-            return path.substr(4);
-        else return null;
+        if( route.path.length > 0 ) route.path.push(goalPos);
+        return route;
+    };
+    this.staticCostMatrix = function(roomName) {
+        var room = Game.rooms[roomName];
+        //console.log(roomName);
+        if(!room) {
+            return;
+        }
+    
+        Memory.pathfinder = Memory.pathfinder || {};
+        Memory.pathfinder[roomName] = Memory.pathfinder[roomName] || {};
+    
+        if(Memory.pathfinder[roomName].costMatrix && (Game.time - Memory.pathfinder[roomName].updated) < 100) {
+            return PathFinder.CostMatrix.deserialize(Memory.pathfinder[roomName].costMatrix);
+        }
+    
+        var costMatrix = new PathFinder.CostMatrix;
+    
+        var structures = room.find(FIND_STRUCTURES);
+        for(var i = 0; i < structures.length; i++) {
+            var structure = structures[i];
+    
+            if(structure.structureType == STRUCTURE_ROAD) {
+                costMatrix.set(structure.pos.x, structure.pos.y, 1);
+            } else if(structure.structureType !== STRUCTURE_RAMPART || !structure.my) {
+                costMatrix.set(structure.pos.x, structure.pos.y, 0xFF);
+            }
+        }
+    
+        Memory.pathfinder[roomName].costMatrix = costMatrix.serialize();
+        Memory.pathfinder[roomName].updated = Game.time;
+        console.log("Recalculated costMatrix for " + roomName);
+        return costMatrix;
     };
     this.validateActionTarget = function(creep, target){
         if( this.isValidAction(creep) ){ // validate target or new
             if( !this.isValidTarget(target)){ 
                 if( this.renewTarget ){ // invalid. try to find a new one...
                     creep.data.moveMode = null;
-                    delete creep.data.path;
+                    delete creep.data.route;
                     return this.newTarget(creep);
                 }
             } else return target;

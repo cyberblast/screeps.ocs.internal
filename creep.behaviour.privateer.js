@@ -8,7 +8,7 @@ module.exports = {
         }
         if( creep.data.targetId != oldTargetId ) {
             creep.data.moveMode = null;
-            delete creep.data.path;
+            delete creep.data.route;
         }
         // Do some work
         if( creep.action && creep.target ) {
@@ -114,7 +114,8 @@ module.exports = {
         Creep.action.idle.assign(creep);
     },
     exploitNextRoom: function(creep){
-        let flag = FlagDir.find(FLAG_COLOR.invade.exploit, creep.pos, false, FlagDir.exploitMod);
+        // calc by distance to home room
+        let flag = FlagDir.find(FLAG_COLOR.invade.exploit, Game.rooms[creep.data.homeRoom].controller.pos, false, FlagDir.exploitMod);
         // new flag found
         if( flag ) {
             // travelling

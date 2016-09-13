@@ -7,7 +7,7 @@ action.isValidTarget = function(target){
     return ( target && target.store && target.store.energy > 0 );
 };   
 action.newTarget = function(creep){ debugger;
-    var that = this;
+    let that = this;
     let isAddable = target => that.isValidTarget(target);    
     if( creep.room.containerIn.length > 0 ) {
         // take from fullest IN container having energy

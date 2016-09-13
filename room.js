@@ -3,7 +3,7 @@ var mod = {
         Object.defineProperties(Room.prototype, {
             'sources': {
                 configurable: true,
-                get: function() {debugger;
+                get: function() {
                     if( _.isUndefined(this.memory.sources) ) {                        
                         this._sources = this.find(FIND_SOURCES);
                         if( this._sources.length > 0 ){
@@ -143,7 +143,7 @@ var mod = {
                 configurable: true,
                 get: function() {
                     if( _.isUndefined(this._fuelables) ){
-                        var that = this; 
+                        let that = this; 
                         var factor = that.situation.invasion ? 1 : 0.82;
                         var fuelable = target => (target.energy < (target.energyCapacity * factor));
                         this._fuelables = _.sortBy( _.filter(this.towers, fuelable), 'energy') ; // TODO: Add Nuker
@@ -418,7 +418,7 @@ var mod = {
                 this.saveContainers();
             }
 
-            var that = this;               
+            let that = this;               
             try {
                 if( this.memory.hostileIds === undefined )
                     this.memory.hostileIds = [];

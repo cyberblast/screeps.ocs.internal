@@ -13,7 +13,7 @@ action.isAddableTarget = function(target){
         (!target.targetOf || target.targetOf.length < this.maxPerTarget));
 };
 action.newTarget = function(creep){
-    var that = this;
+    let that = this;
     return creep.pos.findClosestByPath(FIND_STRUCTURES, {
         filter: (structure) => {
             return ((structure.structureType == STRUCTURE_EXTENSION || 

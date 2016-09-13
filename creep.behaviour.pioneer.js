@@ -8,7 +8,7 @@ module.exports = {
         }
         if( creep.data.targetId != oldTargetId ) {
             creep.data.moveMode = null;
-            delete creep.data.path;
+            delete creep.data.route;
         }
         // Do some work
         if( creep.action && creep.target ) {
