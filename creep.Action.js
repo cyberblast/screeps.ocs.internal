@@ -119,18 +119,23 @@ var Action = function(actionName){
                 range: reachedRange
             } : g;
         }
-        if( Array.isArray(goalPos) ) {
-            goals = goalPos.map(setRange);
-        } else {
+        //if( Array.isArray(goalPos) ) {
+        //    goals = goalPos.map(setRange);
+        //} else {
             goals = setRange(goalPos);
-        }
+        //}
+        let validRoomNames = this.getRoute(originPos.roomName, goalPos.roomName);
+        
         let that = this;
         let route = PathFinder.search(
             originPos, goals, {
                 plainCost: 4,
                 swampCost: 10,
-                heuristicWeight: 1.2,
+                heuristicWeight: 1.4,
+                maxRooms: 7,
                 roomCallback: function(roomName) {
+                    if( !validRoomNames.includes(roomName) ) 
+                        return false;
                     let costs = that.staticCostMatrix(roomName);
                     if( evade && roomName == originPos.roomName ) {
                         let room = Game.rooms[roomName];
@@ -144,9 +149,27 @@ var Action = function(actionName){
         if( route.path.length > 0 ) route.path.push(goalPos);
         return route;
     };
+    this.getRoute = function(fromRoom, toRoom){
+        if (fromRoom != toRoom) {
+            let rooms = Game.map.findRoute(fromRoom, toRoom, {
+                routeCallback(roomName) {
+                    let isHighway = roomName.includes('0');
+                    let isMyRoom = Game.rooms[roomName] &&
+                        Game.rooms[roomName].controller &&
+                        Game.rooms[roomName].controller.my;
+                    let isExploitationRoom = FlagDir.find(FLAG_COLOR.invade.exploit, new RoomPosition(25, 28, roomName), true);
+                    if (isHighway || isMyRoom || isExploitationRoom) {
+                        return 1;
+                    } else {
+                        return 30;
+                    }
+                }
+            });
+            return rooms ? rooms.map(r => r.room) : [];
+        } else return [fromRoom];
+    };
     this.staticCostMatrix = function(roomName) {
         var room = Game.rooms[roomName];
-        //console.log(roomName);
         if(!room) {
             return;
         }
@@ -154,7 +177,7 @@ var Action = function(actionName){
         Memory.pathfinder = Memory.pathfinder || {};
         Memory.pathfinder[roomName] = Memory.pathfinder[roomName] || {};
     
-        if(Memory.pathfinder[roomName].costMatrix && (Game.time - Memory.pathfinder[roomName].updated) < 100) {
+        if(Memory.pathfinder[roomName].costMatrix && (Game.time - Memory.pathfinder[roomName].updated) < 500) {
             return PathFinder.CostMatrix.deserialize(Memory.pathfinder[roomName].costMatrix);
         }
     
