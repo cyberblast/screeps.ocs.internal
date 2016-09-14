@@ -124,10 +124,11 @@ var mod = {
         return range + ( crowd * 300 );
     },
     exploitMod: function(range, flagItem){
+        if( range > 100 ) return Infinity;
         var flag = Game.flags[flagItem.name];
         let reserved = flag.targetOf ? _.sum( flag.targetOf.map( t => t.carryCapacityLeft)) : 0;
         if( flag.room ) {
-            if(flag.room.sourceEnergyAvailable < reserved ) return Infinity;
+            if( flag.room.sourceEnergyAvailable <= reserved ) return Infinity;
             return range*range/(flag.room.sourceEnergyAvailable - reserved);
         } 
         return range;
@@ -143,8 +144,8 @@ var mod = {
         let dirs = ['N','E','S','W'];
         let toggle = q => dirs[ (dirs.indexOf(q)+2) % 4 ];
         let names = [];
-        for( x = parts[2]-1; x < parts[2]+2; x++ ){
-            for( y = parts[4]-1; y < parts[4]+2; y++ ){
+        for( x = parseInt(parts[2])-1; x < parseInt(parts[2])+2; x++ ){
+            for( y = parseInt(parts[4])-1; y < parseInt(parts[4])+2; y++ ){
                 names.push( ( x < 0 ? toggle(parts[1]) + '0' : parts[1] + x ) + ( y < 0 ? toggle(parts[3]) + '0' : parts[3] + y ) );
             }
         }
@@ -171,6 +172,7 @@ var mod = {
             max += (base / neighbors);
         };
         _.forEach(flagEntries, flagWeight);
+        console.log(max);
         return max;
     }
 }
