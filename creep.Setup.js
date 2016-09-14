@@ -78,8 +78,8 @@ var Setup = function(typeName){
         if( maxWeight == null ) 
             maxWeight = Infinity;
 
-        let existingCount;
-        let existingWeight;
+        let existingCount = 0;
+        let existingWeight = 0;
         if( this.measureByHome ){
             let home = spawn.pos.roomName;
             let count = entry => {
