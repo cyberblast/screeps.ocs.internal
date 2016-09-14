@@ -125,6 +125,7 @@ var Action = function(actionName){
             goals = setRange(goalPos);
         //}
         let validRoomNames = this.getRoute(originPos.roomName, goalPos.roomName);
+        if( validRoomNames == ERR_NO_PATH ) return null;
         
         let that = this;
         let route = PathFinder.search(
@@ -132,10 +133,11 @@ var Action = function(actionName){
                 plainCost: 4,
                 swampCost: 10,
                 heuristicWeight: 1.4,
-                maxRooms: 7,
+                maxRooms: validRoomNames.length,
                 roomCallback: function(roomName) {
-                    if( !validRoomNames.includes(roomName) ) 
+                    if( !validRoomNames.includes(roomName) ) {
                         return false;
+                    }
                     let costs = that.staticCostMatrix(roomName);
                     if( evade && roomName == originPos.roomName ) {
                         let room = Game.rooms[roomName];
@@ -165,7 +167,7 @@ var Action = function(actionName){
                     }
                 }
             });
-            return rooms ? rooms.map(r => r.room) : [];
+            return rooms && rooms != ERR_NO_PATH ? [fromRoom].concat(rooms.map(r => r.room)) : ERR_NO_PATH;
         } else return [fromRoom];
     };
     this.staticCostMatrix = function(roomName) {
