@@ -7,7 +7,7 @@ setup.default = {
     multiBody: [WORK, CARRY, MOVE], 
     minAbsEnergyAvailable: 400, 
     minEnergyAvailable: 0.8,
-    maxMulti: 10,
+    maxMulti: 15,
     minMulti: (room) => (room.controller.level),
     maxWeight: (room) => room.privateerMaxWeight
 };
