@@ -108,6 +108,9 @@ action.run = {
             if( creep.target instanceof Flag ){
                 creep.drive( creep.target.pos, 1, 1, Infinity);
                 return;
+            } else if( creep.target instanceof ConstructionSite ){
+                creep.drive( creep.target.pos, 0, 0, Infinity);
+                return;
             }        
             creep.moveTo(creep.target, {reusePath: 0});
         }
@@ -116,10 +119,13 @@ action.run = {
     }, 
     ranger: function(creep){ 
         if( !creep.flee ){    
-            if( creep.target instanceof Flag || creep.target instanceof ConstructionSite){
+            if( creep.target instanceof Flag ){
                 creep.drive( creep.target.pos, 1, 1, Infinity);
                 return;
-            }
+            } else if( creep.target instanceof ConstructionSite ){
+                creep.drive( creep.target.pos, 0, 0, Infinity);
+                return;
+            }  
             var range = creep.pos.getRangeTo(creep.target);
             if( range > 3 ){
                 creep.moveTo(creep.target, {reusePath: 0});
@@ -152,14 +158,20 @@ action.run = {
                 if( creep.target instanceof Flag ){
                     creep.drive( creep.target.pos, 1, 1, Infinity);
                     return;
-                }
+                } else if( creep.target instanceof ConstructionSite ){
+                    creep.drive( creep.target.pos, 0, 0, Infinity);
+                    return;
+                }  
                 let path = creep.room.findPath(creep.pos, creep.target.pos);
                 if( path && path.length > 0 ) creep.move(path[0].direction);
             } else if( hasRangedAttack ) {
-                if( creep.target instanceof Flag || creep.target instanceof ConstructionSite){
+                if( creep.target instanceof Flag ){
                     creep.drive( creep.target.pos, 1, 1, Infinity);
                     return;
-                }
+                } else if( creep.target instanceof ConstructionSite ){
+                    creep.drive( creep.target.pos, 0, 0, Infinity);
+                    return;
+                }  
                 if( range > 3 ){
                     creep.moveTo(creep.target, {reusePath: 0});
                 }
