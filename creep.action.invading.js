@@ -116,7 +116,7 @@ action.run = {
     }, 
     ranger: function(creep){ 
         if( !creep.flee ){    
-            if( creep.target instanceof Flag){
+            if( creep.target instanceof Flag || creep.target instanceof ConstructionSite){
                 creep.drive( creep.target.pos, 1, 1, Infinity);
                 return;
             }
@@ -156,7 +156,7 @@ action.run = {
                 let path = creep.room.findPath(creep.pos, creep.target.pos);
                 if( path && path.length > 0 ) creep.move(path[0].direction);
             } else if( hasRangedAttack ) {
-                if( creep.target instanceof Flag){
+                if( creep.target instanceof Flag || creep.target instanceof ConstructionSite){
                     creep.drive( creep.target.pos, 1, 1, Infinity);
                     return;
                 }
