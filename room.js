@@ -848,6 +848,17 @@ var mod = {
             
         };
 
+        Room.prototype.getBestConstrucionSiteFor = function(creep) {
+            let sites = this.find(FIND_MY_CONSTRUCTION_SITES); 
+            let siteOrder = [STRUCTURE_SPAWN,STRUCTURE_EXTENSION,STRUCTURE_LINK,STRUCTURE_STORAGE,STRUCTURE_TOWER,STRUCTURE_ROAD,STRUCTURE_CONTAINER,STRUCTURE_EXTRACTOR,STRUCTURE_WALL,STRUCTURE_RAMPART];
+            let getOrder = site => {
+                let o = siteOrder.indexOf(site.structureType) * 100; 
+                o = o + creep.pos.getRangeTo(site);
+                return o < 0 ? Infinity : o;
+            };
+            return _.sortBy(sites, getOrder);
+        };
+
         Room.prototype.roadConstruction = function( minDeviation = ROAD_CONSTRUCTION_MIN_DEVIATION ) {
 
             if( !ROAD_CONSTRUCTION_ENABLE || Game.time % ROAD_CONSTRUCTION_INTERVAL != 0 ) return;
