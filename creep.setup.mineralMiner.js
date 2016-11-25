@@ -2,7 +2,7 @@ var setup = new Creep.Setup('mineralMiner');
 setup.minControllerLevel = 6;
 setup.maxCount = function(room){
     let max = 0;
-    if( room.storage ) {
+    if( room.storage && room.storage.sum < room.storage.storeCapacity * 0.9 ) {
         let add = mineral => {
             if(mineral.mineralAmount > 0) max++;
         };
