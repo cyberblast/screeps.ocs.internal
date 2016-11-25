@@ -680,10 +680,10 @@ var mod = {
         });
 
         Room.bestSpawnRoomFor = function(flag) {
-            var range = spawn => routeRange(spawn.roomName, flag.roomName);
+            var range = spawn => routeRange(spawn.pos.roomName, flag.pos.roomName);
             let spawn = _.min(Game.spawns, range);
 
-            return spawn;
+            return spawn.pos.roomName;
         }
         Room.getCostMatrix = function(roomName) {
             var room = Game.rooms[roomName];
