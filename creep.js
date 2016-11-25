@@ -1,28 +1,28 @@
 var mod = {
-    extend: function(){     
+    extend: function(){
         Creep.Action = require('./creep.Action'),
         Creep.Setup = require('./creep.Setup'),
         Creep.action = {
-            building: require('./creep.action.building'), 
+            building: require('./creep.action.building'),
             charging: require('./creep.action.charging'),
             claiming: require('./creep.action.claiming'),
             reserving: require('./creep.action.reserving'),
             defending: require('./creep.action.defending'),
             dismantling: require('./creep.action.dismantling'),
-            feeding: require('./creep.action.feeding'), 
-            fortifying: require('./creep.action.fortifying'), 
-            fueling: require('./creep.action.fueling'), 
-            guarding: require('./creep.action.guarding'), 
+            feeding: require('./creep.action.feeding'),
+            fortifying: require('./creep.action.fortifying'),
+            fueling: require('./creep.action.fueling'),
+            guarding: require('./creep.action.guarding'),
             harvesting: require('./creep.action.harvesting'),
             healing: require('./creep.action.healing'),
             idle: require('./creep.action.idle'),
             invading: require('./creep.action.invading'),
-            picking: require('./creep.action.picking'), 
-            repairing: require('./creep.action.repairing'), 
-            travelling: require('./creep.action.travelling'), 
-            storing: require('./creep.action.storing'), 
+            picking: require('./creep.action.picking'),
+            repairing: require('./creep.action.repairing'),
+            travelling: require('./creep.action.travelling'),
+            storing: require('./creep.action.storing'),
             uncharging: require('./creep.action.uncharging'),
-            upgrading: require('./creep.action.upgrading'), 
+            upgrading: require('./creep.action.upgrading'),
             withdrawing: require('./creep.action.withdrawing'),
             robbing:require('./creep.action.robbing'),
             reallocating:require('./creep.action.reallocating')
@@ -39,12 +39,12 @@ var mod = {
             ranger: require('./creep.behaviour.ranger'),
             upgrader: require('./creep.behaviour.upgrader'),
             warrior: require('./creep.behaviour.warrior'),
-            worker: require('./creep.behaviour.worker')           
+            worker: require('./creep.behaviour.worker')
         };
         Creep.setup = {
             claimer: require('./creep.setup.claimer'),
             hauler: require('./creep.setup.hauler'),
-            healer: require('./creep.setup.healer'), 
+            healer: require('./creep.setup.healer'),
             melee: require('./creep.setup.melee'),
             miner: require('./creep.setup.miner'),
             mineralMiner: require('./creep.setup.mineralMiner'),
@@ -53,7 +53,7 @@ var mod = {
             ranger: require('./creep.setup.ranger'),
             upgrader: require('./creep.setup.upgrader'),
             warrior: require('./creep.setup.warrior'),
-            worker: require('./creep.setup.worker')          
+            worker: require('./creep.setup.worker')
         };
         Creep.loop = function(){
             var run = creep => creep.run();
@@ -105,16 +105,16 @@ var mod = {
                     if( type && weight && home && spawn && breeding  ) {
                         //console.log( 'Fixing corrupt creep without population entry: ' + this.name );
                         var entry = Population.setCreep({
-                            creepName: this.name, 
-                            creepType: type, 
-                            weight: weight, 
-                            roomName: this.pos.roomName, 
-                            homeRoom: home, 
-                            motherSpawn: spawn, 
-                            actionName: this.action ? this.action.name : null, 
+                            creepName: this.name,
+                            creepType: type,
+                            weight: weight,
+                            roomName: this.pos.roomName,
+                            homeRoom: home,
+                            motherSpawn: spawn,
+                            actionName: this.action ? this.action.name : null,
                             targetId: this.target ? this.target.id || this.target.name : null,
-                            spawningTime: breeding, 
-                            flagName: null, 
+                            spawningTime: breeding,
+                            flagName: null,
                             body: _.countBy(this.body, 'type')
                         });
                         Population.countCreep(this.room, entry);
@@ -124,18 +124,18 @@ var mod = {
                         let counts = _.countBy(this.body, 'type');
                         if( counts[WORK] && counts[CARRY])
                         {
-                            let weight = (counts[WORK]*PART_COSTS[WORK]) + (counts[CARRY]*PART_COSTS[CARRY]) + (counts[MOVE]*PART_COSTS[MOVE]); 
+                            let weight = (counts[WORK]*PART_COSTS[WORK]) + (counts[CARRY]*PART_COSTS[CARRY]) + (counts[MOVE]*PART_COSTS[MOVE]);
                             var entry = Population.setCreep({
-                                creepName: this.name, 
-                                creepType: 'worker', 
-                                weight: weight, 
-                                roomName: this.pos.roomName, 
-                                homeRoom: this.pos.roomName, 
-                                motherSpawn: null, 
-                                actionName: null, 
+                                creepName: this.name,
+                                creepType: 'worker',
+                                weight: weight,
+                                roomName: this.pos.roomName,
+                                homeRoom: this.pos.roomName,
+                                motherSpawn: null,
+                                actionName: null,
                                 targetId: null,
-                                spawningTime: -1, 
-                                flagName: null, 
+                                spawningTime: -1,
+                                flagName: null,
                                 body: _.countBy(this.body, 'type')
                             });
                             Population.countCreep(this.room, entry);
@@ -144,12 +144,12 @@ var mod = {
                 }
                 if( this.flee ) {
                     this.fleeMove();
-                    if( SAY_ASSIGNMENT ) this.say(String.fromCharCode(10133), SAY_PUBLIC); 
+                    if( SAY_ASSIGNMENT ) this.say(String.fromCharCode(10133), SAY_PUBLIC);
                 }
             }
         };
         Creep.prototype.leaveBorder = function() {
-            // if on border move away 
+            // if on border move away
             // for emergency case, Path not found
             if( this.pos.y == 0 ){
                 this.move(BOTTOM);
@@ -163,7 +163,7 @@ var mod = {
             // TODO: CORNER cases
         };
         Creep.prototype.honk = function(){
-            if( HONK ) this.say('\u{26D4}\u{FE0E}', SAY_PUBLIC);            
+            if( HONK ) this.say('\u{26D4}\u{FE0E}', SAY_PUBLIC);
         },
         Creep.prototype.honkEvade = function(){
             if( HONK ) this.say('\u{1F500}\u{FE0E}', SAY_PUBLIC);
@@ -173,27 +173,27 @@ var mod = {
             if( !range ) range = this.pos.getRangeTo(targetPos);
             let lastPos = this.data.lastPos;
             this.data.lastPos = new RoomPosition(this.pos.x, this.pos.y, this.pos.roomName);
-            if( this.data.moveMode == null || 
+            if( this.data.moveMode == null ||
                 (lastPos && // moved
-                (lastPos.x != this.pos.x || lastPos.y != this.pos.y || lastPos.roomName != this.pos.roomName)) 
+                (lastPos.x != this.pos.x || lastPos.y != this.pos.y || lastPos.roomName != this.pos.roomName))
             ) {
-                // at this point its sure, that the this DID move in the last loop. 
-                // from lastPos to this.pos 
+                // at this point its sure, that the this DID move in the last loop.
+                // from lastPos to this.pos
                 this.room.recordMove(this);
 
-                if( this.data.moveMode == null) 
+                if( this.data.moveMode == null)
                     this.data.moveMode = 'auto';
                 if( this.data.path && this.data.path.length > 1 )
                     this.data.path = this.data.path.substr(1);
-                else 
+                else
                     this.data.path = this.getPath( targetPos, true);
 
                 if( this.data.path && this.data.path.length > 0 ) {
                     let moveResult = this.move(this.data.path.charAt(0));
-                    if( moveResult == OK ) { // OK is no guarantee that it will move to the next pos. 
-                        this.data.moveMode = 'auto'; 
+                    if( moveResult == OK ) { // OK is no guarantee that it will move to the next pos.
+                        this.data.moveMode = 'auto';
                     } else logErrorCode(this, moveResult);
-                    if( moveResult == ERR_NOT_FOUND ) delete this.data.path;  
+                    if( moveResult == ERR_NOT_FOUND ) delete this.data.path;
                 } else if( range > enoughRange ) {
                     this.say('NO PATH!');
                     this.data.targetId = null;
@@ -211,7 +211,7 @@ var mod = {
                 if( this.data.path && this.data.path.length > 0 ) {
                     let moveResult = this.move(this.data.path.charAt(0));
                     if( moveResult != OK ) logErrorCode(this, moveResult);
-                    if( moveResult == ERR_NOT_FOUND ) delete this.data.path;  
+                    if( moveResult == ERR_NOT_FOUND ) delete this.data.path;
                 } else if( range > enoughRange ) {
                     this.say('NO PATH!');
                     this.data.targetId = null;
@@ -219,14 +219,14 @@ var mod = {
                 }
             } else { // evade
                 // get path (don't ignore thiss)
-                // try to move. 
+                // try to move.
                 if( range > enoughRange ){
                     this.honkEvade();
                     delete this.data.path;
                     this.data.path = this.getPath( targetPos, false);
-                }                
+                }
                 if( this.data.path && this.data.path.length > 0 ) {
-                    if( this.data.path.length > 5 ) 
+                    if( this.data.path.length > 5 )
                         this.data.path = this.data.path.substr(0,4);
                     let moveResult = this.move(this.data.path.charAt(0));
                     if( moveResult != OK ) logErrorCode(this, moveResult);
@@ -246,10 +246,10 @@ var mod = {
             }
 
             let path = this.room.findPath(this.pos, targetPos, {
-                serialize: true, 
+                serialize: true,
                 ignoreCreeps: ignoreCreeps
             });
-            if( path && path.length > 4 ) 
+            if( path && path.length > 4 )
                 return path.substr(4);
             else return null;
         };
@@ -257,18 +257,18 @@ var mod = {
             if( this.fatigue > 0 ) return;
             let path;
             if( !this.data.fleePath || this.data.fleePath.length < 2 || this.data.fleePath[0].x != this.pos.x || this.data.fleePath[0].y != this.pos.y || this.data.fleePath[0].roomName != this.pos.roomName ) {
-                let goals = _.map(this.room.hostiles, function(o) {  
+                let goals = _.map(this.room.hostiles, function(o) {
                     return { pos: o.pos, range: 5 };
                 });
-                
+
                 let ret = PathFinder.search(
                     this.pos, goals, {
                         flee: true,
                         plainCost: 2,
-                        swampCost: 10, 
-                        maxOps: 500, 
-                        maxRooms: 2, 
-                        
+                        swampCost: 10,
+                        maxOps: 500,
+                        maxRooms: 2,
+
                         roomCallback: function(roomName) {
                             let room = Game.rooms[roomName];
                             if (!room) return;
@@ -293,18 +293,18 @@ var mod = {
             if( here && here.length > 0 ) {
                 let path;
                 if( !this.data.idlePath || this.data.idlePath.length < 2 || this.data.idlePath[0].x != this.pos.x || this.data.idlePath[0].y != this.pos.y || this.data.idlePath[0].roomName != this.pos.roomName ) {
-                    let goals = _.map(this.room.structures.all, function(o) {  
+                    let goals = _.map(this.room.structures.all, function(o) {
                         return { pos: o.pos, range: 1 };
                     });
-                    
+
                     let ret = PathFinder.search(
                         this.pos, goals, {
                             flee: true,
                             plainCost: 2,
-                            swampCost: 10, 
-                            maxOps: 350, 
-                            maxRooms: 1, 
-                            
+                            swampCost: 10,
+                            maxOps: 350,
+                            maxRooms: 1,
+
                             roomCallback: function(roomName) {
                                 let room = Game.rooms[roomName];
                                 if (!room) return;
@@ -322,24 +322,24 @@ var mod = {
                     this.move(this.pos.getDirectionTo(new RoomPosition(path[0].x,path[0].y,path[0].roomName)));
             }
         };
-        
+
         Object.defineProperties(Creep.prototype, {
             'flee': {
                 configurable: true,
                 get: function() {
                     if( this.data.flee ){
                         // release when restored
-                        this.data.flee = this.hits != this.hitsMax;                       
+                        this.data.flee = this.hits != this.hitsMax;
                     } else {
                         // set when low
-                        this.data.flee = (this.hits/this.hitsMax) < 0.35; 
+                        this.data.flee = (this.hits/this.hitsMax) < 0.35;
                     }
                     return this.data.flee;
-                }, 
+                },
                 set: function(newValue) {
                     this.data.flee = newValue;
                 }
-            }, 
+            },
             'sum': {
                 configurable: true,
                 get: function() {
@@ -350,7 +350,7 @@ var mod = {
                     return this._sum;
                 }
             }
-        });    
+        });
     }
 }
 

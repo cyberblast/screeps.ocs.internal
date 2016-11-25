@@ -7,15 +7,15 @@ var mod = {
         _.assign(global, {
             Extensions: require('./extensions'),
             Population: require('./population'),
-            FlagDir: require('./flagDir'),    
-            Tower: require('./tower'), 
+            FlagDir: require('./flagDir'),
+            Tower: require('./tower'),
             FLAG_COLOR: {
                 invade: { // destroy everything enemy in the room
-                    color: COLOR_RED, 
+                    color: COLOR_RED,
                     secondaryColor: COLOR_RED,
-                    filter: {'color': COLOR_RED, 'secondaryColor': COLOR_RED },                 
+                    filter: {'color': COLOR_RED, 'secondaryColor': COLOR_RED },
                     exploit: { // send privateers to exploit sources
-                        color: COLOR_RED, 
+                        color: COLOR_RED,
                         secondaryColor: COLOR_GREEN,
                         filter: {'color': COLOR_RED, 'secondaryColor': COLOR_GREEN }
                     },
@@ -30,40 +30,40 @@ var mod = {
                 //COLOR_CYAN,
                 // COLOR_GREEN
                 defense: { // point to gather troops
-                    color: COLOR_YELLOW, 
+                    color: COLOR_YELLOW,
                     secondaryColor: COLOR_YELLOW,
                     filter: {'color': COLOR_YELLOW, 'secondaryColor': COLOR_YELLOW }
                 },
                 destroy: { // destroy whats standing here
-                    color: COLOR_ORANGE, 
+                    color: COLOR_ORANGE,
                     secondaryColor: COLOR_ORANGE,
                     filter: {'color': COLOR_ORANGE, 'secondaryColor': COLOR_ORANGE },
-                    dismantle: { 
-                        color: COLOR_ORANGE, 
+                    dismantle: {
+                        color: COLOR_ORANGE,
                         secondaryColor: COLOR_YELLOW,
                         filter: {'color': COLOR_ORANGE, 'secondaryColor': COLOR_YELLOW }
-                    },  
+                    },
                 },
                 pavementArt: {
-                    color: COLOR_BROWN, 
+                    color: COLOR_BROWN,
                     secondaryColor: COLOR_BROWN,
                     filter: {'color': COLOR_BROWN, 'secondaryColor': COLOR_BROWN },
                 },
                 // COLOR_GREY
                 claim: { // claim this room
-                    color: COLOR_WHITE, 
+                    color: COLOR_WHITE,
                     secondaryColor: COLOR_WHITE,
                     filter: {'color': COLOR_WHITE, 'secondaryColor': COLOR_WHITE },
                     spawn: { // send pioneers & build spawn here
-                        color: COLOR_WHITE, 
+                        color: COLOR_WHITE,
                         secondaryColor: COLOR_GREEN,
                         filter: {'color': COLOR_WHITE, 'secondaryColor': COLOR_GREEN }
-                    },  
+                    },
                     pioneer: { // send additional pioneers
-                        color: COLOR_WHITE, 
+                        color: COLOR_WHITE,
                         secondaryColor: COLOR_RED,
                         filter: {'color': COLOR_WHITE, 'secondaryColor': COLOR_RED }
-                    },                    
+                    },
                     reserve: { // reserve this room
                         color: COLOR_WHITE,
                         secondaryColor: COLOR_GREY,
@@ -74,11 +74,11 @@ var mod = {
             PART_COSTS: {
                 work: 100,
                 carry: 50,
-                move: 50, 
-                attack: 80, 
-                ranged_attack: 150, 
-                heal: 250, 
-                claim: 600, 
+                move: 50,
+                attack: 80,
+                ranged_attack: 150,
+                heal: 250,
+                claim: 600,
                 tough: 10
             },
             DECAY_AMOUNT: {
@@ -87,9 +87,9 @@ var mod = {
                 'container': CONTAINER_DECAY, // 5000
             },
             DECAYABLES: [
-                STRUCTURE_ROAD, 
-                STRUCTURE_CONTAINER, 
-                STRUCTURE_RAMPART], 
+                STRUCTURE_ROAD,
+                STRUCTURE_CONTAINER,
+                STRUCTURE_RAMPART],
             translateErrorCode: function(code){
                 var codes = {
                     0: 'OK',
@@ -121,9 +121,9 @@ var mod = {
                 else return text;
             },
             CRAYON: {
-                death: { color: 'black', 'font-weight': 'bold' }, 
-                birth: '#e6de99', 
-                error: 'FireBrick', 
+                death: { color: 'black', 'font-weight': 'bold' },
+                birth: '#e6de99',
+                error: 'FireBrick',
                 system: { color: '#999', 'font-size': '10px' }
             },
             logErrorCode: function(creep, code) {
@@ -149,7 +149,7 @@ var mod = {
                 return ( (typeof val === 'function') || (typeof val === 'object') );
             },
             toLocalDate: function(date){
-                if( !date ) date = new Date(); 
+                if( !date ) date = new Date();
                 var offset = TIME_ZONE;
                 if( USE_SUMMERTIME && isSummerTime(date) ) offset++;
                 return new Date(date.getTime() + (3600000 * offset));
@@ -222,10 +222,10 @@ var mod = {
                 let setSite = flag => flag.room.createConstructionSite(flag, STRUCTURE_WALL);
                 flags.forEach(setSite);
                 let remove = flag => flag.remove();
-                flags.forEach(remove); 
-            }, 
+                flags.forEach(remove);
+            },
             unpave: function(roomname){
-                
+
             }
         });
     }

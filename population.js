@@ -14,33 +14,33 @@ var mod = {
     },
     registerCreep: function(creepName, creepType, creepCost, room, spawnName, body, destiny = null){
         var entry = this.setCreep({
-            creepName: creepName, 
-            creepType: creepType, 
-            weight: creepCost, 
-            roomName: room.name, 
-            homeRoom: room.name, 
-            motherSpawn: spawnName, 
-            actionName: null, 
+            creepName: creepName,
+            creepType: creepType,
+            weight: creepCost,
+            roomName: room.name,
+            homeRoom: room.name,
+            motherSpawn: spawnName,
+            actionName: null,
             targetId: null,
-            spawningTime: 0, 
+            spawningTime: 0,
             flagName: null,
-            body: _.countBy(body), 
+            body: _.countBy(body),
             destiny: destiny
         });
         this.countCreep(room, entry);
-    }, 
+    },
     unregisterCreep: function(creepName){
         delete Memory.population[creepName];
         delete Memory.creeps[creepName];
-    }, 
+    },
     registerAction: function(creep, action, target, entry) {
         if( entry === undefined ) entry = this.getCreep(creep.name);
         entry.carryCapacityLeft = creep.carryCapacity - creep.sum;
         let room = creep.room;
         if( room.population === undefined ) {
             room.population = {
-                typeCount: {}, 
-                typeWeight: {}, 
+                typeCount: {},
+                typeWeight: {},
                 actionCount: {},
                 actionWeight: {}
             };
@@ -74,7 +74,7 @@ var mod = {
         if( this.actionWeight[action.name] === undefined )
             this.actionWeight[action.name] = entry.weight;
         else this.actionWeight[action.name] += entry.weight;
-        
+
         let targetId = target.id || target.name;
         if( entry.targetId ) {
             // unregister target
@@ -83,7 +83,7 @@ var mod = {
                 let byName = elem => elem.creepName === creep.name;
                 let index = oldTarget.targetOf.findIndex(byName);
                 if( index > -1 ) oldTarget.targetOf.splice(index, 1);
-            }                
+            }
         }
         // register target
         entry.targetId = targetId;
@@ -94,7 +94,7 @@ var mod = {
         }
         creep.action = action;
         creep.target = target;
-    }, 
+    },
     registerCreepFlag: function(creep, flag) {
         if( flag && creep.data && creep.data.flagName && creep.data.flagName == flag.name && creep.flag.name == flag.name )
             return;
@@ -107,7 +107,7 @@ var mod = {
                 if( index > -1 ) oldFlag.targetOf.splice(index, 1);
             }
         }
-        if( !flag ) 
+        if( !flag )
             delete creep.data.flagName;
         else {
             if( flag.targetOf === undefined ) flag.targetOf = [creep.data];
@@ -120,8 +120,8 @@ var mod = {
         entry.roomName = room.name;
         if( room.population === undefined ) {
             room.population = {
-                typeCount: {}, 
-                typeWeight: {}, 
+                typeCount: {},
+                typeWeight: {},
                 actionCount: {},
                 actionWeight: {}
             };
@@ -143,7 +143,7 @@ var mod = {
     loop: function(){
         if(_.isUndefined(Memory.population)) {
             Memory.population = {};
-        }        
+        }
         this.typeCount = {};
         this.typeWeight = {};
         this.actionCount = {};
@@ -154,8 +154,8 @@ var mod = {
             if ( !creep ) {
                 if(CENSUS_ANNOUNCEMENTS) console.log(dye(CRAYON.system, entry.homeRoom + ' &gt; ') + dye(CRAYON.death, 'Good night ' + entry.creepName + '!') );
                 this.unregisterCreep(entry.creepName);
-            } 
-            else {                
+            }
+            else {
                 creep.data = entry;
                 delete creep.action;
                 delete creep.target;
@@ -168,7 +168,7 @@ var mod = {
                 }
                 else if(creep.ticksToLive == entry.spawningTime) { // will die in ticks equal to spawning time
                     if(CENSUS_ANNOUNCEMENTS) console.log(dye(CRAYON.system, entry.creepName + ' &gt; ') + dye(CRAYON.death, 'Farewell!') );
-                    if( !spawnsToProbe.includes(entry.motherSpawn) && entry.motherSpawn != 'unknown' ) { 
+                    if( !spawnsToProbe.includes(entry.motherSpawn) && entry.motherSpawn != 'unknown' ) {
                         spawnsToProbe.push(entry.motherSpawn);
                     }
                 } else if( entry.destiny ) {
@@ -176,15 +176,15 @@ var mod = {
                 }
                 entry.ttl = creep.ticksToLive;
 
-                if( entry.creepType && 
-                    ( creep.ticksToLive === undefined || 
+                if( entry.creepType &&
+                    ( creep.ticksToLive === undefined ||
                     creep.ticksToLive > entry.spawningTime )) {
                         this.countCreep(creep.room, entry);
                 }
-                
+
                 if( entry.flagName ){
                     var flag = Game.flags[entry.flagName];
-                    if( !flag ) 
+                    if( !flag )
                         delete entry.flagName;
                     else {
                         if( flag.targetOf === undefined ) flag.targetOf = [entry];
@@ -211,7 +211,7 @@ var mod = {
         let validateAssignment = entry => {
             let creep = Game.creeps[entry.creepName];
             if( creep.action && creep.target) {
-                let oldId = creep.target.id || creep.target.name; 
+                let oldId = creep.target.id || creep.target.name;
                 let target = creep.action.validateActionTarget(creep, creep.target);
                 if( !target ) {
                     delete entry.actionName;
