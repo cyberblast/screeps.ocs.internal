@@ -862,6 +862,7 @@ var mod = {
         Room.prototype.roadConstruction = function( minDeviation = ROAD_CONSTRUCTION_MIN_DEVIATION ) {
 
             if( !ROAD_CONSTRUCTION_ENABLE || Game.time % ROAD_CONSTRUCTION_INTERVAL != 0 ) return;
+            if( _.isNumber(ROAD_CONSTRUCTION_ENABLE) && ROAD_CONSTRUCTION_ENABLE < this.controller.level) return;
 
             let data = Object.keys(this.roadConstructionTrace)
                 .map( k => { 
