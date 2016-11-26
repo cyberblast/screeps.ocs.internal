@@ -19,7 +19,7 @@ module.exports = {
         } else {
             logError('Creep without action/activity!\nCreep: ' + creep.name + '\ndata: ' + JSON.stringify(creep.data));
         }
-        
+
         if( !creep.attacking ){
             // Heal self
             if( creep.data.body.heal !== undefined && creep.hits < creep.hitsMax ){
@@ -39,17 +39,17 @@ module.exports = {
             }
         }
     },
-    nextAction: function(creep){ 
+    nextAction: function(creep){
         let priority = [
             Creep.action.defending,
-            Creep.action.invading, 
-            Creep.action.guarding, 
+            Creep.action.invading,
+            Creep.action.guarding,
             Creep.action.idle
         ];
         for(var iAction = 0; iAction < priority.length; iAction++) {
             var action = priority[iAction];
-            if(action.isValidAction(creep) && 
-                action.isAddableAction(creep) && 
+            if(action.isValidAction(creep) &&
+                action.isAddableAction(creep) &&
                 action.assign(creep)) {
                     return;
             }

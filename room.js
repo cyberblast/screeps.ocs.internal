@@ -3,7 +3,7 @@ var mod = {
 
         let Container = function(room){
             this.room = room;
-            
+
             Object.defineProperties(this, {
                 'all': {
                     configurable: true,
@@ -11,10 +11,10 @@ var mod = {
                         if( _.isUndefined(this.room.memory.container)) {
                             this.room.saveContainers();
                         }
-                        if( _.isUndefined(this._container) ){ 
+                        if( _.isUndefined(this._container) ){
                             this._container = [];
                             let add = entry => {
-                                let cont = Game.getObjectById(entry.id); 
+                                let cont = Game.getObjectById(entry.id);
                                 if( cont ) {
                                     _.assign(cont, entry);
                                     this._container.push(cont);
@@ -28,7 +28,7 @@ var mod = {
                 'controller': {
                     configurable: true,
                     get: function() {
-                        if( _.isUndefined(this._controller) ){ 
+                        if( _.isUndefined(this._controller) ){
                             if( this.room.controller.memory.storage ){
                                 this._controller = [Game.getObjectById(this.room.controller.memory.storage)];
                                 if( !this._controller ) delete this.room.controller.memory.storage;
@@ -43,7 +43,7 @@ var mod = {
                 'in': {
                     configurable: true,
                     get: function() {
-                        if( _.isUndefined(this._in) ){ 
+                        if( _.isUndefined(this._in) ){
                             let byType = c => (c.source === true || c.mineral === true ) && c.controller == false;
                             this._in = _.filter(this.all, byType);
                             // add managed
@@ -56,10 +56,10 @@ var mod = {
                 'out': {
                     configurable: true,
                     get: function() {
-                        if( _.isUndefined(this._out) ){ 
+                        if( _.isUndefined(this._out) ){
                             let byType = c => (c.source === false && !c.mineral);
                             this._out = _.filter(this.all, byType);
-                            // add managed                         
+                            // add managed
                             let isEmpty = c => c.sum <= (c.storeCapacity * MANAGED_CONTAINER_TRIGGER);
                             this._out = this._out.concat(this.managed.filter(isEmpty));
                         }
@@ -69,7 +69,7 @@ var mod = {
                 'managed': {
                     configurable: true,
                     get: function() {
-                        if( _.isUndefined(this._managed) ){ 
+                        if( _.isUndefined(this._managed) ){
                             let byType = c => c.source === true && c.controller == true;
                             this._managed = _.filter(this.all, byType);
                         }
@@ -81,7 +81,7 @@ var mod = {
 
         let Links = function(room){
             this.room = room;
-            
+
             Object.defineProperties(this, {
                 'all': {
                     configurable: true,
@@ -89,10 +89,10 @@ var mod = {
                         if( _.isUndefined(this.room.memory.links)) {
                             this.room.saveLinks();
                         }
-                        if( _.isUndefined(this._all) ){ 
+                        if( _.isUndefined(this._all) ){
                             this._all = [];
                             let add = entry => {
-                                let o = Game.getObjectById(entry.id); 
+                                let o = Game.getObjectById(entry.id);
                                 if( o ) {
                                     _.assign(o, entry);
                                     this._all.push(o);
@@ -106,7 +106,7 @@ var mod = {
                 'controller': {
                     configurable: true,
                     get: function() {
-                        if( _.isUndefined(this._controller) ){ 
+                        if( _.isUndefined(this._controller) ){
                             let byType = c => c.controller === true;
                             this._controller = this.all.filter(byType);
                         }
@@ -116,7 +116,7 @@ var mod = {
                 'storage': {
                     configurable: true,
                     get: function() {
-                        if( _.isUndefined(this._storage) ) { 
+                        if( _.isUndefined(this._storage) ) {
                             let byType = l => l.storage == true;
                             this._storage = this.all.filter(byType);
                         }
@@ -126,7 +126,7 @@ var mod = {
                 'in': {
                     configurable: true,
                     get: function() {
-                        if( _.isUndefined(this._in) ) { 
+                        if( _.isUndefined(this._in) ) {
                             let byType = l => l.storage == false && l.controller == false;
                             this._in = _.filter(this.all, byType);
                         }
@@ -136,7 +136,7 @@ var mod = {
                 'privateers': {
                     configurable: true,
                     get: function() {
-                        if( _.isUndefined(this._privateers) ) { 
+                        if( _.isUndefined(this._privateers) ) {
                             let byType = l => l.storage == false && l.controller == false && l.source == false && l.energy < l.energyCapacity * 0.85;
                             this._privateers = _.filter(this.all, byType);
                         }
@@ -153,7 +153,7 @@ var mod = {
                 'all': {
                     configurable: true,
                     get: function() {
-                        if( _.isUndefined(this._all) ){ 
+                        if( _.isUndefined(this._all) ){
                             this._all = this.room.find(FIND_STRUCTURES);
                         }
                         return this._all;
@@ -165,7 +165,7 @@ var mod = {
                         if( _.isUndefined(this.room.memory.spawns) ) {
                             this.room.saveSpawns();
                         }
-                        if( _.isUndefined(this._spawns) ){ 
+                        if( _.isUndefined(this._spawns) ){
                             this._spawns = [];
                             var addSpawn = id => { addById(this._spawns, id); };
                             _.forEach(this.room.memory.spawns, addSpawn);
@@ -179,7 +179,7 @@ var mod = {
                         if( _.isUndefined(this.room.memory.towers)) {
                             this.room.saveTowers();
                         }
-                        if( _.isUndefined(this._towers) ){ 
+                        if( _.isUndefined(this._towers) ){
                             this._towers = [];
                             var add = id => { addById(this._towers, id); };
                             _.forEach(this.room.memory.towers, add);
@@ -190,15 +190,15 @@ var mod = {
                 'repairable': {
                     configurable: true,
                     get: function() {
-                        if( _.isUndefined(this._repairable) ){ 
+                        if( _.isUndefined(this._repairable) ){
                             let that = this;
-                            this._repairable = _.sortBy( 
+                            this._repairable = _.sortBy(
                                 that.all.filter(
                                     structure => (
-                                        structure.hits < structure.hitsMax && 
-                                        ( !that.room.controller || !that.room.controller.my || structure.hits < MAX_REPAIR_LIMIT[that.room.controller.level] || structure.hits < (LIMIT_URGENT_REPAIRING + (3*(DECAY_AMOUNT[structure.structureType] || 0)))) && 
-                                        ( !DECAYABLES.includes(structure.structureType) || (structure.hitsMax - structure.hits) > GAP_REPAIR_DECAYABLE ) && 
-                                        ( structure.towers === undefined || structure.towers.length == 0) && 
+                                        structure.hits < structure.hitsMax &&
+                                        ( !that.room.controller || !that.room.controller.my || structure.hits < MAX_REPAIR_LIMIT[that.room.controller.level] || structure.hits < (LIMIT_URGENT_REPAIRING + (3*(DECAY_AMOUNT[structure.structureType] || 0)))) &&
+                                        ( !DECAYABLES.includes(structure.structureType) || (structure.hitsMax - structure.hits) > GAP_REPAIR_DECAYABLE ) &&
+                                        ( structure.towers === undefined || structure.towers.length == 0) &&
                                         ( Memory.pavementArt[that.room.name] === undefined || Memory.pavementArt[that.room.name].indexOf('x'+structure.pos.x+'y'+structure.pos.y+'x') < 0 )
                                     )
                                 ),
@@ -211,29 +211,29 @@ var mod = {
                 'urgentRepairable': {
                     configurable: true,
                     get: function() {
-                        if( _.isUndefined(this._urgentRepairableSites) ){ 
-                            var isUrgent = site => (site.hits < (LIMIT_URGENT_REPAIRING + (3*(DECAY_AMOUNT[site.structureType] || 0)))); 
+                        if( _.isUndefined(this._urgentRepairableSites) ){
+                            var isUrgent = site => (site.hits < (LIMIT_URGENT_REPAIRING + (3*(DECAY_AMOUNT[site.structureType] || 0))));
                             this._urgentRepairableSites = _.filter(this.repairable, isUrgent);
                         }
                         return this._urgentRepairableSites;
                     }
-                }, 
+                },
                 'fortifyable': {
                     configurable: true,
                     get: function() {
-                        if( _.isUndefined(this._fortifyableSites) ){ 
+                        if( _.isUndefined(this._fortifyableSites) ){
                             let that = this;
                             this._fortifyableSites = _.sortBy(
                                 that.all.filter(
                                     structure => (
                                         that.room.my &&
-                                        structure.hits < structure.hitsMax && 
-                                        structure.hits < MAX_FORTIFY_LIMIT[that.room.controller.level] && 
+                                        structure.hits < structure.hitsMax &&
+                                        structure.hits < MAX_FORTIFY_LIMIT[that.room.controller.level] &&
                                         ( structure.structureType != STRUCTURE_CONTAINER || structure.hits < MAX_FORTIFY_CONTAINER ) &&
-                                        ( !DECAYABLES.includes(structure.structureType) || (structure.hitsMax - structure.hits) > GAP_REPAIR_DECAYABLE*3 ) && 
+                                        ( !DECAYABLES.includes(structure.structureType) || (structure.hitsMax - structure.hits) > GAP_REPAIR_DECAYABLE*3 ) &&
                                         ( Memory.pavementArt[that.room.name] === undefined || Memory.pavementArt[that.room.name].indexOf('x'+structure.pos.x+'y'+structure.pos.y+'x') < 0 )
                                     )
-                                ), 
+                                ),
                                 'hits'
                             );
                         }
@@ -244,7 +244,7 @@ var mod = {
                     configurable: true,
                     get: function() {
                         if( _.isUndefined(this._fuelables) ){
-                            var that = this; 
+                            var that = this;
                             var factor = that.room.situation.invasion ? 1 : 0.82;
                             var fuelable = target => (target.energy < (target.energyCapacity * factor));
                             this._fuelables = _.sortBy( _.filter(this.towers, fuelable), 'energy') ; // TODO: Add Nuker
@@ -253,18 +253,18 @@ var mod = {
                     }
                 },
                 'container' : {
-                    configurable: true, 
+                    configurable: true,
                     get: function() {
-                        if( _.isUndefined(this._container) ){ 
+                        if( _.isUndefined(this._container) ){
                             this._container = new Container(this.room);
                         }
                         return this._container;
                     }
                 },
                 'links' : {
-                    configurable: true, 
+                    configurable: true,
                     get: function() {
-                        if( _.isUndefined(this._links) ){ 
+                        if( _.isUndefined(this._links) ){
                             this._links = new Links(this.room);
                         }
                         return this._links;
@@ -277,7 +277,7 @@ var mod = {
             'structures': {
                 configurable: true,
                 get: function() {
-                    if( _.isUndefined(this._structures) ){ 
+                    if( _.isUndefined(this._structures) ){
                         this._structures = new Structures(this);
                     }
                     return this._structures;
@@ -286,13 +286,13 @@ var mod = {
             'sources': {
                 configurable: true,
                 get: function() {
-                    if( _.isUndefined(this.memory.sources) || this.name == 'sim') {                        
+                    if( _.isUndefined(this.memory.sources) || this.name == 'sim') {
                         this._sources = this.find(FIND_SOURCES);
                         if( this._sources.length > 0 ){
                             this.memory.sources = this._sources.map(s => s.id);
                         } else this.memory.sources = [];
                     }
-                    if( _.isUndefined(this._sources) ){  
+                    if( _.isUndefined(this._sources) ){
                         this._sources = [];
                         var addSource = id => { addById(this._sources, id); };
                         this.memory.sources.forEach(addSource);
@@ -303,7 +303,7 @@ var mod = {
             'droppedResources': {
                 configurable: true,
                 get: function() {
-                    if( _.isUndefined(this._droppedResources) ){ 
+                    if( _.isUndefined(this._droppedResources) ){
                         this._droppedResources = this.find(FIND_DROPPED_RESOURCES);
                     }
                     return this._droppedResources;
@@ -325,7 +325,7 @@ var mod = {
             'sourceEnergyAvailable': {
                 configurable: true,
                 get: function() {
-                    if( _.isUndefined(this._sourceEnergyAvailable) ){ 
+                    if( _.isUndefined(this._sourceEnergyAvailable) ){
                         this._sourceEnergyAvailable = 0;
                         var countEnergy = source => (this._sourceEnergyAvailable += source.energy);
                         _.forEach(this.sources, countEnergy);
@@ -345,7 +345,7 @@ var mod = {
             'relativeEnergyAvailable': {
                 configurable: true,
                 get: function() {
-                    if( _.isUndefined(this._relativeEnergyAvailable) ){  
+                    if( _.isUndefined(this._relativeEnergyAvailable) ){
                         this._relativeEnergyAvailable = this.energyCapacityAvailable > 0 ? this.energyAvailable / this.energyCapacityAvailable : 0;
                     }
                     return this._relativeEnergyAvailable;
@@ -354,7 +354,7 @@ var mod = {
             'towerFreeCapacity': {
                 configurable: true,
                 get: function() {
-                    if( _.isUndefined(this._towerFreeCapacity) ) { 
+                    if( _.isUndefined(this._towerFreeCapacity) ) {
                         this._towerFreeCapacity = 0;
                         var addFreeCapacity = tower => this._towerFreeCapacity += (tower.energyCapacity - tower.energy);
                         _.forEach(this.structures.towers, addFreeCapacity);
@@ -365,11 +365,11 @@ var mod = {
             'constructionSites': {
                 configurable: true,
                 get: function() {
-                    if( _.isUndefined(this._constructionSites) ) { 
-                        let sites = this.find(FIND_MY_CONSTRUCTION_SITES); 
+                    if( _.isUndefined(this._constructionSites) ) {
+                        let sites = this.find(FIND_MY_CONSTRUCTION_SITES);
                         let siteOrder = [STRUCTURE_SPAWN,STRUCTURE_EXTENSION,STRUCTURE_LINK,STRUCTURE_STORAGE,STRUCTURE_TOWER,STRUCTURE_ROAD,STRUCTURE_CONTAINER,STRUCTURE_EXTRACTOR,STRUCTURE_WALL,STRUCTURE_RAMPART];
                         let getOrder = site => {
-                            let o = siteOrder.indexOf(site.structureType); 
+                            let o = siteOrder.indexOf(site.structureType);
                             return o < 0 ? 100 : o;
                         };
                         this._constructionSites = _.sortBy(sites, getOrder);
@@ -381,7 +381,7 @@ var mod = {
             'creeps': {
                 configurable: true,
                 get: function() {
-                    if( _.isUndefined(this._creeps) ){ 
+                    if( _.isUndefined(this._creeps) ){
                         this._creeps = this.find(FIND_MY_CREEPS);
                     }
                     return this._creeps;
@@ -390,7 +390,7 @@ var mod = {
             'allCreeps': {
                 configurable: true,
                 get: function() {
-                    if( _.isUndefined(this._allCreeps) ){ 
+                    if( _.isUndefined(this._allCreeps) ){
                         this._allCreeps = this.find(FIND_CREEPS);
                     }
                     return this._allCreeps;
@@ -399,7 +399,7 @@ var mod = {
             'hostiles': {
                 configurable: true,
                 get: function() {
-                    if( _.isUndefined(this._hostiles) ){ 
+                    if( _.isUndefined(this._hostiles) ){
                         this._hostiles = this.find(FIND_HOSTILE_CREEPS, { filter : c => _.indexOf(PLAYER_WHITELIST, c.owner.username) == -1 });
                     }
                     return this._hostiles;
@@ -408,7 +408,7 @@ var mod = {
             'hostileIds': {
                 configurable: true,
                 get: function() {
-                    if( _.isUndefined(this._hostileIds) ){ 
+                    if( _.isUndefined(this._hostileIds) ){
                         this._hostileIds = _.map(this.hostiles, 'id');
                     }
                     return this._hostileIds;
@@ -417,7 +417,7 @@ var mod = {
             'combatCreeps': {
                 configurable: true,
                 get: function() {
-                    if( _.isUndefined(this._combatCreeps) ){ 
+                    if( _.isUndefined(this._combatCreeps) ){
                         this._combatCreeps = this.creeps.filter( c => ['melee','ranger','healer', 'warrior'].includes(c.data.creepType) );
                     }
                     return this._combatCreeps;
@@ -426,8 +426,8 @@ var mod = {
             'casualties': {
                 configurable: true,
                 get: function() {
-                    if( _.isUndefined(this._casualties) ){ 
-                        var isInjured = creep => creep.hits < creep.hitsMax && 
+                    if( _.isUndefined(this._casualties) ){
+                        var isInjured = creep => creep.hits < creep.hitsMax &&
                             (creep.towers === undefined || creep.towers.length == 0);
                         this._casualties = _.sortBy(_.filter(this.creeps, isInjured), 'hits');
                     }
@@ -438,9 +438,9 @@ var mod = {
             'situation': {
                 configurable: true,
                 get: function() {
-                    if( _.isUndefined(this._situation) ){ 
+                    if( _.isUndefined(this._situation) ){
                         this._situation = {
-                            noEnergy: this.sourceEnergyAvailable == 0, 
+                            noEnergy: this.sourceEnergyAvailable == 0,
                             invasion: this.hostiles.length > 0
                         }
                     }
@@ -455,7 +455,7 @@ var mod = {
                     }
                     return this.memory.roadConstructionTrace;
                 }
-            }, 
+            },
             'adjacentRooms': {
                 configurable: true,
                 get: function () {
@@ -525,7 +525,7 @@ var mod = {
                             // don't spawn claimer for reservation at RCL < 4 (claimer not big enough)
                             if( rcl > 3 || (flagEntry.color == FLAG_COLOR.claim.color && flagEntry.secondaryColor == FLAG_COLOR.claim.secondaryColor )) {
                                 distance = Room.roomDistance(that.name, flagEntry.roomName);
-                                if( distance > maxRange ) 
+                                if( distance > maxRange )
                                     return;
                                 flag = Game.flags[flagEntry.name];
                                 if( flag.room && flag.room.controller && flag.room.controller.reservation && flag.room.controller.reservation.ticksToEnd > 2500)
@@ -543,7 +543,7 @@ var mod = {
             'conserveForDefense': {
                 configurable: true,
                 get: function () {
-                    return (this.storage && this.storage.store.energy < MIN_STORAGE_ENERGY[this.controller.level]); 
+                    return (this.storage && this.storage.store.energy < MIN_STORAGE_ENERGY[this.controller.level]);
                 }
             },
             'hostileThreatLevel': {
@@ -566,7 +566,7 @@ var mod = {
                     if (_.isUndefined(this._defenseLevel) ) {
                         this._defenseLevel = {
                             towers: 0,
-                            creeps: 0, 
+                            creeps: 0,
                             sum: 0
                         }
                         let evaluate = creep => {
@@ -604,18 +604,18 @@ var mod = {
                     }
                     return this.memory.mineralType;
                 }
-            }, 
+            },
             'costMatrix': {
-                configurable: true, 
+                configurable: true,
                 get: function () {
                     if( _.isUndefined(Memory.pathfinder)) Memory.pathfinder = {};
                     if( _.isUndefined(Memory.pathfinder[this.name])) Memory.pathfinder[this.name] = {};
-                
+
                     if( Memory.pathfinder[this.name].costMatrix && (Game.time - Memory.pathfinder[this.name].updated) < COST_MATRIX_VALIDITY) {
                         return PathFinder.CostMatrix.deserialize(Memory.pathfinder[this.name].costMatrix);
                     }
 
-                    if( DEBUG ) console.log("Calulating cost matrix for " + this.name);                
+                    if( DEBUG ) console.log("Calulating cost matrix for " + this.name);
                     var costMatrix = new PathFinder.CostMatrix;
                     let setCosts = structure => {
                         if(structure.structureType == STRUCTURE_ROAD) {
@@ -625,12 +625,12 @@ var mod = {
                         }
                     };
                     this.structures.all.forEach(setCosts);
-                
+
                     Memory.pathfinder[this.name].costMatrix = costMatrix.serialize();
                     Memory.pathfinder[this.name].updated = Game.time;
                     return costMatrix;
                 }
-            }, 
+            },
             'currentCostMatrix': {
                 configurable: true,
                 get: function () {
@@ -644,7 +644,7 @@ var mod = {
                     }
                     return this._currentCostMatrix;
                 }
-            }, 
+            },
             'my': {
                 configurable: true,
                 get: function () {
@@ -653,20 +653,20 @@ var mod = {
                     }
                     return this._my;
                 }
-            },            
+            },
             'spawnQueueHigh': {
                 configurable: true,
                 get: function() {
-                    if( _.isUndefined(this.memory.spawnQueueHigh) ) {                        
+                    if( _.isUndefined(this.memory.spawnQueueHigh) ) {
                         this.memory.spawnQueueHigh = [];
                     }
                     return this.memory.spawnQueueHigh;
                 }
-            },            
+            },
             'spawnQueueLow': {
                 configurable: true,
                 get: function() {
-                    if( _.isUndefined(this.memory.spawnQueueLow) ) {                        
+                    if( _.isUndefined(this.memory.spawnQueueLow) ) {
                         this.memory.spawnQueueLow = [];
                     }
                     return this.memory.spawnQueueLow;
@@ -675,7 +675,7 @@ var mod = {
             'pavementArt': {
                 configurable: true,
                 get: function() {
-                    if( _.isUndefined(this.memory.pavementArt) ) {                        
+                    if( _.isUndefined(this.memory.pavementArt) ) {
                         this.memory.pavementArt = [];
                     }
                     return this.memory.pavementArt;
@@ -686,7 +686,7 @@ var mod = {
         Room.getCostMatrix = function(roomName) {
             var room = Game.rooms[roomName];
             if(!room) return;
-            return room.costMatrix;        
+            return room.costMatrix;
         };
         Room.isMine = function(roomName) {
             let room = Game.rooms[roomName];
@@ -699,7 +699,7 @@ var mod = {
                 if( diagonal ) {
                     let roomExits = Game.map.describeExits(roomName);
                     let dirA = (direction + 2) % 8;
-                    let dirB = (direction + 6) % 8; 
+                    let dirB = (direction + 6) % 8;
                     if( roomExits[dirA] && !validRooms.includes(roomExits[dirA]) )
                         validRooms.push(roomExits[dirA]);
                     if( roomExits[dirB] && !validRooms.includes(roomExits[dirB]) )
@@ -733,8 +733,8 @@ var mod = {
             let posB = roomName2.split(/([N,E,S,W])/);
             let xDif = posA[1] == posB[1] ? Math.abs(posA[2]-posB[2]) : posA[2]+posB[2]+1;
             let yDif = posA[3] == posB[3] ? Math.abs(posA[4]-posB[4]) : posA[4]+posB[4]+1;
-            //if( diagonal ) return Math.max(xDif, yDif); // count diagonal as 1 
-            return xDif + yDif; // count diagonal as 2        
+            //if( diagonal ) return Math.max(xDif, yDif); // count diagonal as 1
+            return xDif + yDif; // count diagonal as 2
         };
 
         Room.validFields = function(roomName, minX, maxX, minY, maxY, checkWalkable = false, where = null) {
@@ -743,7 +743,7 @@ var mod = {
                 look = Game.rooms[roomName].lookAtArea(minY,minX,maxY,maxX);
             }
             let invalidObject = o => {
-                return ((o.type == LOOK_TERRAIN && o.terrain == 'wall') || 
+                return ((o.type == LOOK_TERRAIN && o.terrain == 'wall') ||
                     o.type == LOOK_CONSTRUCTION_SITES ||
                     (o.type == LOOK_STRUCTURES && OBSTACLE_OBJECT_TYPES.includes(o.structure.structureType) ));
             };
@@ -775,7 +775,7 @@ var mod = {
             let maxY = Math.min(...plusRangeY);
             return Room.validFields(args.roomName, minX, maxX, minY, maxY, args.checkWalkable, args.where);
         };
-        
+
         Room.prototype.defenseMaxWeight = function(base, type) {
             let defenseMaxWeight = 0;
             let maxRange = 2;
@@ -785,7 +785,7 @@ var mod = {
             let flagEntries = FlagDir.filter(FLAG_COLOR.defense);
             let calcWeight = flagEntry => {
                 distance = Room.roomDistance(that.name, flagEntry.roomName);
-                if( distance > maxRange ) 
+                if( distance > maxRange )
                     return;
                 flag = Game.flags[flagEntry.name];
 
@@ -802,7 +802,7 @@ var mod = {
                         if( !validRooms.includes(roomName2) ){
                             validRooms.push(roomName2);
                                 if( Room.isMine(roomName2) ) ownNeighbor++;
-                        }                                         
+                        }
                     }
                     _.forEach(roomExits, add);
                 }
@@ -832,11 +832,11 @@ var mod = {
                         let room = Game.rooms[roomName];
                         isMyOrNeutralRoom = room &&
                             room.controller &&
-                            (room.controller.my || 
+                            (room.controller.my ||
                             (room.controller.owner === undefined));
                     }
 
-                    if (isMyOrNeutralRoom || roomName == targetRoomName) 
+                    if (isMyOrNeutralRoom || roomName == targetRoomName)
                         return 1;
                     else if (isHighway)
                         return 3;
@@ -845,14 +845,14 @@ var mod = {
                     return Infinity;
                 }
             });
-            
+
         };
 
         Room.prototype.getBestConstrucionSiteFor = function(creep) {
-            let sites = this.find(FIND_MY_CONSTRUCTION_SITES); 
+            let sites = this.find(FIND_MY_CONSTRUCTION_SITES);
             let siteOrder = [STRUCTURE_SPAWN,STRUCTURE_EXTENSION,STRUCTURE_LINK,STRUCTURE_STORAGE,STRUCTURE_TOWER,STRUCTURE_ROAD,STRUCTURE_CONTAINER,STRUCTURE_EXTRACTOR,STRUCTURE_WALL,STRUCTURE_RAMPART];
             let getOrder = site => {
-                let o = siteOrder.indexOf(site.structureType) * 100; 
+                let o = siteOrder.indexOf(site.structureType) * 100;
                 o = o + creep.pos.getRangeTo(site);
                 return o < 0 ? Infinity : o;
             };
@@ -864,22 +864,22 @@ var mod = {
             if( !ROAD_CONSTRUCTION_ENABLE || Game.time % ROAD_CONSTRUCTION_INTERVAL != 0 ) return;
 
             let data = Object.keys(this.roadConstructionTrace)
-                .map( k => { 
+                .map( k => {
                     return { // convert to [{key,n,x,y}]
                         'n': this.roadConstructionTrace[k], // count of steps on x,y cordinates
                         'x': k.charCodeAt(0)-32, // extract x from key
                         'y': k.charCodeAt(1)-32 // extraxt y from key
                     };
                 });
-                
+
             let min = Math.max(ROAD_CONSTRUCTION_ABS_MIN, (data.reduce( (_sum, b) => _sum + b.n, 0 ) / data.length) * minDeviation);
 
             data = data.filter( e => {
-                return e.n > min && 
+                return e.n > min &&
                     this.lookForAt(LOOK_STRUCTURES,e.x,e.y).length == 0 &&
                     this.lookForAt(LOOK_CONSTRUCTION_SITES,e.x,e.y).length == 0;
             });
-            
+
             // build roads on all most frequent used fields
             let setSite = pos => {
                 if( DEBUG ) console.log(`Constructing new road in ${this.name} at ${pos.x}'${pos.y} (${pos.n} traces)`);
@@ -894,8 +894,8 @@ var mod = {
             if( !ROAD_CONSTRUCTION_ENABLE ) return;
             let x = creep.pos.x;
             let y = creep.pos.y;
-            if ( x == 0 || y == 0 || x == 49 || y == 49 || 
-                creep.carry.energy == 0 || creep.data.actionName == 'building' ) 
+            if ( x == 0 || y == 0 || x == 49 || y == 49 ||
+                creep.carry.energy == 0 || creep.data.actionName == 'building' )
                 return;
 
             let key = `${String.fromCharCode(32+x)}${String.fromCharCode(32+y)}_x${x}-y${y}`;
@@ -922,21 +922,21 @@ var mod = {
         };
         Room.prototype.saveContainers = function(){
             this.memory.container = [];
-            let containers = this.structures.all.filter( 
-                structure => structure.structureType == STRUCTURE_CONTAINER 
+            let containers = this.structures.all.filter(
+                structure => structure.structureType == STRUCTURE_CONTAINER
             );
             let add = (cont) => {
                 let source = cont.pos.findInRange(this.sources, 2);
                 let mineral = cont.pos.findInRange(this.minerals, 2);
                 this.memory.container.push({
-                    id: cont.id, 
-                    source: (source.length > 0), 
+                    id: cont.id,
+                    source: (source.length > 0),
                     controller: ( cont.pos.getRangeTo(this.controller) < 4 ),
                     mineral: (mineral.length > 0),
                 });
                 let assignContainer = s => s.memory.container = cont.id;
-                source.forEach(assignContainer);  
-                mineral.forEach(assignContainer);  
+                source.forEach(assignContainer);
+                mineral.forEach(assignContainer);
             };
             containers.forEach(add);
 
@@ -944,24 +944,24 @@ var mod = {
                 let source = this.terminal.pos.findInRange(this.sources, 2);
                 let mineral = this.terminal.pos.findInRange(this.minerals, 2);
                 let assignTerminal = s => s.memory.terminal = this.terminal.id;
-                source.forEach(assignTerminal);  
-                mineral.forEach(assignTerminal);  
+                source.forEach(assignTerminal);
+                mineral.forEach(assignTerminal);
             }
             if( this.storage ) {
                 let source = this.storage.pos.findInRange(this.sources, 2);
                 let mineral = this.storage.pos.findInRange(this.minerals, 2);
                 let assignStorage = s => s.memory.storage = this.storage.id;
-                source.forEach(assignStorage);  
+                source.forEach(assignStorage);
                 mineral.forEach(assignStorage);
-                
-                if( this.storage.pos.getRangeTo(this.controller) < 4 ) 
+
+                if( this.storage.pos.getRangeTo(this.controller) < 4 )
                     this.controller.memory.storage = this.storage.id;
             }
         };
         Room.prototype.saveLinks = function(){
-            if( _.isUndefined(this.memory.links) ){ 
+            if( _.isUndefined(this.memory.links) ){
                 this.memory.links = [];
-            } 
+            }
             let links = this.find(FIND_MY_STRUCTURES, {
                 filter: (structure) => ( structure.structureType == STRUCTURE_LINK )
             });
@@ -973,8 +973,8 @@ var mod = {
             let keep = (entry) => {
                 if( links.find( (c) => c.id == entry.id )){
                     entry.storage = storageLinks.includes(entry.id);
-                    kept.push(entry); 
-                }                    
+                    kept.push(entry);
+                }
             };
             this.memory.links.forEach(keep);
             this.memory.links = kept;
@@ -989,13 +989,13 @@ var mod = {
                     if( !isControllerLink ) {
                         let source = link.pos.findInRange(this.sources, 2);
                         let assign = s => s.memory.link = link.id;
-                        source.forEach(assign);  
+                        source.forEach(assign);
                         isSource = source.length > 0;
                     }
                     this.memory.links.push({
-                        id: link.id, 
+                        id: link.id,
                         storage: storageLinks.includes(link.id),
-                        controller: isControllerLink, 
+                        controller: isControllerLink,
                         source: isSource
                     });
                 }
@@ -1004,17 +1004,17 @@ var mod = {
         };
         Room.prototype.saveMinerals = function() {
             let that = this;
-            let toPos = o => { 
+            let toPos = o => {
                 return {
                     x: o.pos.x,
                     y: o.pos.y
                 };
             };
-            let extractorPos = this.structures.all.filter( 
-                structure => structure.structureType == STRUCTURE_EXTRACTOR 
+            let extractorPos = this.structures.all.filter(
+                structure => structure.structureType == STRUCTURE_EXTRACTOR
             ).map(toPos);
             let hasExtractor = m => _.some(extractorPos, {
-                x: m.pos.x, 
+                x: m.pos.x,
                 y: m.pos.y
             });
             this._minerals = this.find(FIND_MINERALS).filter(hasExtractor);
@@ -1023,16 +1023,16 @@ var mod = {
                 this.memory.minerals = _.map(that._minerals, id);
             } else this.memory.minerals = [];
         };
-        
+
         Room.prototype.linkDispatcher = function () {
             let filled = l => l.cooldown == 0 && l.energy > (l.energyCapacity * (l.source ? 0.85 : 0.5));
             let empty = l =>  l.energy < l.energyCapacity * 0.15;
-            let filledIn = this.structures.links.in.filter(filled); 
-            let emptyController = this.structures.links.controller.filter(empty); 
+            let filledIn = this.structures.links.in.filter(filled);
+            let emptyController = this.structures.links.controller.filter(empty);
 
             if( filledIn.length > 0  ){
-                let emptyStorage = this.structures.links.storage.filter(empty); 
-                
+                let emptyStorage = this.structures.links.storage.filter(empty);
+
                 let handleFilledIn = f => { // first fill controller, then storage
                     if( emptyController.length > 0 ){
                         f.transferEnergy(emptyController[0]);
@@ -1046,7 +1046,7 @@ var mod = {
             }
 
             if( emptyController.length > 0 ){ // controller still empty, send from storage
-                let filledStorage = this.structures.links.storage.filter(filled); 
+                let filledStorage = this.structures.links.storage.filter(filled);
                 let handleFilledStorage = f => {
                     if( emptyController.length > 0 ){
                         f.transferEnergy(emptyController[0]);
@@ -1065,33 +1065,33 @@ var mod = {
                 if(DEBUG) console.log('Executing terminalBroker in ' + this.name);
                 let orders = Game.market.getAllOrders( o => {
                     if( !o.roomName ||
-                        o.resourceType != mineral || 
+                        o.resourceType != mineral ||
                         o.type != 'buy' ||
                         o.amount < MIN_MINERAL_SELL_AMOUNT ) return false;
 
                     o.range = Game.map.getRoomLinearDistance(o.roomName, that.name, true);
                     o.transactionAmount = Math.min(o.amount, that.terminal.store[mineral]);
                     o.transactionCost = Game.market.calcTransactionCost(
-                        o.transactionAmount, 
-                        that.name, 
+                        o.transactionAmount,
+                        that.name,
                         o.roomName);
                     if(o.transactionCost > that.terminal.store.energy && o.transactionAmount > MIN_MINERAL_SELL_AMOUNT) {
                         // cant afford. try min amount
                         o.transactionAmount = MIN_MINERAL_SELL_AMOUNT;
                         o.transactionCost = Game.market.calcTransactionCost(
-                            o.transactionAmount, 
-                            that.name, 
+                            o.transactionAmount,
+                            that.name,
                             o.roomName);
                     }
 
                     o.credits = o.transactionAmount*o.price;
-                    o.ratio = o.credits/o.transactionCost; 
-                    
-                    return ( 
+                    o.ratio = o.credits/o.transactionCost;
+
+                    return (
                         o.ratio >= MIN_SELL_RATIO[mineral] &&
-                        //o.range <= MAX_SELL_RANGE && 
+                        //o.range <= MAX_SELL_RANGE &&
                         o.transactionCost <= that.terminal.store.energy);
-                }); 
+                });
 
                 if( orders.length > 0 ){
                     let order = _.max(orders, 'ratio');
@@ -1100,18 +1100,18 @@ var mod = {
                     console.log(message);
                     Game.notify( message );
                     transacting = true;
-                }                
-            } 
-            if( this.controller.level == 8 && !transacting && 
-                this.storage.store.energy > MAX_STORAGE_ENERGY[this.controller.level] && 
-                this.terminal.store[mineral] < 150000 && 
+                }
+            }
+            if( this.controller.level == 8 && !transacting &&
+                this.storage.store.energy > MAX_STORAGE_ENERGY[this.controller.level] &&
+                this.terminal.store[mineral] < 150000 &&
                 this.terminal.store.energy > 50000 ){
                 let requiresEnergy = room => (
-                    room.my && 
-                    room.controller.level < 8 && 
-                    room.storage && room.terminal && 
-                    room.terminal.sum < room.terminal.storeCapacity - 50000 && 
-                    room.storage.sum < room.storage.storeCapacity * 0.8 && 
+                    room.my &&
+                    room.controller.level < 8 &&
+                    room.storage && room.terminal &&
+                    room.terminal.sum < room.terminal.storeCapacity - 50000 &&
+                    room.storage.sum < room.storage.storeCapacity * 0.8 &&
                     !room._isReceivingEnergy
                 )
                 let targetRoom = _.min(_.filter(Game.rooms, requiresEnergy), 'storage.store.energy');
@@ -1145,7 +1145,7 @@ var mod = {
             }
         };
         Room.prototype.statistics = function(){
-            let that = this; 
+            let that = this;
             if( this.memory.hostileIds === undefined )
                 this.memory.hostileIds = [];
             if( this.memory.statistics === undefined)
@@ -1153,7 +1153,7 @@ var mod = {
 
             if( this.controller && this.controller.my ) {
                 var registerHostile = creep => {
-                    if( !that.memory.hostileIds.includes(creep.id) ){ 
+                    if( !that.memory.hostileIds.includes(creep.id) ){
                         let bodyCount = JSON.stringify( _.countBy(creep.body, 'type') );
                         let message = 'Hostile intruder ' + creep.id + ' (' + bodyCount + ') from "' + creep.owner.username + '" in room ' + that.name + ' at ' + toDateTimeString(toLocalDate(new Date()));
                         if( DEBUG || NOTIFICATE_INVADER ) console.log(message);
@@ -1163,16 +1163,16 @@ var mod = {
                         if(that.memory.statistics.invaders === undefined)
                             that.memory.statistics.invaders = [];
                         that.memory.statistics.invaders.push({
-                            owner: creep.owner.username, 
+                            owner: creep.owner.username,
                             id: creep.id,
-                            body: bodyCount, 
-                            enter: Game.time, 
+                            body: bodyCount,
+                            enter: Game.time,
                             time: Date.now()
                         });
                     }
                 }
                 _.forEach(this.hostiles, registerHostile);
-                
+
                 let registerHostileLeave = id => {
                     if( !that.hostileIds.includes(id) && that.memory.statistics && that.memory.statistics.invaders !== undefined && that.memory.statistics.invaders.length > 0){
                         let select = invader => invader.id == id && invader.leave === undefined;
@@ -1183,10 +1183,10 @@ var mod = {
                 _.forEach(this.memory.hostileIds, registerHostileLeave);
             }
 
-            this.memory.hostileIds = this.hostileIds;  
+            this.memory.hostileIds = this.hostileIds;
         }
         Room.prototype.init = function(){
-            // required. otherwise the objects will keep the values. Which would be ok if reliable. 
+            // required. otherwise the objects will keep the values. Which would be ok if reliable.
             // but will be empty or "old" when redirected to an other server (load balancing), because it has its own cache
             delete this._structures;
             delete this._sourceEnergyAvailable;
@@ -1206,16 +1206,16 @@ var mod = {
             delete this._combatCreeps;
             delete this._defenseLevel;
             delete this._hostileThreatLevel;
-            delete this._minerals;    
+            delete this._minerals;
             delete this._currentCostMatrix;
             delete this._my;
             delete this._isReceivingEnergy;
         }
-        
+
         Room.prototype.loop = function(){
             this.init();
-            try {                
-                let that = this; 
+            try {
+                let that = this;
                 if( Game.time % MEMORY_RESYNC_INTERVAL == 0 || this.name == 'sim' ) {
                     this.saveMinerals();
                     this.saveTowers();
@@ -1231,8 +1231,8 @@ var mod = {
             }
             catch(err) {
                 Game.notify('Error in room.js (Room.prototype.loop): ' + err);
-                console.log( dye(CRAYON.error, 'Error in room.js (Room.prototype.loop): <br/>' + JSON.stringify(err))); 
-            }          
+                console.log( dye(CRAYON.error, 'Error in room.js (Room.prototype.loop): <br/>' + JSON.stringify(err)));
+            }
         };
     }
 }

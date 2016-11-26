@@ -1,9 +1,9 @@
 var action = new Creep.Action('guarding');
 action.isAddableAction = function(){ return true; };
 action.isAddableTarget = function(){ return true; };
-action.newTarget = function(creep){     
+action.newTarget = function(creep){
     var flag = FlagDir.find(FLAG_COLOR.defense, creep.pos, false, FlagDir.rangeMod, {
-        rangeModPerCrowd: 400 
+        rangeModPerCrowd: 400
         //rangeModByType: creep.data.creepType
     });
 
@@ -18,6 +18,6 @@ action.work = function(creep){
     else return ERR_INVALID_ARGS;
 };
 action.onAssignment = function(creep, target) {
-    if( SAY_ASSIGNMENT ) creep.say(String.fromCharCode(9929), SAY_PUBLIC); 
+    if( SAY_ASSIGNMENT ) creep.say(String.fromCharCode(9929), SAY_PUBLIC);
 };
 module.exports = action;

@@ -10,14 +10,14 @@ var mod = {
             }
         });
     },
-    list:[], 
+    list:[],
     findName: function(flagColor, pos, local, mod, modArgs){
         let that = this;
-        if( flagColor == null || this.list.length == 0) 
+        if( flagColor == null || this.list.length == 0)
             return null;
         let filter;
         if (typeof flagColor === 'function' ) {
-            filter = flagEntry => ( flagColor(flagEntry) && flagEntry.cloaking == 0 && 
+            filter = flagEntry => ( flagColor(flagEntry) && flagEntry.cloaking == 0 &&
                 (!local || !pos || !pos.roomName || flagEntry.roomName != pos.roomName));
         }
         else {
@@ -26,14 +26,14 @@ var mod = {
                 _.assign(filter, {roomName: pos.roomName, cloaking: "0"});
             else
                 _.assign(filter, {cloaking: "0"});
-        } 
+        }
         let flags = _.filter(that.list, filter);
 
-        if( flags.length == 0 ) 
+        if( flags.length == 0 )
             return null;
-        if( flags.length == 1 ) 
+        if( flags.length == 1 )
             return flags[0].name;
-        
+
         // some flags found - find nearest
         if( pos && pos.roomName ){
             var range = flag => {
@@ -51,10 +51,10 @@ var mod = {
             let flag = _.min(flags, range); //_.sortBy(flags, range)[0];
             return flag.valid ? flag.name : null;
         } else return flags[0].name;
-    }, 
+    },
     find: function(flagColor, pos, local, mod, modArgs){
         let id = this.findName(flagColor, pos, local, mod, modArgs);
-        if( id === null ) 
+        if( id === null )
             return null;
         return Game.flags[id];
     },
@@ -71,20 +71,20 @@ var mod = {
             delete flag.targetOf;
             if( flag.cloaking && flag.cloaking > 0 ) flag.cloaking--;
             this.list.push({
-                name: flag.name, 
-                color: flag.color, 
-                secondaryColor: flag.secondaryColor, 
+                name: flag.name,
+                color: flag.color,
+                secondaryColor: flag.secondaryColor,
                 roomName: flag.pos.roomName,
                 x: flag.pos.x,
-                y: flag.pos.y, 
+                y: flag.pos.y,
                 cloaking: flag.cloaking
             });
         };
         _.forEach(Game.flags, register);
-    }, 
+    },
     count: function(flagColor, pos, local){
         let that = this;
-        if( flagColor == null || this.list.length == 0) 
+        if( flagColor == null || this.list.length == 0)
             return 0;
 
         let filter = _.clone(flagColor.filter);
@@ -93,7 +93,7 @@ var mod = {
         return _.countBy(this.list, filter).true || 0;
     },
     filter: function(flagColor, pos, local){
-        if( flagColor == null || this.list.length == 0) 
+        if( flagColor == null || this.list.length == 0)
             return [];
         let filter;
         if( Array.isArray(flagColor) ) {
@@ -114,7 +114,7 @@ var mod = {
         return _.filter(this.list, filter);
     },
     filterCustom: function(filter){
-        if( filter == null || this.list.length == 0) 
+        if( filter == null || this.list.length == 0)
             return [];
         return _.filter(this.list, filter);
     },
@@ -126,18 +126,18 @@ var mod = {
         if( flag.targetOf ){ // flag is targetted
             if( rangeModByType ) { // count defined creep type only
                 let count = _.countBy(flag.targetOf, 'creepType')[rangeModByType];
-                crowd = count || 0; 
+                crowd = count || 0;
             } else // count all creeps
                 crowd = flag.targetOf.length;
         } else crowd = 0; // not targetted
         return range + ( crowd * rangeModPerCrowd );
-    }, 
+    },
     claimMod: function(range, flagItem, creepName){
         if( range > 200 ) return Infinity;
         var flag = Game.flags[flagItem.name];
         if( flag.targetOf && _.some(flag.targetOf, {'creepType': 'claimer'}) ) return Infinity;
         if( range > 100 ) range = range * 3;
-        return range;        
+        return range;
     },
     reserveMod: function(range, flagItem, creepName){
         if( range > 200 ) return Infinity;
@@ -151,7 +151,7 @@ var mod = {
         let reservation = 0;
         if( flag.room && flag.room.controller && flag.room.controller.reservation ) {
             reservation = flag.room.controller.reservation.ticksToEnd;
-        } 
+        }
 
         return assigned + reservation + (range*10);
     },
@@ -162,7 +162,7 @@ var mod = {
             let assigned = flag.targetOf ? _.sum( flag.targetOf.map( t => t.creepType != 'privateer' || t.creepName == creepName ? 0 : t.carryCapacityLeft)) : 0;
             if( flag.room.sourceEnergyAvailable <= assigned ) return Infinity;
             return (range*range) / (flag.room.sourceEnergyAvailable - assigned);
-        } 
+        }
         return range;
     },
     hasInvasionFlag: function(){

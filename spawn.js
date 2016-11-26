@@ -1,16 +1,16 @@
 var mod = {
     extend: function(){
         Spawn.prototype.priority = [
-                Creep.setup.miner, 
+                Creep.setup.miner,
                 Creep.setup.mineralMiner,
-                Creep.setup.worker, 
+                Creep.setup.worker,
                 Creep.setup.hauler,
                 Creep.setup.upgrader,
                 Creep.setup.warrior,
                 Creep.setup.melee,
                 Creep.setup.ranger,
                 Creep.setup.healer,
-                Creep.setup.pioneer, 
+                Creep.setup.pioneer,
                 Creep.setup.privateer,
                 Creep.setup.claimer];
         Spawn.prototype.loop = function(){
@@ -28,7 +28,7 @@ var mod = {
         };
         Spawn.prototype.createCreepBySetup = function(setup){
             var params = setup.buildParams(this);
-            if( this.create(params.parts, params.name, params.setup) ) 
+            if( this.create(params.parts, params.name, params.setup) )
                 return params;
             return null;
         };
@@ -46,12 +46,12 @@ var mod = {
                     cost += PART_COSTS[part];
                 });
                 Population.registerCreep(
-                    newName, 
-                    type, 
-                    cost, 
-                    this.room, 
-                    this.name, 
-                    body, 
+                    newName,
+                    type,
+                    cost,
+                    this.room,
+                    this.name,
+                    body,
                     destiny);
                 if(CENSUS_ANNOUNCEMENTS) console.log( dye(CRAYON.system, this.pos.roomName  + ' &gt; ') + dye(CRAYON.birth, 'Good morning ' + newName + '!') );
                 return true;
@@ -59,7 +59,7 @@ var mod = {
             if( DEBUG ) console.log( dye(CRAYON.system, this.pos.roomName + ' &gt; ') + dye(CRAYON.error, 'Offspring failed: ' + translateErrorCode(newName) + '<br/> - body: ' + JSON.stringify(_.countBy(body)) + '<br/> - name: ' + name + '<br/> - type:  ' + type + '<br/> - destiny: ' + destiny) );
             return false;
         };
-        Spawn.loop = function(){      
+        Spawn.loop = function(){
             var loop = spawn => {
                 if(spawn.room.my) spawn.loop();
             }
