@@ -8,6 +8,7 @@ var mod = {
             Extensions: require(Memory.modules.extensions.path),
             Population: require(Memory.modules.population.path),
             FlagDir: require(Memory.modules.flagDir.path),
+            Task: require(Memory.modules.task.path),
             Tower: require(Memory.modules.tower.path),
             FLAG_COLOR: {
                 invade: { // destroy everything enemy in the room
