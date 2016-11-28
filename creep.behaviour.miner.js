@@ -9,6 +9,8 @@ module.exports = {
     },
     run: function(creep) {
         let source;
+        if(creep.data.destiny) 
+            creep.data.determinatedTarget = creep.data.destiny;
         if( !creep.data.determinatedTarget ) { // select source
             let notDeterminated = source => {
                 let hasThisSource = data => { return data.determinatedTarget == source.id };
@@ -25,7 +27,15 @@ module.exports = {
         }
 
         if( source ) {
-            if( !creep.action ) Population.registerAction(creep, Creep.action.harvesting, source);
+            if( creep.action && creep.action.name == "travelling" && creep.target ) {
+               creep.action.step(creep);
+            return;
+            }
+            if( creep.pos.roomName != source.pos.roomName ){
+                Creep.action.travelling.assign(creep, source);
+                return;
+            }
+            if( !creep.action != "travelling" ) Population.registerAction(creep, Creep.action.harvesting, source);
             if( !creep.data.determinatedSpot ) {
                 let args = {
                     spots: [{
