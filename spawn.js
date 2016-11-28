@@ -1,7 +1,6 @@
 var mod = {
     extend: function(){
         Spawn.prototype.priority = [
-                Creep.setup.miner,
                 Creep.setup.mineralMiner,
                 Creep.setup.worker,
                 Creep.setup.hauler,
