@@ -43,7 +43,7 @@ var mod = {
             if( name == newName || translateErrorCode(newName) === undefined ){
                 let cost = 0;
                 body.forEach(function(part){
-                    cost += PART_COSTS[part];
+                    cost += BODYPART_COST[part];
                 });
                 Population.registerCreep(
                     newName,

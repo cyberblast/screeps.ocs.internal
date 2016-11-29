@@ -124,7 +124,7 @@ var mod = {
                         let counts = _.countBy(this.body, 'type');
                         if( counts[WORK] && counts[CARRY])
                         {
-                            let weight = (counts[WORK]*PART_COSTS[WORK]) + (counts[CARRY]*PART_COSTS[CARRY]) + (counts[MOVE]*PART_COSTS[MOVE]);
+                            let weight = (counts[WORK]*BODYPART_COST[WORK]) + (counts[CARRY]*BODYPART_COST[CARRY]) + (counts[MOVE]*BODYPART_COST[MOVE]);
                             var entry = Population.setCreep({
                                 creepName: this.name,
                                 creepType: 'worker',
