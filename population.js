@@ -140,6 +140,23 @@ var mod = {
             this.typeWeight[entry.creepType] = entry.weight;
         else this.typeWeight[entry.creepType] += entry.weight;
     },
+    findCreepDestiny: function(creepType, destiny) {
+        let creepHasThisSource = data => { return data.creepType == creepType && data.destiny == destiny}; // "&& data.ttl > data.spawningTime" I think this is causing doubles for creeps still getting spawned 
+        let existingCreep = _.find(Memory.population, creepHasThisSource);
+        var existingQueuedCreep = 0;
+        let queuedCreepHasThisSource = data => { return data.setup == creepType && data.destiny == destiny};
+        for (var roomName in Game.rooms) {
+             var room = Game.rooms[roomName];
+             if (room.spawnQueueHigh && _.find(room.spawnQueueHigh, queuedCreepHasThisSource)){
+
+                 existingQueuedCreep++;
+             }
+             if (room.spawnQueueLow && _.find(room.spawnQueueLow, queuedCreepHasThisSource)){
+                 existingQueuedCreep++;
+             }
+        };
+        return existingCreep || existingQueuedCreep ? true : false;
+    },
     loop: function(){
         if(_.isUndefined(Memory.population)) {
             Memory.population = {};
