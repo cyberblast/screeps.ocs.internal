@@ -196,7 +196,7 @@ var mod = {
                                 that.all.filter(
                                     structure => (
                                         structure.hits < structure.hitsMax &&
-                                        ( !that.room.controller || !that.room.controller.my || structure.hits < MAX_REPAIR_LIMIT[that.room.controller.level] || structure.hits < (LIMIT_URGENT_REPAIRING + (3*(DECAY_AMOUNT[structure.structureType] || 0)))) &&
+                                        ( !that.room.my || structure.hits < MAX_REPAIR_LIMIT[that.room.controller.level] || structure.hits < (LIMIT_URGENT_REPAIRING + (3*(DECAY_AMOUNT[structure.structureType] || 0)))) &&
                                         ( !DECAYABLES.includes(structure.structureType) || (structure.hitsMax - structure.hits) > GAP_REPAIR_DECAYABLE ) &&
                                         ( structure.towers === undefined || structure.towers.length == 0) &&
                                         ( Memory.pavementArt[that.room.name] === undefined || Memory.pavementArt[that.room.name].indexOf('x'+structure.pos.x+'y'+structure.pos.y+'x') < 0 )
@@ -543,7 +543,7 @@ var mod = {
             'conserveForDefense': {
                 configurable: true,
                 get: function () {
-                    return (this.storage && this.storage.store.energy < MIN_STORAGE_ENERGY[this.controller.level]);
+                    return (this.my && this.storage && this.storage.store.energy < MIN_STORAGE_ENERGY[this.controller.level]);
                 }
             },
             'hostileThreatLevel': {
@@ -683,14 +683,25 @@ var mod = {
             }
         });
 
-        Room.getCostMatrix = function(roomName) {
-            var room = Game.rooms[roomName];
-            if(!room) return;
-            return room.costMatrix;
-        };
         Room.isMine = function(roomName) {
             let room = Game.rooms[roomName];
             return( room && room.controller && room.controller.my );
+        };
+        Room.isCenterRoom = function(roomName){
+            let parsed = /^[WE]([0-9]+)[NS]([0-9]+)$/.exec(roomName);
+            return (parsed[1] % 10 === 5) && (parsed[2] % 10 === 5);
+        };
+        Room.adjacentRooms = function(roomName){
+            let parts = roomName.split(/([N,E,S,W])/);
+            let dirs = ['N','E','S','W'];
+            let toggle = q => dirs[ (dirs.indexOf(q)+2) % 4 ];
+            let names = [];
+            for( let x = parseInt(parts[2])-1; x < parseInt(parts[2])+2; x++ ){
+                for( let y = parseInt(parts[4])-1; y < parseInt(parts[4])+2; y++ ){
+                    names.push( ( x < 0 ? toggle(parts[1]) + '0' : parts[1] + x ) + ( y < 0 ? toggle(parts[3]) + '0' : parts[3] + y ) );
+                }
+            }
+            return names;
         };
         Room.adjacentAccessibleRooms = function(roomName, diagonal = true) {
             let validRooms = [];
@@ -710,22 +721,6 @@ var mod = {
             _.forEach(exits, addValidRooms);
             return validRooms;
         };
-        Room.isCenterRoom = function(roomName){
-            let parsed = /^[WE]([0-9]+)[NS]([0-9]+)$/.exec(roomName);
-            return (parsed[1] % 10 === 5) && (parsed[2] % 10 === 5);
-        };
-        Room.adjacentRooms = function(roomName){
-            let parts = roomName.split(/([N,E,S,W])/);
-            let dirs = ['N','E','S','W'];
-            let toggle = q => dirs[ (dirs.indexOf(q)+2) % 4 ];
-            let names = [];
-            for( let x = parseInt(parts[2])-1; x < parseInt(parts[2])+2; x++ ){
-                for( let y = parseInt(parts[4])-1; y < parseInt(parts[4])+2; y++ ){
-                    names.push( ( x < 0 ? toggle(parts[1]) + '0' : parts[1] + x ) + ( y < 0 ? toggle(parts[3]) + '0' : parts[3] + y ) );
-                }
-            }
-            return names;
-        };
         Room.roomDistance = function(roomName1, roomName2, diagonal, continuous){
             if( diagonal ) return Game.map.getRoomLinearDistance(roomName1, roomName2, continuous);
             if( roomName1 == roomName2 ) return 0;
@@ -736,7 +731,11 @@ var mod = {
             //if( diagonal ) return Math.max(xDif, yDif); // count diagonal as 1
             return xDif + yDif; // count diagonal as 2
         };
-
+        Room.getCostMatrix = function(roomName) {
+            var room = Game.rooms[roomName];
+            if(!room) return;
+            return room.costMatrix;
+        };
         Room.validFields = function(roomName, minX, maxX, minY, maxY, checkWalkable = false, where = null) {
             let look;
             if( checkWalkable ) {
@@ -775,6 +774,17 @@ var mod = {
             let maxY = Math.min(...plusRangeY);
             return Room.validFields(args.roomName, minX, maxX, minY, maxY, args.checkWalkable, args.where);
         };
+
+        let find = Room.prototype.find;
+        Room.prototype.find = function (c, opt) {
+            if (_.isArray(c)) {
+                return _(c)
+                    .map(x => find.call(this, x, opt))
+                    .flatten()
+                    .value();
+            } else
+                return find.apply(this, arguments);
+        }
 
         Room.prototype.defenseMaxWeight = function(base, type) {
             let defenseMaxWeight = 0;
@@ -1057,8 +1067,8 @@ var mod = {
             }
         };
         Room.prototype.terminalBroker = function () {
+            if( !this.my || !this.terminal ) return;
             let that = this;
-            if( !this.terminal ) return;
             let mineral = this.mineralType;
             let transacting = false;
             if( this.terminal.store[mineral] >= MIN_MINERAL_SELL_AMOUNT ) {
@@ -1121,7 +1131,7 @@ var mod = {
             }
         };
         Room.prototype.springGun = function(){
-            if( this.situation.invasion ){
+            if( this.my && this.situation.invasion ){
                 let RCL = {
                     1: Creep.setup.melee,
                     2: Creep.setup.melee,
@@ -1230,8 +1240,8 @@ var mod = {
                 this.statistics();
             }
             catch(err) {
-                Game.notify('Error in room.js (Room.prototype.loop): ' + err);
-                console.log( dye(CRAYON.error, 'Error in room.js (Room.prototype.loop): <br/>' + JSON.stringify(err)));
+                Game.notify('Error in room.js (Room.prototype.loop) for "' + this.name + '" : ' + err.stack ? err + <br/> + err.stack : err);
+                console.log( dye(CRAYON.error, 'Error in room.js (Room.prototype.loop) for "' + this.name + '": <br/>' + JSON.stringify(err)));
             }
         };
     }
