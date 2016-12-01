@@ -1240,7 +1240,7 @@ var mod = {
                 this.statistics();
             }
             catch(err) {
-                Game.notify('Error in room.js (Room.prototype.loop) for "' + this.name + '" : ' + err.stack ? err + <br/> + err.stack : err);
+                Game.notify('Error in room.js (Room.prototype.loop) for "' + this.name + '" : ' + err.stack ? err + '<br/>' + err.stack : err);
                 console.log( dye(CRAYON.error, 'Error in room.js (Room.prototype.loop) for "' + this.name + '": <br/>' + JSON.stringify(err)));
             }
         };
