@@ -121,7 +121,7 @@ var Setup = function(typeName){
         let costs = 0;
         if( body ){
             body.forEach(function(part){
-                costs += PART_COSTS[part];
+                costs += BODYPART_COST[part];
             });
         }
         return costs;

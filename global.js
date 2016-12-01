@@ -71,16 +71,6 @@ var mod = {
                     }
                 }
             },
-            PART_COSTS: {
-                work: 100,
-                carry: 50,
-                move: 50,
-                attack: 80,
-                ranged_attack: 150,
-                heal: 250,
-                claim: 600,
-                tough: 10
-            },
             DECAY_AMOUNT: {
                 'rampart': RAMPART_DECAY_AMOUNT, // 300
                 'road': ROAD_DECAY_AMOUNT, // 100
