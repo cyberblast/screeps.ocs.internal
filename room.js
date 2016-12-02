@@ -1125,9 +1125,11 @@ var mod = {
                     !room._isReceivingEnergy
                 )
                 let targetRoom = _.min(_.filter(Game.rooms, requiresEnergy), 'storage.store.energy');
-                targetRoom._isReceivingEnergy = true;
-                let response = this.terminal.send('energy', 50000, targetRoom.name, 'have fun');
-                console.log(`Transfering 50k energy from room ${this.name} to ${targetRoom.name}. (${translateErrorCode(response)})`);
+                if( targetRoom ) {
+                    targetRoom._isReceivingEnergy = true;
+                    let response = this.terminal.send('energy', 50000, targetRoom.name, 'have fun');
+                    console.log(`Transfering 50k energy from room ${this.name} to ${targetRoom.name}. (${translateErrorCode(response)})`);
+                }
             }
         };
         Room.prototype.springGun = function(){
