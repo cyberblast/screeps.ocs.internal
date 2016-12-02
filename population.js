@@ -143,10 +143,10 @@ var mod = {
     findCreepDestiny: function(creepType, destiny) {
         let creepHasThisSource = data => { return data.creepType == creepType && data.destiny == destiny}; // "&& data.ttl > data.spawningTime" I think this is causing doubles for creeps still getting spawned 
         let existingCreep = _.find(Memory.population, creepHasThisSource);
-        var existingQueuedCreep = 0;
+        let existingQueuedCreep = 0;
         let queuedCreepHasThisSource = data => { return data.setup == creepType && data.destiny == destiny};
-        for (var roomName in Game.rooms) {
-             var room = Game.rooms[roomName];
+        for (let roomName in Game.rooms) {
+             let room = Game.rooms[roomName];
              if (room.spawnQueueHigh && _.find(room.spawnQueueHigh, queuedCreepHasThisSource)){
 
                  existingQueuedCreep++;
