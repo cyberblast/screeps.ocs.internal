@@ -1113,7 +1113,7 @@ var mod = {
                 }
             }
             if( this.controller.level == 8 && !transacting &&
-                this.storage.store.energy > MAX_STORAGE_ENERGY[this.controller.level] &&
+                this.storage.store.energy > MAX_STORAGE_ENERGY[this.controller.level] * 0.8 &&
                 this.terminal.store[mineral] < 150000 &&
                 this.terminal.store.energy > 50000 ){
                 let requiresEnergy = room => (
