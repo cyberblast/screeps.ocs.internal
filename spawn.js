@@ -34,6 +34,11 @@ var mod = {
         Spawn.prototype.createCreepByQueue = function(queue){
             if( !queue || queue.length == 0 ) return null;
             let params = queue.shift();
+            var completeName;
+            for (var son = 1; completeName == null || Game.creeps[completeName]; son++) {
+             completeName = params.name + '-' + son;
+            }
+            params.name = completeName;
             return this.create(params.parts, params.name, params.setup, params.destiny);
         };
         Spawn.prototype.create = function(body, name, type, destiny){
