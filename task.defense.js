@@ -5,7 +5,6 @@ var mod = {
             let flag = Game.flags[flagEntry.name];
             let destiny = flagEntry.name;
             let existingWarrior = Population.findCreepDestiny("warrior", destiny);
-            console.log(existingWarrior);
             if (!existingWarrior) {
                 let spawnRoomName = Room.bestSpawnRoomFor(flag);
                 let setup = 'warrior';
