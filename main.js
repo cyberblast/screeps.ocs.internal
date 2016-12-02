@@ -107,7 +107,7 @@ module.exports.loop = function () {
 
     Creep.loop();
     if ( Game.time % SPAWN_INTERVAL == 0 ) {
-        Task.exploit.checkForRequiredCreeps();
+        Task.defense.checkForRequiredCreeps();
     }
     Spawn.loop();
 
