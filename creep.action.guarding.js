@@ -2,7 +2,7 @@ var action = new Creep.Action('guarding');
 action.isAddableAction = function(){ return true; };
 action.isAddableTarget = function(){ return true; };
 action.newTarget = function(creep){
-    var flag = Game.flags[creep.destiny];
+    var flag = Game.flags[creep.data.destiny];
     if ( !flag ) {
         flag = FlagDir.find(FLAG_COLOR.defense, creep.pos, false, FlagDir.rangeMod, {
             rangeModPerCrowd: 400
