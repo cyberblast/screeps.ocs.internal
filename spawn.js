@@ -34,6 +34,19 @@ var mod = {
         Spawn.prototype.createCreepByQueue = function(queue){
             if( !queue || queue.length == 0 ) return null;
             let params = queue.shift();
+            let cost = 0;
+            params.parts.forEach(function(part){
+                cost += BODYPART_COST[part];
+            });
+            // wait with spawn until enough resources are available
+            if (cost > this.room.energyAvailable) {
+                if (cost > this.room.energyCapacityAvailable) {
+                    console.log( dye(CRAYON.system, this.pos.roomName + ' &gt; ') + dye(CRAYON.error, 'Queued creep too big for room: ' + JSON.stringify(params) ) );
+                    return false;
+                }
+                queue.unshift(params);
+                return true;
+            }
             var completeName;
             for (var son = 1; completeName == null || Game.creeps[completeName]; son++) {
              completeName = params.name + '-' + son;
