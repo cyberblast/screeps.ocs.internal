@@ -367,7 +367,7 @@ var mod = {
                 get: function() {
                     if( _.isUndefined(this._constructionSites) ) {
                         let sites = this.find(FIND_MY_CONSTRUCTION_SITES);
-                        let siteOrder = [STRUCTURE_SPAWN,STRUCTURE_EXTENSION,STRUCTURE_LINK,STRUCTURE_STORAGE,STRUCTURE_TOWER,STRUCTURE_ROAD,STRUCTURE_CONTAINER,STRUCTURE_EXTRACTOR,STRUCTURE_WALL,STRUCTURE_RAMPART];
+                        let siteOrder = [STRUCTURE_SPAWN,STRUCTURE_EXTENSION,STRUCTURE_LINK,STRUCTURE_STORAGE,STRUCTURE_TERMINAL,STRUCTURE_TOWER,STRUCTURE_ROAD,STRUCTURE_CONTAINER,STRUCTURE_EXTRACTOR,STRUCTURE_WALL,STRUCTURE_RAMPART];
                         let getOrder = site => {
                             let o = siteOrder.indexOf(site.structureType);
                             return o < 0 ? 100 : o;
@@ -936,8 +936,9 @@ var mod = {
                 structure => structure.structureType == STRUCTURE_CONTAINER
             );
             let add = (cont) => {
+                let minerals = this.find(FIND_MINERALS);
                 let source = cont.pos.findInRange(this.sources, 2);
-                let mineral = cont.pos.findInRange(this.minerals, 2);
+                let mineral = cont.pos.findInRange(minerals, 2);
                 this.memory.container.push({
                     id: cont.id,
                     source: (source.length > 0),
