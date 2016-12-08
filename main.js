@@ -4,6 +4,7 @@ module.exports.loop = function () {
     var params = require('./parameter');
     var glob = require('./global');
     glob.init(params);
+    if (Memory.modules === undefined) loadPaths();
     Extensions.extend();
     Creep.extend();
     Room.extend();
