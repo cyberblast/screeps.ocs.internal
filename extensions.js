@@ -184,6 +184,17 @@ var mod = {
                 Memory.controllers[this.id] = value;
             }
         });
+        Object.defineProperty(StructureController.prototype, 'accessibleFields', {
+            configurable: true,
+            get: function() {
+                if( _.isUndefined(this.memory.accessibleFields) ) {
+                    var fields = this.room.lookForAtArea(LOOK_TERRAIN, this.pos.y-1, this.pos.x-1, this.pos.y+1, this.pos.x+1, true);
+                    let walls = _.countBy( fields , "terrain" ).wall;
+                    this.memory.accessibleFields = walls === undefined ? 9 : 9-walls;
+                }
+                return this.memory.accessibleFields;
+            }
+        });
         Object.defineProperty(StructureStorage.prototype, 'sum', {
             configurable: true,
             get: function() {
