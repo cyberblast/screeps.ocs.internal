@@ -11,11 +11,11 @@ setup.maxCount = function(room){
     return max;
 };
 setup.default = {
-    fixedBody: [WORK, WORK, WORK, CARRY, MOVE], 
-    multiBody: [WORK, WORK, WORK, MOVE], 
-    minAbsEnergyAvailable: 750, 
+    fixedBody: [WORK, WORK, WORK, CARRY, MOVE],
+    multiBody: [WORK, WORK, WORK, MOVE],
+    minAbsEnergyAvailable: 750,
     minEnergyAvailable: 0.3,
-    maxMulti: 11, 
+    maxMulti: 11,
     minMulti: 1,
     maxCount: setup.maxCount
 };

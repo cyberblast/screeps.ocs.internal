@@ -84,7 +84,7 @@ var mod = {
                     else if( this.memory.terminal ) {
                         this._container = Game.getObjectById(this.memory.terminal);
                         if( !this._container ) delete this.memory.terminal;
-                    }                     
+                    }
                     else if( this.memory.container ) {
                         this._container = Game.getObjectById(this.memory.container);
                         if( !this._container ) delete this.memory.container;
@@ -92,7 +92,7 @@ var mod = {
                 }
                 return this._container;
             }
-        });        
+        });
          Object.defineProperty(Mineral.prototype,'memory', {
             configurable: true,
             get: function() {
@@ -214,7 +214,7 @@ var mod = {
                 return this._sum;
             }
         });
-        
+
         if( Memory.pavementArt === undefined ) Memory.pavementArt = {};
     }
 }

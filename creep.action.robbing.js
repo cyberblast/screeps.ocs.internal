@@ -5,7 +5,7 @@ action.isValidAction = function(creep){
     return ( creep.sum < creep.carryCapacity && (FlagDir.find(FLAG_COLOR.invade.robbing, creep.pos, true) != null) );
 };
 action.isValidTarget = function(target){
-    return ( target.store && _.sum(target.store) > 20 ) || ( target.energy && target.energy > 20 );
+    return ( target.store && _.sum(target.store) > 20 ) || ( target.energy && target.energy > 20 ) || ( target.mineralAmount && target.mineralAmount > 20 );
 };  
 action.newTarget = function(creep){
     let that = this;
@@ -25,6 +25,8 @@ action.work = function(creep){
             if( creep.target.store[type] > 0  )
                 ret = creep.withdraw(creep.target, type);
         }
+    } else if ( creep.target.structureType == STRUCTURE_LAB && creep.target.mineralAmount > 0) {
+        ret = creep.withdraw(creep.target, creep.target.mineralType);
     } else if ( creep.target.energy ) {
         ret = creep.withdraw(creep.target, 'energy');
     }
