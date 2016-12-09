@@ -57,15 +57,17 @@ var mod = {
                 Memory.sources[this.id] = value;
             }
         });
-        Object.defineProperty(Source.prototype, 'accessibleFields', {
+        Object.defineProperty(RoomObject.prototype, 'accessibleFields', {
             configurable: true,
             get: function() {
-                if( _.isUndefined(this.memory.accessibleFields) ) {
+                if ( this.memory && !_.isUndefined(this.memory.accessibleFields) ) {
+                    return this.memory.accessibleFields;
+                } else {
                     var fields = this.room.lookForAtArea(LOOK_TERRAIN, this.pos.y-1, this.pos.x-1, this.pos.y+1, this.pos.x+1, true);
                     let walls = _.countBy( fields , "terrain" ).wall;
-                    this.memory.accessibleFields = walls === undefined ? 9 : 9-walls;
+                    var accessibleFields = walls === undefined ? 9 : 9-walls;
+                    return (this.memory) ? this.memory.accessibleFields = accessibleFields : accessibleFields
                 }
-                return this.memory.accessibleFields;
             }
         });
         Object.defineProperty(Source.prototype, 'container', {
@@ -112,18 +114,6 @@ var mod = {
                     throw new Error('Could not set memory extension for minerals');
                 }
                 Memory.minerals[this.id] = value;
-            }
-        });
-
-        Object.defineProperty(Mineral.prototype, 'accessibleFields', {
-            configurable: true,
-            get: function() {
-                if( _.isUndefined(this.memory.accessibleFields) ) {
-                    var fields = this.room.lookForAtArea(LOOK_TERRAIN, this.pos.y-1, this.pos.x-1, this.pos.y+1, this.pos.x+1, true);
-                    let walls = _.countBy( fields , "terrain" ).wall;
-                    this.memory.accessibleFields = walls === undefined ? 9 : 9-walls;
-                }
-                return this.memory.accessibleFields;
             }
         });
         Object.defineProperty(Mineral.prototype, 'container', {
