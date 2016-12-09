@@ -166,22 +166,22 @@ var mod = {
         Object.defineProperty(StructureController.prototype, 'memory', {
             configurable: true,
             get: function() {
-                if(_.isUndefined(Memory.sources)) {
-                    Memory.sources = {};
+                if(_.isUndefined(Memory.controllers)) {
+                    Memory.controllers = {};
                 }
-                if(!_.isObject(Memory.sources)) {
+                if(!_.isObject(Memory.controllers)) {
                     return undefined;
                 }
-                return Memory.sources[this.id] = Memory.sources[this.id] || {};
+                return Memory.controllers[this.id] = Memory.controllers[this.id] || {};
             },
             set: function(value) {
-                if(_.isUndefined(Memory.sources)) {
-                    Memory.sources = {};
+                if(_.isUndefined(Memory.controllers)) {
+                    Memory.controllers = {};
                 }
-                if(!_.isObject(Memory.sources)) {
+                if(!_.isObject(Memory.controllers)) {
                     throw new Error('Could not set memory extension for storage');
                 }
-                Memory.sources[this.id] = value;
+                Memory.controllers[this.id] = value;
             }
         });
         Object.defineProperty(StructureStorage.prototype, 'sum', {
