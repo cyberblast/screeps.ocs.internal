@@ -366,13 +366,7 @@ var mod = {
                 configurable: true,
                 get: function() {
                     if( _.isUndefined(this._constructionSites) ) {
-                        let sites = this.find(FIND_MY_CONSTRUCTION_SITES);
-                        let siteOrder = [STRUCTURE_SPAWN,STRUCTURE_EXTENSION,STRUCTURE_LINK,STRUCTURE_STORAGE,STRUCTURE_TERMINAL,STRUCTURE_TOWER,STRUCTURE_ROAD,STRUCTURE_CONTAINER,STRUCTURE_EXTRACTOR,STRUCTURE_WALL,STRUCTURE_RAMPART];
-                        let getOrder = site => {
-                            let o = siteOrder.indexOf(site.structureType);
-                            return o < 0 ? 100 : o;
-                        };
-                        this._constructionSites = _.sortBy(sites, getOrder);
+                        this._constructionSites = this.find(FIND_MY_CONSTRUCTION_SITES);
                     }
                     return this._constructionSites;
                 }
@@ -859,10 +853,10 @@ var mod = {
         };
 
         Room.prototype.getBestConstrucionSiteFor = function(creep) {
-            let sites = this.find(FIND_MY_CONSTRUCTION_SITES);
+            let sites = this.constructionSites;
             let siteOrder = [STRUCTURE_SPAWN,STRUCTURE_EXTENSION,STRUCTURE_LINK,STRUCTURE_STORAGE,STRUCTURE_TOWER,STRUCTURE_ROAD,STRUCTURE_CONTAINER,STRUCTURE_EXTRACTOR,STRUCTURE_WALL,STRUCTURE_RAMPART];
             let getOrder = site => {
-                let o = siteOrder.indexOf(site.structureType) * 100;
+                let o = (siteOrder.indexOf(site.structureType) - (site.progress / site.progressTotal)) * 100;
                 o = o + creep.pos.getRangeTo(site);
                 return o < 0 ? Infinity : o;
             };
