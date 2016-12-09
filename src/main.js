@@ -1,4 +1,5 @@
 /* https://github.com/cyberblast/screeps.ocs.internal */
+require('screeps-perf')();
 
 module.exports.loop = function () {
     var params = require('./parameter');
