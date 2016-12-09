@@ -1,4 +1,4 @@
-/* https://github.com/ScreepsGamers/screeps.behaviour-action-pattern */
+/* https://github.com/cyberblast/screeps.ocs.internal */
 
 module.exports.loop = function () {
     var params = require('./parameter');
