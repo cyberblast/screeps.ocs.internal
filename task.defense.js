@@ -8,16 +8,17 @@ var mod = {
             if (!existingWarrior) {
                 let spawnRoomName = Room.bestSpawnRoomFor(flag);
                 let setup = 'warrior';
-                let parts = [RANGED_ATTACK,MOVE,RANGED_ATTACK,MOVE,HEAL,MOVE];
-//    multiBody: [RANGED_ATTACK, MOVE],                
+                let fixedBody = [];
+                let multiBody = [TOUGH, ATTACK, RANGED_ATTACK, HEAL, MOVE, MOVE];
+                let body = Task.bodyparts(Game.rooms[spawnRoomName], fixedBody, multiBody);
                 let name = setup + '-' + flag.name;
                 Game.rooms[spawnRoomName].spawnQueueHigh.push({
-                    parts: parts,
+                    parts: body,
                     name: name,
                     setup: setup,
                     destiny: destiny
                 });
-                console.log(destiny + ": " + flag.name + " - " + spawnRoomName);
+                console.log(destiny + ": " + flag.name + " - " + spawnRoomName + " : " + JSON.stringify(Game.rooms[spawnRoomName].spawnQueueHigh[Game.rooms[spawnRoomName].spawnQueueHigh.length-1]));
             }
         });
     }
