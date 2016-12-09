@@ -13,7 +13,8 @@ var mod = {
     multi: function (room, fixedBody, multiBody) {
         let fixedCosts = Task.bodyCosts(fixedBody);
         let multiCosts = Task.bodyCosts(multiBody);
-        return Math.floor((room.energyCapacityAvailable - fixedCosts) / multiCosts);
+        let max = Math.floor((50 - fixedBody.length) / multiBody.length);
+        return _.min([Math.floor((room.energyCapacityAvailable - fixedCosts) / multiCosts), max]);
     },
     bodyparts: function (room, fixedBody, multiBody) {
         var parts = [];
@@ -24,8 +25,6 @@ var mod = {
         for (let iPart = 0; iPart < fixedBody.length; iPart++) {
             parts[parts.length] = fixedBody[iPart];
         }
-        if (parts.length > 50) 
-            parts.length = 50;
         /*if( this.sortedParts ) {
             parts.sort(this.partsComparator);
             if( this.mixMoveParts )
