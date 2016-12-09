@@ -7,13 +7,13 @@ action.getFlaggedStructure = function(flagColor, pos){
     let target = [];
     let checkFlag = flagEntry => {
         var flag = Game.flags[flagEntry.name];
-        if( flag && flag.room !== undefined ){ // room is visible
+        if( flag && flag.pos.roomName == pos.roomName && flag.room !== undefined ){ // room is visible
             var targets = flag.room.lookForAt(LOOK_STRUCTURES, flag.pos.x, flag.pos.y);
             if( targets && targets.length > 0){
                 addTarget = structure => {
                     structure.destroyFlag = flag;
                     target.push(structure)
-                } 
+                }
                 targets.forEach(addTarget);
             }
             else { // remove flag. try next flag
@@ -35,63 +35,65 @@ action.newTarget = function(creep){
     var flag = FlagDir.find(FLAG_COLOR.invade, creep.pos);
     if( flag && (!flag.room || flag.pos.roomName != creep.pos.roomName)){
         Population.registerCreepFlag(creep, flag);
-        return flag; // other room    
+        return flag; // other room
     }
     if( !flag ){
-        // unregister 
+        // unregister
         creep.action = null;
         delete creep.data.actionName;
         delete creep.data.targetId;
         return;
     }
-    if( !flag.room.controller || !flag.room.controller.my ) {        
+
+    if( !flag.room.controller || !flag.room.controller.my ) {
         //attack healer
-        var target = creep.pos.findClosestByRange(FIND_HOSTILE_CREEPS, {
-            filter: function(hostile){ return _.some(hostile.body, {'type': HEAL}); } 
+        var target = creep.pos.findClosestByRange(creep.room.hostiles, {
+            function(hostile){ return _.some(hostile.body, {'type': HEAL}); }
         });
-        if( target ) 
+        if( target )
             return target;
         //attack attacker
-        target = creep.pos.findClosestByRange(FIND_HOSTILE_CREEPS, {
-            filter: function(hostile){ return _.some(hostile.body, function(part){return part.type == ATTACK || part.type == RANGED_ATTACK}); } 
+        target = creep.pos.findClosestByRange(creep.room.hostiles, {
+            function(hostile){ return _.some(hostile.body, function(part){return part.type == ATTACK || part.type == RANGED_ATTACK}); }
         });
-        if( target ) 
+        if( target )
             return target;
+
         // attack tower
-        target = creep.pos.findClosestByPath(FIND_HOSTILE_STRUCTURES, {
+       target = creep.pos.findClosestByPath(FIND_HOSTILE_STRUCTURES, {
             filter: (structure) => {
                 return structure.structureType == STRUCTURE_TOWER;
             }
         });
-        if( target ) 
+        if( target )
             return target;
         // attack remaining creeps
-        target = creep.pos.findClosestByRange(FIND_HOSTILE_CREEPS);
-        if( target ) 
-            return target;        
+        target = creep.pos.findClosestByRange(creep.room.hostiles);
+        if( target )
+            return target;
         // attack spawn
         target = creep.pos.findClosestByPath(FIND_HOSTILE_STRUCTURES, {
             filter: (structure) => {
                 return structure.structureType == STRUCTURE_SPAWN;
             }
         });
-        if( target ) 
-            return target;        
+        if( target )
+            return target;
         // attack structures
         target = creep.pos.findClosestByPath(FIND_HOSTILE_STRUCTURES, {
-            filter: (structure) => {
+            filter : (structure) => {
                 return structure.structureType != STRUCTURE_CONTROLLER;
             }
         });
-        if( target ) 
-            return target;        
+        if( target )
+            return target;
         // attack construction sites
         target = creep.pos.findClosestByPath(FIND_HOSTILE_CONSTRUCTION_SITES);
-        if( target ) 
+        if( target )
             return target;
     }
     // no target found
-    flag.remove();    
+    flag.remove();
     return null;
 };
 action.step = function(creep){
@@ -106,16 +108,22 @@ action.run = {
             if( creep.target instanceof Flag ){
                 creep.drive( creep.target.pos, 1, 1, Infinity);
                 return;
-            }        
+            } else if( creep.target instanceof ConstructionSite ){
+                creep.drive( creep.target.pos, 0, 0, Infinity);
+                return;
+            }
             creep.moveTo(creep.target, {reusePath: 0});
         }
         if( !creep.target.my )
             creep.attacking = creep.attack(creep.target) == OK;
-    }, 
-    ranger: function(creep){ 
-        if( !creep.flee ){    
-            if( creep.target instanceof Flag){
+    },
+    ranger: function(creep){
+        if( !creep.flee ){
+            if( creep.target instanceof Flag ){
                 creep.drive( creep.target.pos, 1, 1, Infinity);
+                return;
+            } else if( creep.target instanceof ConstructionSite ){
+                creep.drive( creep.target.pos, 0, 0, Infinity);
                 return;
             }
             var range = creep.pos.getRangeTo(creep.target);
@@ -140,7 +148,7 @@ action.run = {
         if(targets.length > 0){
             creep.attackingRanged = creep.rangedAttack(targets[0]) == OK;
         }
-    }, 
+    },
     warrior: function(creep){
         let range = creep.pos.getRangeTo(creep.target);
         let hasAttack = creep.hasActiveAttackPart();
@@ -150,12 +158,18 @@ action.run = {
                 if( creep.target instanceof Flag ){
                     creep.drive( creep.target.pos, 1, 1, Infinity);
                     return;
+                } else if( creep.target instanceof ConstructionSite ){
+                    creep.drive( creep.target.pos, 0, 0, Infinity);
+                    return;
                 }
                 let path = creep.room.findPath(creep.pos, creep.target.pos);
                 if( path && path.length > 0 ) creep.move(path[0].direction);
             } else if( hasRangedAttack ) {
-                if( creep.target instanceof Flag){
+                if( creep.target instanceof Flag ){
                     creep.drive( creep.target.pos, 1, 1, Infinity);
+                    return;
+                } else if( creep.target instanceof ConstructionSite ){
+                    creep.drive( creep.target.pos, 0, 0, Infinity);
                     return;
                 }
                 if( range > 3 ){
@@ -169,7 +183,7 @@ action.run = {
         }
         // attack
         if( hasAttack ){
-            let attacking = creep.attack(creep.target);        
+            let attacking = creep.attack(creep.target);
             if( attacking == ERR_NOT_IN_RANGE ) {
                 let targets = creep.pos.findInRange(FIND_HOSTILE_CREEPS, 1);
                 if( targets.length > 0)
@@ -196,6 +210,6 @@ action.run = {
     }
 };
 action.onAssignment = function(creep, target) {
-    if( SAY_ASSIGNMENT ) creep.say(String.fromCharCode(9876), SAY_PUBLIC); 
+    if( SAY_ASSIGNMENT ) creep.say(String.fromCharCode(9876), SAY_PUBLIC);
 };
 module.exports = action;

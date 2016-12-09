@@ -1,12 +1,12 @@
-/* https://github.com/ScreepsGamers/screeps.behaviour-action-pattern */ 
+/* https://github.com/ScreepsGamers/screeps.behaviour-action-pattern */
 
 module.exports.loop = function () {
     var params = require('./parameter');
     var glob = require('./global');
     glob.init(params);
-    Extensions.extend();  
-    Creep.extend();  
-    Room.extend();  
+    Extensions.extend();
+    Creep.extend();
+    Room.extend();
     Spawn.extend();
     FlagDir.extend();
 
@@ -20,9 +20,7 @@ module.exports.loop = function () {
     _.forEach(Game.rooms, roomLoop);
 
     Creep.loop();
-
-    if( Game.time % SPAWN_INTERVAL == 0 )   
-        Spawn.loop(); 
+    Spawn.loop();
 
     if( Memory.statistics && Memory.statistics.tick && Memory.statistics.tick + TIME_REPORT <= Game.time )
         require('./statistics').loop();
@@ -40,3 +38,5 @@ module.exports.loop = function () {
 
 // move Creep
 // Game.creeps['ranger-900-1'].move(RIGHT)
+
+// Game.rooms['W44N3'].spawnQueueLow.push({parts:[MOVE],name:'max',setup:'worker'})

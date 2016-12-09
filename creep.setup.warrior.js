@@ -15,7 +15,7 @@ setup.maxCount = function(room){
     let distance, flag;
     let calcMax = flagEntry => {
         distance = routeRange(room.name, flagEntry.roomName);
-        if( distance > maxRange ) 
+        if( distance > maxRange )
             return;
         flag = Game.flags[flagEntry.name];
         if( !flag.targetOf || flag.targetOf.length == 0 )
@@ -27,18 +27,18 @@ setup.maxCount = function(room){
 };
 
 setup.small = {
-    fixedBody: [ATTACK,RANGED_ATTACK,HEAL,MOVE,MOVE,MOVE], 
-    multiBody: [ATTACK, RANGED_ATTACK, MOVE, MOVE], 
-    minAbsEnergyAvailable: 1000, 
+    fixedBody: [ATTACK,RANGED_ATTACK,HEAL,MOVE,MOVE,MOVE],
+    multiBody: [ATTACK, RANGED_ATTACK, MOVE, MOVE],
+    minAbsEnergyAvailable: 1000,
     minEnergyAvailable: 0.5,
     maxMulti: 3,
-    maxCount: setup.maxCount, 
+    maxCount: setup.maxCount,
     maxWeight: null//(room) => room.defenseMaxWeight(1750, 'warrior')
 };
 setup.mid = {
-    fixedBody: [], 
-    multiBody: [TOUGH, ATTACK, RANGED_ATTACK, HEAL, MOVE, MOVE], 
-    minAbsEnergyAvailable: 1500, 
+    fixedBody: [],
+    multiBody: [TOUGH, ATTACK, RANGED_ATTACK, HEAL, MOVE, MOVE],
+    minAbsEnergyAvailable: 1500,
     minEnergyAvailable: 0.5,
     maxMulti: 5, // 7
     minMulti: 3,
@@ -46,9 +46,9 @@ setup.mid = {
     maxWeight: null//(room) => room.defenseMaxWeight(2000, 'warrior')
 };
 setup.big = {
-    fixedBody: [], 
-    multiBody: [TOUGH, ATTACK, RANGED_ATTACK, HEAL, MOVE, MOVE], 
-    minAbsEnergyAvailable: 2000,  
+    fixedBody: [],
+    multiBody: [TOUGH, ATTACK, RANGED_ATTACK, HEAL, MOVE, MOVE],
+    minAbsEnergyAvailable: 2000,
     minEnergyAvailable: 0.5,
     maxMulti:  7,
     minMulti: 5,
