@@ -1,14 +1,14 @@
 var mod = {
     init: function(params){
-        Creep.extend = require('./creep').extend;
-        Room.extend = require('./room').extend;
-        Spawn.extend = require('./spawn').extend;
+        Creep.extend = require(Memory.modules.creep.path).extend;
+        Room.extend = require(Memory.modules.room.path).extend;
+        Spawn.extend = require(Memory.modules.spawn.path).extend;
         _.assign(global, params);
         _.assign(global, {
-            Extensions: require('./extensions'),
-            Population: require('./population'),
-            FlagDir: require('./flagDir'),
-            Tower: require('./tower'),
+            Extensions: require(Memory.modules.extensions.path),
+            Population: require(Memory.modules.population.path),
+            FlagDir: require(Memory.modules.flagDir.path),
+            Tower: require(Memory.modules.tower.path),
             FLAG_COLOR: {
                 invade: { // destroy everything enemy in the room
                     color: COLOR_RED,
@@ -216,102 +216,6 @@ var mod = {
             },
             unpave: function(roomname){
 
-            },            
-            loadPaths: function(){
-                Memory.modules = {
-                    action: {},
-                    behaviour: {},
-                    setup: {},
-                }
-                var actionList = [
-                    'building',
-                    'charging',
-                    'claiming',
-                    'reserving',
-                    'defending',
-                    'dismantling',
-                    'feeding',
-                    'fortifying',
-                    'fueling',
-                    'guarding',
-                    'harvesting',
-                    'healing',
-                    'idle',
-                    'invading',
-                    'picking',
-                    'reallocating',
-                    'repairing',
-                    'robbing',
-                    'travelling',
-                    'storing',
-                    'uncharging',
-                    'upgrading',
-                    'withdrawing'
-                ];
-                _.forEach(actionList, function(action) {
-                    var path = './custom.creep.action.' + action;
-                    try {
-                        var a = require(path);
-                    }
-                    catch (e) {
-                        path = './creep.action.' + action
-                    }
-                    finally {
-                        Memory.modules.action[action] = path;
-                    }
-                });
-                var behaviourList = [
-                    'claimer',
-                    'hauler',
-                    'healer',
-                    'melee',
-                    'miner',
-                    'mineralMiner',
-                    'pioneer',
-                    'privateer',
-                    'ranger',
-                    'upgrader',
-                    'warrior',
-                    'worker'
-                ];
-                _.forEach(behaviourList, function(behaviour) {
-                    var path = './custom.creep.behaviour.' + behaviour;
-                    try {
-                        var a = require(path);
-                    }
-                    catch (e) {
-                        path = './creep.behaviour.' + behaviour
-                    }
-                    finally {
-                        Memory.modules.behaviour[behaviour] = path;
-                    }
-                });
-                var setupList = [
-                    'claimer',
-                    'hauler',
-                    'healer',
-                    'melee',
-                    'miner',
-                    'mineralMiner',
-                    'pioneer',
-                    'privateer',
-                    'ranger',
-                    'upgrader',
-                    'warrior',
-                    'worker'
-                ];
-                _.forEach(setupList, function(setup) {
-                    var path = './custom.creep.setup.' + setup;
-                    try {
-                        var a = require(path);
-                    }
-                    catch (e) {
-                        path = './creep.setup.' + setup
-                    }
-                    finally {
-                        Memory.modules.setup[setup] = path;
-                    }
-                });
             }
         });
     }
