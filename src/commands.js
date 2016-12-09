@@ -7,9 +7,9 @@ _.forEach(Memory.rooms, r => delete r.roadConstructionTrace);
 _.forEach(Game.constructionSites, s => s.remove());
 
 // spawn something...
-Game.spawns['<spawnName>'].createCreepBySetup(Creep.setup.worker);
+Game.spawns['<spawnName>'].createCreepBySetup(Creep.setup.worker)
 // or
-Game.rooms['<roomName>'].spawnQueueLow.push({parts:[MOVE,WORK,CARRY],name:'max',setup:'worker'});
+Game.rooms['<roomName>'].spawnQueueLow.push({parts:[MOVE,WORK,CARRY],name:'max',setup:'worker'})
 
 // move Creep
-Game.creeps['<creepName>'].move(RIGHT);
+Game.creeps['<creepName>'].move(RIGHT)

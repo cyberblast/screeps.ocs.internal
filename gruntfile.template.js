@@ -1,31 +1,7 @@
-module.exports = function(grunt) { // NOSONAR
-    grunt.loadNpmTasks('grunt-contrib-clean');
-    grunt.loadNpmTasks('grunt-contrib-copy');
-    grunt.loadNpmTasks('grunt-webpack');
-    grunt.loadNpmTasks('grunt-screeps');
+module.exports = function(grunt) {
+    require('load-grunt-tasks')(grunt);
 
     grunt.initConfig({
-        clean: ['dist/'],
-        copy: {
-            main: {
-                expand: true,
-                cwd: 'node_modules/screeps-perf/',
-                src: '*.js',
-                dest: 'src/',
-                flatten: true,
-                filter: 'isFile'
-            }
-        },
-        webpack: {
-            main: {
-                entry: './src/main.js',
-                output: {
-                    path: 'dist/',
-                    filename: 'main.js',
-                    libraryTarget: 'commonjs2'
-                }
-            }
-        },
         screeps: {
             options: {
                 email: 'YOUR_EMAIL',
@@ -36,9 +12,41 @@ module.exports = function(grunt) { // NOSONAR
             dist: {
                 src: ['dist/main.js']
             }
+        },
+        clean: ['dist/'],
+        webpack: {
+            main: {
+                entry: './src/main.js',
+                output: {
+                    path: 'dist/',
+                    filename: 'main.js',
+                    libraryTarget: 'commonjs2'
+                },
+                module: {
+                    loaders: [{
+                        test: /\.js$/,
+                        loader: 'babel-loader',
+                        query: {
+                            presets: [
+                                require.resolve('babel-preset-es2015')
+                            ]
+                        }
+                    }]
+                }
+            }
+        },
+        uglify: {
+            my_target: {
+                files: [{
+                    expand: true,
+                    cwd: 'dist',
+                    src: 'main.js',
+                    dest: 'dist'
+                }]
+            }
         }
     });
 
-    grunt.registerTask('default', ['clean', 'copy', 'webpack']);
-    grunt.registerTask('deploy', ['clean', 'copy', 'webpack', 'screeps']);
+    grunt.registerTask('default', ['clean', 'webpack', 'uglify']);
+    grunt.registerTask('deploy', ['clean', 'webpack', 'uglify', 'screeps']);
 };
