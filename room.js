@@ -679,7 +679,7 @@ var mod = {
 
         Room.isMine = function(roomName) {
             let room = Game.rooms[roomName];
-            return( room && room.controller && room.controller.my );
+            return( room && room.my );
         };
         Room.isCenterRoom = function(roomName){
             let parsed = /^[WE]([0-9]+)[NS]([0-9]+)$/.exec(roomName);
@@ -866,7 +866,7 @@ var mod = {
         Room.prototype.roadConstruction = function( minDeviation = ROAD_CONSTRUCTION_MIN_DEVIATION ) {
 
             if( !ROAD_CONSTRUCTION_ENABLE || Game.time % ROAD_CONSTRUCTION_INTERVAL != 0 ) return;
-            if( _.isNumber(ROAD_CONSTRUCTION_ENABLE) && ROAD_CONSTRUCTION_ENABLE < this.controller.level) return;
+            if( _.isNumber(ROAD_CONSTRUCTION_ENABLE) && (!this.my || ROAD_CONSTRUCTION_ENABLE < this.controller.level)) return;
 
             let data = Object.keys(this.roadConstructionTrace)
                 .map( k => {
