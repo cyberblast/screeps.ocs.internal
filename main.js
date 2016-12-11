@@ -96,8 +96,7 @@ module.exports.loop = function () {
     Spawn.extend();
     FlagDir.extend();
 
-    Task.defense.register();
-
+    Task.register();
     FlagDir.loop();
     Population.loop();
 

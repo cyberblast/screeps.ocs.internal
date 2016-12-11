@@ -36,16 +36,16 @@ var mod = {
             }
         }*/
         return parts;
-    }/*,
-    loop: function () {
+    },
+    register: function () {
         let tasks = [
             Task.defense,
-            Task.exploit
+            //Task.exploit
         ];
         var loop = task => {
-            task.checkForRequiredCreeps();
+            task.register();
         }
         _.forEach(tasks, loop);
-    }*/
+    }
 };
 module.exports = mod;
