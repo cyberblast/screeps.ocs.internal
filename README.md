@@ -5,4 +5,5 @@
 [Alliance map](http://www.leagueofautomatednations.com/a/OCS)  
 [Public repository](https://github.com/ScreepsOCS/screeps.behaviour-action-pattern)  
 [Internal repository](https://github.com/cyberblast/screeps.ocs.internal)  
+[Internal Package repository](https://github.com/cyberblast/screeps.ocs.internal.package)  
 [mail](mailto://ocs@cyberblast.org)  
