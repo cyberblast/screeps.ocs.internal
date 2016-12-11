@@ -29,6 +29,7 @@ let modules = [
     "creep.action.withdrawing",
     "creep.behaviour.claimer",
     "creep.behaviour.hauler",
+    "creep.behaviour.healer",
     "creep.behaviour.melee",
     "creep.behaviour.miner",
     "creep.behaviour.mineralMiner",
