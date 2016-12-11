@@ -58,6 +58,8 @@ let modules = [
     "room",
     "spawn",
     "statistics",
+    "task",
+    "task.defense",
     "tower"
 ];
 
