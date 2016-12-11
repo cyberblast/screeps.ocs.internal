@@ -1,13 +1,21 @@
 module.exports = function(grunt) {
+    let config = require('./screeps.json')
+    if(!config.branch) {
+        config.branch = 'sim'
+    }
+    if(!config.ptr) {
+        config.ptr = false
+    }
+
     require('load-grunt-tasks')(grunt);
 
     grunt.initConfig({
         screeps: {
             options: {
-                email: 'YOUR_EMAIL',
-                password: 'YOUR_PASSWORD',
-                branch: 'ScreepsOCS',
-                ptr: false
+                email: config.email,
+                password: config.password,
+                branch: config.branch,
+                ptr: config.ptr
             },
             dist: {
                 src: ['dist/main.js']
