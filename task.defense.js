@@ -1,4 +1,11 @@
 var mod = {
+    register: () => {
+        Flag.FlagFound.on(f => {
+            if( f.color == FLAG_COLOR.defense.color && f.secondaryColor == FLAG_COLOR.defense.secondaryColor ){
+                Task.defense.checkForRequiredCreeps(f);
+            }
+        });
+    },
     checkForRequiredCreeps: (flag) => {
         let destiny = flag.name;
         let existingWarrior = Population.findCreepDestiny("warrior", destiny);

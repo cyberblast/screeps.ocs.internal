@@ -80,7 +80,7 @@ var mod = {
                 y: flag.pos.y,
                 cloaking: flag.cloaking
             });
-            FlagDir.FlagFound.trigger(flag);
+            Flag.FlagFound.trigger(flag);
         };
         _.forEach(Game.flags, register);
     },

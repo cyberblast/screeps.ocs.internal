@@ -96,12 +96,7 @@ module.exports.loop = function () {
     Spawn.extend();
     FlagDir.extend();
 
-    Flag.FlagFound.on(f => console.log(`Found flag "${f.name}"`));
-    Flag.FlagFound.on(f => {
-        if( f.color == FLAG_COLOR.defense.color && f.secondaryColor == FLAG_COLOR.defense.secondaryColor ){
-            Task.defense.checkForRequiredCreeps(f);
-        }
-    });
+    Task.defense.register();
 
     FlagDir.loop();
     Population.loop();
