@@ -9,6 +9,7 @@ var mod = {
                 this.memory.cloaking = value;
             }
         });
+        Flag.FlagFound = new LiteEvent();
     },
     list:[],
     findName: function(flagColor, pos, local, mod, modArgs){
@@ -79,6 +80,7 @@ var mod = {
                 y: flag.pos.y,
                 cloaking: flag.cloaking
             });
+            FlagDir.FlagFound.trigger(flag);
         };
         _.forEach(Game.flags, register);
     },
@@ -175,4 +177,5 @@ var mod = {
         return this._hasInvasionFlag;
     }
 }
+
 module.exports = mod;

@@ -36,7 +36,7 @@ var mod = {
             }
         }*/
         return parts;
-    },
+    }/*,
     loop: function () {
         let tasks = [
             Task.defense,
@@ -46,6 +46,6 @@ var mod = {
             task.checkForRequiredCreeps();
         }
         _.forEach(tasks, loop);
-    }
+    }*/
 };
 module.exports = mod;
