@@ -4,6 +4,10 @@ screeps.json
 dist/
 lib/
 
+### ignore individual custom module overrides
+custom.*
+custom/*
+
 ### Dreamweaver template
 # DW Dreamweaver added files
 _notes
@@ -202,4 +206,3 @@ local.properties
 
 # TeXlipse plugin
 .texlipse
-

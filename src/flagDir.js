@@ -148,6 +148,9 @@ var mod = {
         if( assigned > 3500 ) return Infinity;
         if( assigned > 2000 ) assigned += 1000;
 
+        if (flag.room && flag.room.controller) var accessibleFields = flag.room.controller.accessibleFields; 
+        if (accessibleFields && _.countBy(flag.targetOf, 'creepType')['claimer'] >= accessibleFields) return Infinity;
+
         let reservation = 0;
         if( flag.room && flag.room.controller && flag.room.controller.reservation ) {
             reservation = flag.room.controller.reservation.ticksToEnd;
