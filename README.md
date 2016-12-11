@@ -4,13 +4,11 @@
   https://nodejs.org/en/
 
 2. Install dependencies  
-  `npm i`  
-  
-3. create a screeps.json file (copy example.screeps.json) & enter login data  
+  `npm i`
 
-4. create a gruntfile.js file (copy example.gruntfile.js)  
+3. create a screeps.json file (copy example.screeps.json) & enter login data
 
-5. Use commands  
+4. Use commands
   * to build (without deployment)  
   `grunt`  
   * to build & deploy  
