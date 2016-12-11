@@ -1,6 +1,5 @@
 var mod = {
     defense: require('./task.defense'),
-    exploit: require('./task.exploit'),
     bodyCosts: function (body) {
         let costs = 0;
         if (body) {
@@ -37,10 +36,18 @@ var mod = {
         }*/
         return parts;
     },
+    handleNewCreep: function(creep) {
+        if (!creep.data || !creep.data.destiny)
+            return;
+        let flag = Game.flags[creep.data.destiny.flagname];
+        if (flag) {
+            flag.memory.tasks[creep.data.destiny.task].name = creep.name;
+            flag.memory.tasks[creep.data.destiny.task].spawning = 0;
+        }
+    },
     register: function () {
         let tasks = [
-            Task.defense,
-            //Task.exploit
+            Task.defense
         ];
         var loop = task => {
             task.register();

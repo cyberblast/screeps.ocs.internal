@@ -7,8 +7,20 @@ var mod = {
         });
     },
     checkForRequiredCreeps: (flag) => {
-        let destiny = flag.name;
-        let existingWarrior = Population.findCreepDestiny("warrior", destiny);
+        let destiny = { flagname: flag.name, task: "defense" };
+        let existingWarrior;
+        if (flag.memory.tasks)
+          existingWarrior = flag.memory.tasks.defense;
+        else
+          flag.memory.tasks = {};
+        if (existingWarrior) {
+            if (existingWarrior.spawning)
+                return;
+            if (!Game.creeps[existingWarrior.name]) {
+                delete(flag.memory.tasks.defense);
+                existingWarrior = null;
+            }
+        }
         if (!existingWarrior) {
             let spawnRoomName = Room.bestSpawnRoomFor(flag);
             let setup = 'warrior';
@@ -22,9 +34,10 @@ var mod = {
                 setup: setup,
                 destiny: destiny
             });
+            flag.memory.tasks.defense = { spawnName: name, spawnRoom: spawnRoomName, spawning: 1 };
             console.log(destiny + ": " + flag.name + " - " + spawnRoomName + " : " + JSON.stringify(Game.rooms[spawnRoomName].spawnQueueHigh[Game.rooms[spawnRoomName].spawnQueueHigh.length-1]));
         }
     }
 };
 
-module.exports = mod;
+module.exports = mod; 
