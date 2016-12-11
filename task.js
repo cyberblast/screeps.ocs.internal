@@ -1,5 +1,5 @@
 var mod = {
-    defense: require('./task.defense'),
+    defense: require(Memory.modules.task.defense.path),
     bodyCosts: function (body) {
         let costs = 0;
         if (body) {
