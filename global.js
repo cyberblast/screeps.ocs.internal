@@ -216,6 +216,9 @@ var mod = {
             },
             unpave: function(roomname){
 
+            }, 
+            reloadModules: () => {
+                Memory.modules.reload = true;
             }
         });
     }

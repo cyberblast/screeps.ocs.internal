@@ -62,7 +62,7 @@ let modules = [
 ];
 
 module.exports.loop = function () {
-    if (Memory.modules === undefined) {
+    if (Memory.modules === undefined || Memory.modules.reload) {
         Memory.modules = {};
         let checkModule = mod => {
             let path = './custom.' + mod;
