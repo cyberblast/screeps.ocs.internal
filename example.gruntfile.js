@@ -70,7 +70,10 @@ module.exports = function(grunt) {
             }
         }
     });
-
+    grunt.registerTask('switch-to-lib-deploy', function () {
+        grunt.config.set('screeps.dist.src', ['lib/*.js']);
+    });
     grunt.registerTask('default', ['clean', 'copy', 'webpack', 'uglify']);
-    grunt.registerTask('deploy', ['clean', 'copy', 'webpack', 'uglify', 'screeps']);
+    grunt.registerTask('deploy', ['clean', 'copy', 'switch-to-lib-deploy', 'screeps']);
+    grunt.registerTask('compress-deploy', ['clean', 'copy', 'webpack', 'uglify', 'screeps']);
 };

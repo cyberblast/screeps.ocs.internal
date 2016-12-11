@@ -15,6 +15,8 @@
   `grunt`  
   * to build & deploy  
   `grunt deploy`  
+  * to buil, compress & deploy  
+  `grunt compress-deploy`  
 
 ### For a first quickstart regarding the code: __Please have a look at the [Wiki](https://github.com/ScreepsOCS/screeps.behaviour-action-pattern/wiki)!__
 
