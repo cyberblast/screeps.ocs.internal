@@ -1,14 +1,14 @@
 var mod = {
     init: function(params){
-        Creep.extend = require('./creep').extend;
-        Room.extend = require('./room').extend;
-        Spawn.extend = require('./spawn').extend;
+        Creep.extend = require(Memory.modules.creep.path).extend;
+        Room.extend = require(Memory.modules.room.path).extend;
+        Spawn.extend = require(Memory.modules.spawn.path).extend;
         _.assign(global, params);
         _.assign(global, {
-            Extensions: require('./extensions'),
-            Population: require('./population'),
-            FlagDir: require('./flagDir'),
-            Tower: require('./tower'),
+            Extensions: require(Memory.modules.extensions.path),
+            Population: require(Memory.modules.population.path),
+            FlagDir: require(Memory.modules.flagDir.path),
+            Tower: require(Memory.modules.tower.path),
             FLAG_COLOR: {
                 invade: { // destroy everything enemy in the room
                     color: COLOR_RED,
@@ -216,6 +216,9 @@ var mod = {
             },
             unpave: function(roomname){
 
+            }, 
+            reloadModules: () => {
+                Memory.modules.reload = true;
             }
         });
     }

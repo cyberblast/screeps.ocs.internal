@@ -6,7 +6,7 @@ action.isValidAction = function(creep){
 };
 action.isValidTarget = function(target){
     return ( target.store && _.sum(target.store) > 20 ) || ( target.energy && target.energy > 20 ) || ( target.mineralAmount && target.mineralAmount > 20 );
-};  
+};
 action.newTarget = function(creep){
     let that = this;
     let target = creep.pos.findClosestByRange(creep.room.structures.all, {
@@ -33,6 +33,6 @@ action.work = function(creep){
     return ret;
 };
 action.onAssignment = function(creep, target) {
-    if( SAY_ASSIGNMENT ) creep.say(String.fromCharCode(9760), SAY_PUBLIC); 
+    if( SAY_ASSIGNMENT ) creep.say(String.fromCharCode(9760), SAY_PUBLIC);
 };
 module.exports = action;
