@@ -1,5 +1,5 @@
 module.exports = function(grunt) {
-    let config = require('./screeps.json')
+    var config = require('./screeps.json')
     if(!config.branch) {
         config.branch = 'sim'
     }
@@ -21,10 +21,25 @@ module.exports = function(grunt) {
                 src: ['dist/main.js']
             }
         },
-        clean: ['dist/'],
+        clean: ['dist/','lib/'],        
+        copy: {
+            screeps: {
+                files: [{
+                    expand: true,
+                    cwd: 'src/',
+                    src: '**',
+                    dest: 'lib/',
+                    filter: 'isFile',
+                    rename: function (dest, src) {
+                        // Change the path name utilize dots for folders
+                        return dest + src.replace(/\//g,'.');
+                    }
+                }]
+            },
+        },
         webpack: {
             main: {
-                entry: './src/main.js',
+                entry: './lib/main.js',
                 output: {
                     path: 'dist/',
                     filename: 'main.js',
@@ -33,6 +48,7 @@ module.exports = function(grunt) {
                 module: {
                     loaders: [{
                         test: /\.js$/,
+                        exclude: /(src|node_modules|ScreepsAutocomplete)/,
                         loader: 'babel-loader',
                         query: {
                             presets: [
@@ -55,6 +71,6 @@ module.exports = function(grunt) {
         }
     });
 
-    grunt.registerTask('default', ['clean', 'webpack', 'uglify']);
-    grunt.registerTask('deploy', ['clean', 'webpack', 'uglify', 'screeps']);
+    grunt.registerTask('default', ['clean', 'copy', 'webpack', 'uglify']);
+    grunt.registerTask('deploy', ['clean', 'copy', 'webpack', 'uglify', 'screeps']);
 };

@@ -1,6 +1,8 @@
 ### Project specific
 gruntfile.js
 screeps.json
+dist/
+lib/
 
 ### Dreamweaver template
 # DW Dreamweaver added files
@@ -69,7 +71,6 @@ Temporary Items
 nbproject/private/
 build/
 nbbuild/
-dist/
 nbdist/
 nbactions.xml
 nb-configuration.xml
