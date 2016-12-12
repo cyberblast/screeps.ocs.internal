@@ -189,6 +189,8 @@ Setup.bodyCosts = function(body){
 Setup.multi = function (room, fixedBody, multiBody) {
     let fixedCosts = Creep.Setup.bodyCosts(fixedBody);
     let multiCosts = Creep.Setup.bodyCosts(multiBody);
+    if ( multiCosts == 0 )
+      return 0;
     let maxParts = Math.floor((50 - fixedBody.length) / multiBody.length);
     let maxAffordable = Math.floor((room.energyCapacityAvailable - fixedCosts) / multiCosts);
     return _.min([maxParts, maxAffordable]);
