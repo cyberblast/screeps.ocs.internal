@@ -2,7 +2,7 @@ var setup = new Creep.Setup('claimer');
 setup.minControllerLevel = 3;
 setup.globalMeasurement = true;
 setup.measureByHome = true;
-setup.maxCount = (room) => ( room.situation.invasion || room.conserveForDefense ) ? 0 : 2;
+setup.maxCount = (room) => ( room.situation.invasion || room.conserveForDefense ) ? 0 : 4;
 setup.maxWeight = (room) => room.claimerMaxWeight;
 
 setup.small = {
