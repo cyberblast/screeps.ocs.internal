@@ -67,7 +67,7 @@ let modules = [
 module.exports.loop = function () {
     global.load = (path) => {
         if( !Memory.modules[path] ){
-            console.log(`Module "$(mod)" not found! Trying to parse modules again...`);
+            console.log(`Module "$(path)" not found! Trying to parse modules again...`);
             Memory.modules.reload = true;
             return null;
         }
