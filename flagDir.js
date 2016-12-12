@@ -83,6 +83,12 @@ var mod = {
             Flag.FlagFound.trigger(flag);
         };
         _.forEach(Game.flags, register);
+        var clearStaleFlags = (flag,flagName) => {
+            if(!Game.flags[flagName]) {
+                delete(Memory.flags[flagName]);
+            }
+        }
+        _.forEach(Memory.flags, clearStaleFlags);
     },
     count: function(flagColor, pos, local){
         let that = this;
