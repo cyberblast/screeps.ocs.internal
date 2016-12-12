@@ -43,7 +43,10 @@ action.newTarget = function(creep){
     return target;
 };
 action.work = function(creep){
-    return creep.harvest(creep.target);
+    let result = creep.harvest(creep.target);
+    if ( result == OK || result == ERR_NOT_ENOUGH_RESOURCES)
+      return OK;
+    return result;
 };
 action.onAssignment = function(creep, target) {
     if( SAY_ASSIGNMENT ) creep.say(String.fromCharCode(9935), SAY_PUBLIC);
