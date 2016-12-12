@@ -9,6 +9,20 @@ module.exports = {
     },
     run: function(creep) {
         let source;
+        if( creep.data.destiny && creep.data.destiny.flagName ) {
+            let flag = Game.flags[creep.data.destiny.flagName];
+            if ( flag ) {
+                if( flag.pos.roomName != creep.pos.roomName ){
+                    if ( !creep.action || !creep.action.name != "travelling") {
+                        Creep.action.travelling.assign(creep, flag);
+                        Population.registerCreepFlag(creep, flag);
+                    }
+                    if ( creep.action && creep.action.name == "travelling")
+                        creep.action.step(creep);
+                    return true;
+                }
+            }
+        }
         if( !creep.data.determinatedTarget ) { // select source
             let notDeterminated = source => {
                 let hasThisSource = data => { return data.determinatedTarget == source.id };

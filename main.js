@@ -61,6 +61,7 @@ let modules = [
     "statistics",
     "task",
     "task.defense",
+    "task.exploit",
     "tower"
 ];
 

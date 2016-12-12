@@ -11,8 +11,9 @@ var mod = {
 //                Creep.setup.ranger,
                 Creep.setup.healer,
                 Creep.setup.pioneer,
-                Creep.setup.privateer,
-                Creep.setup.claimer];
+//                Creep.setup.privateer,
+//                Creep.setup.claimer
+];
         Spawn.prototype.loop = function(){
             if( this.spawning ) return;
             let room = this.room;
