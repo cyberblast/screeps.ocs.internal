@@ -65,7 +65,16 @@ let modules = [
 ];
 
 module.exports.loop = function () {
-    if (Memory.modules === undefined || Memory.modules.reload) {
+    global.load = (path) => {
+        if( !Memory.modules[path] ){
+            console.log(`Module "$(mod)" not found! Trying to parse modules again...`);
+            Memory.modules.reload = true;
+            return null;
+        }
+        return require(Memory.modules[path]);
+    };
+    global.load = load;
+    if (Memory.modules === undefined || Memory.modules.reload || Memory.modules.creep) {
         Memory.modules = {};
         let checkModule = mod => {
             let path = './custom.' + mod;
@@ -76,6 +85,7 @@ module.exports.loop = function () {
                 path = './' + mod
             }
             finally {
+                /*
                 let nameParts = mod.split('.');
                 let mem = Memory.modules;
                 let ensureNamespace = name => {                    
@@ -85,13 +95,16 @@ module.exports.loop = function () {
                 }
                 nameParts.forEach(ensureNamespace);
                 mem['path'] = path;
+                */
+                Memory.modules[mod] = path;
             }
         };
         modules.forEach(checkModule);
+        delete Memory.modules.reload;
     }
 
-    var params = require(Memory.modules.parameter.path);
-    var glob = require(Memory.modules.global.path);
+    var params = load("parameter");
+    var glob = load("global");
     glob.init(params);
     Extensions.extend();
     Creep.extend();
