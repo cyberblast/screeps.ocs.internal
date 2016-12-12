@@ -7,14 +7,14 @@ var mod = {
         });
     },
     handleNewCreep:(creep) => {
-        let flag = Game.flags[creep.data.destiny.flagname];
+        let flag = Game.flags[creep.data.destiny.flagName];
         if (flag) {
             flag.memory.tasks[creep.data.destiny.task].name = creep.name;
             flag.memory.tasks[creep.data.destiny.task].spawning = 0;
         }
     },
     checkForRequiredCreeps: (flag) => {
-        let destiny = { flagname: flag.name, task: "defense" };
+        let destiny = { flagName: flag.name, task: "defense" };
         let existingWarrior;
         if (flag.memory.tasks)
           existingWarrior = flag.memory.tasks.defense;
