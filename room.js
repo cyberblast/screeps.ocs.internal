@@ -679,6 +679,17 @@ var mod = {
             }
         });
 
+        Room.bestSpawnRoomFor = function(flag) {
+            var range = spawn => routeRange(spawn.pos.roomName, flag.pos.roomName);
+            let spawn = _.min(Game.spawns, range);
+
+            return spawn.pos.roomName;
+        }
+        Room.getCostMatrix = function(roomName) {
+            var room = Game.rooms[roomName];
+            if(!room) return;
+            return room.costMatrix;
+        };
         Room.isMine = function(roomName) {
             let room = Game.rooms[roomName];
             return( room && room.my );

@@ -5,9 +5,22 @@ var mod = {
         Spawn.extend = require(Memory.modules.spawn.path).extend;
         _.assign(global, params);
         _.assign(global, {
+            LiteEvent: function() {
+                this.handlers = [];
+                this.on = function(handler) {
+                    this.handlers.push(handler);
+                }
+                this.off = function(handler) {
+                    this.handlers = this.handlers.filter(h => h !== handler);
+                }
+                this.trigger = function(data) {
+                    this.handlers.slice(0).forEach(h => h(data)); 
+                }
+            },
             Extensions: require(Memory.modules.extensions.path),
             Population: require(Memory.modules.population.path),
             FlagDir: require(Memory.modules.flagDir.path),
+            Task: require(Memory.modules.task.path),
             Tower: require(Memory.modules.tower.path),
             FLAG_COLOR: {
                 invade: { // destroy everything enemy in the room

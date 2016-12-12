@@ -59,6 +59,8 @@ let modules = [
     "room",
     "spawn",
     "statistics",
+    "task",
+    "task.defense",
     "tower"
 ];
 
@@ -97,6 +99,7 @@ module.exports.loop = function () {
     Spawn.extend();
     FlagDir.extend();
 
+    Task.register();
     FlagDir.loop();
     Population.loop();
 
@@ -107,6 +110,10 @@ module.exports.loop = function () {
     _.forEach(Game.rooms, roomLoop);
 
     Creep.loop();
+    /*
+    if ( Game.time % SPAWN_INTERVAL == 0 ) {
+        Task.loop();
+    }*/
     Spawn.loop();
 
     if( Memory.statistics && Memory.statistics.tick && Memory.statistics.tick + TIME_REPORT <= Game.time )
