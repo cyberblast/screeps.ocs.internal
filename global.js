@@ -1,8 +1,8 @@
 var mod = {
     init: function(params){
-        Creep.extend = require(Memory.modules.creep.path).extend;
-        Room.extend = require(Memory.modules.room.path).extend;
-        Spawn.extend = require(Memory.modules.spawn.path).extend;
+        Creep.extend = load("creep").extend;
+        Room.extend = load("room").extend;
+        Spawn.extend = load("spawn").extend;
         _.assign(global, params);
         _.assign(global, {
             LiteEvent: function() {
@@ -17,11 +17,11 @@ var mod = {
                     this.handlers.slice(0).forEach(h => h(data)); 
                 }
             },
-            Extensions: require(Memory.modules.extensions.path),
-            Population: require(Memory.modules.population.path),
-            FlagDir: require(Memory.modules.flagDir.path),
-            Task: require(Memory.modules.task.path),
-            Tower: require(Memory.modules.tower.path),
+            Extensions: load("extensions"),
+            Population: load("population"),
+            FlagDir: load("flagDir"),
+            Task: load("task"),
+            Tower: load("tower"),
             FLAG_COLOR: {
                 invade: { // destroy everything enemy in the room
                     color: COLOR_RED,
@@ -231,7 +231,7 @@ var mod = {
 
             }, 
             reloadModules: () => {
-                Memory.modules.reload = true;
+                reload = true;
             }
         });
     }

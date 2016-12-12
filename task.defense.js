@@ -6,8 +6,15 @@ var mod = {
             }
         });
     },
+    handleNewCreep:(creep) => {
+        let flag = Game.flags[creep.data.destiny.flagName];
+        if (flag) {
+            flag.memory.tasks[creep.data.destiny.task].name = creep.name;
+            flag.memory.tasks[creep.data.destiny.task].spawning = 0;
+        }
+    },
     checkForRequiredCreeps: (flag) => {
-        let destiny = { flagname: flag.name, task: "defense" };
+        let destiny = { flagName: flag.name, task: "defense" };
         let existingWarrior;
         if (flag.memory.tasks)
           existingWarrior = flag.memory.tasks.defense;
@@ -26,9 +33,9 @@ var mod = {
             let setup = 'warrior';
             let fixedBody = [];
             let multiBody = [TOUGH, ATTACK, RANGED_ATTACK, HEAL, MOVE, MOVE];
-            let body = Task.bodyparts(Game.rooms[spawnRoomName], fixedBody, multiBody);
+            let body = Creep.Setup.compileBody(Game.rooms[spawnRoomName], fixedBody, multiBody);
             let name = setup + '-' + flag.name;
-            Game.rooms[spawnRoomName].spawnQueueHigh.push({
+            Game.rooms[spawnRoomName].spawnQueueLow.push({
                 parts: body,
                 name: name,
                 setup: setup,
