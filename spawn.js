@@ -18,13 +18,13 @@ var mod = {
             if( this.spawning ) return;
             let room = this.room;
             let busy = this.createCreepByQueue(room.spawnQueueHigh);
-            if( !busy ) busy = this.createCreepByQueue(room.spawnQueueLow);
             if( !busy && Game.time % SPAWN_INTERVAL == 0 ) {
                 let that = this;
                 let probe = setup => {
                     return setup.isValidSetup(room) && that.createCreepBySetup(setup);
                 }
-                _.find(this.priority, probe);
+                busy = _.some(this.priority, probe);
+                if( !busy ) busy = this.createCreepByQueue(room.spawnQueueLow);
             }
         };
         Spawn.prototype.createCreepBySetup = function(setup){

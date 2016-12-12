@@ -43,9 +43,6 @@ module.exports = {
             if (creep.room.structures.urgentRepairable.length > 0 ) {
                 priority.unshift(Creep.action.fueling);
             }
-            if( creep.room.controller && creep.room.controller.ticksToDowngrade < 2000 ) { // urgent upgrading
-                priority.unshift(Creep.action.upgrading);
-            }
         }
 
         for(var iAction = 0; iAction < priority.length; iAction++) {

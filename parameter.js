@@ -6,7 +6,7 @@ var mod = {
     SAY_PUBLIC: true, // creeps talk public
     DEBUG: true, // gimme some more details
     CENSUS_ANNOUNCEMENTS: true, // log birth and death
-    SPAWN_INTERVAL: 10, // loops between regular spawn probe
+    SPAWN_INTERVAL: 5, // loops between regular spawn probe
     MAX_STORAGE_ENERGY: { // stop storing energy when reached
         4: 5000,
         5: 50000,
