@@ -33,7 +33,7 @@ var mod = {
             let setup = 'warrior';
             let fixedBody = [];
             let multiBody = [TOUGH, ATTACK, RANGED_ATTACK, HEAL, MOVE, MOVE];
-            let body = Creep.Setup.compileBody(Game.rooms[spawnRoomName], fixedBody, multiBody);
+            let body = Creep.Setup.compileBody(Game.rooms[spawnRoomName], fixedBody, multiBody, true);
             let name = setup + '-' + flag.name;
             Game.rooms[spawnRoomName].spawnQueueLow.push({
                 parts: body,

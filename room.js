@@ -659,6 +659,15 @@ var mod = {
                     return this.memory.spawnQueueHigh;
                 }
             },
+            'spawnQueueMedium': {
+                configurable: true,
+                get: function() {
+                    if( _.isUndefined(this.memory.spawnQueueMedium) ) {
+                        this.memory.spawnQueueMedium = [];
+                    }
+                    return this.memory.spawnQueueMedium;
+                }
+            },
             'spawnQueueLow': {
                 configurable: true,
                 get: function() {
