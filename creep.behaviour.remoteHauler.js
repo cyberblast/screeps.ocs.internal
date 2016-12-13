@@ -39,9 +39,6 @@ module.exports = {
                 return true;
             }
             priority = [
-                Creep.action.feeding,
-                Creep.action.charging,
-                Creep.action.fueling,
                 Creep.action.storing,
                 Creep.action.idle];
 
