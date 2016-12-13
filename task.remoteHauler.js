@@ -31,7 +31,7 @@ var mod = {
         if (!existingCreep) {
             let spawnRoomName = Room.bestSpawnRoomFor(flag);
             destiny.roomName = spawnRoomName;
-            let setup = 'miner';
+            let setup = 'remoteHauler';
             let fixedBody = [CARRY, MOVE];
             let multiBody = [CARRY, MOVE];
             let body = Creep.Setup.compileBody(Game.rooms[spawnRoomName], fixedBody, multiBody);
