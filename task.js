@@ -4,7 +4,7 @@ var mod = {
     handleNewCreep: function(creep) {
         if (!creep.data || !creep.data.destiny || !creep.data.destiny.task )
             return;
-        let task = Task[!creep.data.destiny.task];
+        let task = Task[creep.data.destiny.task];
         if( !task ) return; 
         // TODO: log something in both above return cases...
         task.handleNewCreep(creep);

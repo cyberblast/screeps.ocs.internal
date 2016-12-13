@@ -659,6 +659,15 @@ var mod = {
                     return this.memory.spawnQueueHigh;
                 }
             },
+            'spawnQueueMedium': {
+                configurable: true,
+                get: function() {
+                    if( _.isUndefined(this.memory.spawnQueueMedium) ) {
+                        this.memory.spawnQueueMedium = [];
+                    }
+                    return this.memory.spawnQueueMedium;
+                }
+            },
             'spawnQueueLow': {
                 configurable: true,
                 get: function() {
@@ -1124,7 +1133,7 @@ var mod = {
             if( this.controller.level == 8 && !transacting &&
                 this.storage.store.energy > MAX_STORAGE_ENERGY[this.controller.level] * 0.8 &&
                 this.terminal.store[mineral] < 150000 &&
-                this.terminal.store.energy > 50000 ){
+                this.terminal.store.energy > 55000 ){
                 let requiresEnergy = room => (
                     room.my &&
                     room.controller.level < 8 &&
@@ -1134,7 +1143,7 @@ var mod = {
                     !room._isReceivingEnergy
                 )
                 let targetRoom = _.min(_.filter(Game.rooms, requiresEnergy), 'storage.store.energy');
-                if( targetRoom ) {
+                if( targetRoom && Game.market.calcTransactionCost(50000, this.name, targetRoom.name) < (this.terminal.store.energy-50000)) {
                     targetRoom._isReceivingEnergy = true;
                     let response = this.terminal.send('energy', 50000, targetRoom.name, 'have fun');
                     console.log(`Transfering 50k energy from room ${this.name} to ${targetRoom.name}. (${translateErrorCode(response)})`);

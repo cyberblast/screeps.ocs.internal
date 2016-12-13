@@ -1,6 +1,6 @@
 var mod = {
     extend: function(){
-        Spawn.prototype.priority = [
+        Spawn.priority = [
                 Creep.setup.miner,
                 Creep.setup.mineralMiner,
                 Creep.setup.worker,
@@ -19,13 +19,18 @@ var mod = {
             let room = this.room;
             let busy = this.createCreepByQueue(room.spawnQueueHigh);
             if( !busy && Game.time % SPAWN_INTERVAL == 0 ) {
+                busy = this.createCreepByQueue(room.spawnQueueMedium);
+
+                // old spawning system 
                 let that = this;
                 let probe = setup => {
                     return setup.isValidSetup(room) && that.createCreepBySetup(setup);
                 }
-                busy = _.some(this.priority, probe);
+                busy = _.some(Spawn.priority, probe);
+
                 if( !busy ) busy = this.createCreepByQueue(room.spawnQueueLow);
             }
+            return busy;
         };
         Spawn.prototype.createCreepBySetup = function(setup){
             var params = setup.buildParams(this);
