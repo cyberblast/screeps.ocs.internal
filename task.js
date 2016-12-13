@@ -1,6 +1,7 @@
 var mod = {
     defense: load("task.defense"),
     exploit: load("task.exploit"),
+    remoteHauler: load("task.remoteHauler"),
     handleNewCreep: function(creep) {
         if (!creep.data || !creep.data.destiny || !creep.data.destiny.task )
             return;

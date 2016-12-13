@@ -36,6 +36,7 @@ let modules = [
     "creep.behaviour.pioneer",
     "creep.behaviour.privateer",
     "creep.behaviour.ranger",
+    "creep.behaviour.remoteHauler",
     "creep.behaviour.upgrader",
     "creep.behaviour.warrior",
     "creep.behaviour.worker",
@@ -62,6 +63,7 @@ let modules = [
     "task",
     "task.defense",
     "task.exploit",
+    "task.remoteHauler",
     "tower"
 ];
 
