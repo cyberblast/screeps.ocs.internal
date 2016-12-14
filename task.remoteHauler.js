@@ -32,11 +32,11 @@ var mod = {
             let spawnRoomName = Room.bestSpawnRoomFor(flag);
             destiny.roomName = spawnRoomName;
             let setup = 'remoteHauler';
-            let fixedBody = [CARRY, MOVE];
-            let multiBody = [CARRY, MOVE];
+            let fixedBody = [WORK];
+            let multiBody = [CARRY, CARRY, MOVE];
             let body = Creep.Setup.compileBody(Game.rooms[spawnRoomName], fixedBody, multiBody);
             let name = setup + '-' + flag.name;
-            Game.rooms[spawnRoomName].spawnQueueHigh.push({
+            Game.rooms[spawnRoomName].spawnQueueLow.push({
                 parts: body,
                 name: name,
                 setup: setup,
