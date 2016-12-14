@@ -125,7 +125,7 @@ module.exports = {
                     if(CHATTY) creep.say('dropmining', SAY_PUBLIC);
                     let range = this.approach(creep);
                     if( range == 0 ){
-                        if( !creep.data.containerConstruction ) {
+                        if( !creep.data.containerConstruction && !source.container ) {
                             let newContainers = creep.room.lookForAt(
                                LOOK_CONSTRUCTION_SITES,
                                creep.data.determinatedSpot.x,
@@ -140,7 +140,7 @@ module.exports = {
                                     STRUCTURE_CONTAINER
                                 );
                             }
-                       }
+                        }
                         if( carrying > ( creep.carryCapacity -
                             ( creep.data.body&&creep.data.body.work ? (creep.data.body.work*2) : (creep.carryCapacity/2) ))) {
                             if( OOPS ) creep.say(String.fromCharCode(8681), SAY_PUBLIC);
