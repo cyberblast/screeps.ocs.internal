@@ -29,7 +29,7 @@ module.exports = {
                 Creep.action.idle];
         }
         else {
-            if( creep.room.situation.invasion && creep.room.controller.level > 2 ){
+            if( creep.room.situation.invasion && creep.room.controller.level > 2 && !creep.room.controller.safeMode){
                 priority = [
                     Creep.action.fueling,
                     Creep.action.feeding,
