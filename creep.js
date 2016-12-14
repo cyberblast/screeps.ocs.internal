@@ -38,6 +38,7 @@ var mod = {
             privateer: load("creep.behaviour.privateer"),
             ranger: load("creep.behaviour.ranger"),
             remoteHauler: load("creep.behaviour.remoteHauler"),
+            remoteMiner: load("creep.behaviour.remoteMiner"),
             upgrader: load("creep.behaviour.upgrader"),
             warrior: load("creep.behaviour.warrior"),
             worker: load("creep.behaviour.worker")

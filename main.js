@@ -37,6 +37,7 @@ let modules = [
     "creep.behaviour.privateer",
     "creep.behaviour.ranger",
     "creep.behaviour.remoteHauler",
+    "creep.behaviour.remoteMiner",
     "creep.behaviour.upgrader",
     "creep.behaviour.warrior",
     "creep.behaviour.worker",
@@ -62,8 +63,8 @@ let modules = [
     "statistics",
     "task",
     "task.defense",
-    "task.exploit",
     "task.remoteHauler",
+    "task.remoteMiner",
     "tower"
 ];
 
