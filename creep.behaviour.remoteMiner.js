@@ -106,7 +106,7 @@ module.exports = {
                         }
                         creep.harvest(source);
                     }
-                } else if( creep.room.population && creep.room.population.typeCount['hauler'] && creep.room.population.typeCount['hauler'] > 0 ) {
+                } else {
                     if(CHATTY) creep.say('dropmining', SAY_PUBLIC);
                     let range = this.approach(creep);
                     if( range == 0 ){
@@ -118,9 +118,9 @@ module.exports = {
                         }
                         creep.harvest(source);
                     }
-                } else {
+                /*} else {
                     Creep.behaviour.worker.run(creep);
-                }
+                */}
             }
         }
     }
