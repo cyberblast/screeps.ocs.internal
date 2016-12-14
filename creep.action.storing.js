@@ -6,7 +6,7 @@ action.isValidAction = function(creep){
         (
             creep.data.creepType == 'hauler' ||
             creep.data.creepType == 'privateer' ||
-            creep.data.creepType == 'remoteHauler'
+            creep.data.creepType == 'remoteHauler' ||
             (
                 creep.sum > creep.carry.energy ||
                 (
