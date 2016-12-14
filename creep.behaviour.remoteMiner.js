@@ -98,15 +98,6 @@ module.exports = {
                 }
                 if( !creep.data.determinatedSpot ) { 
                     logError('Unable to determine working location for miner in room ' + creep.pos.roomName);
-                } else {
-                    if ( !source.container ) {
-                        creep.room.createConstructionSite(
-                            creep.data.determinatedSpot.x,
-                            creep.data.determinatedSpot.y,
-                            STRUCTURE_CONTAINER
-                        );
-                        creep.data.newContainerConstruction = 1;
-                    }
                 }
             }
 
@@ -134,6 +125,22 @@ module.exports = {
                     if(CHATTY) creep.say('dropmining', SAY_PUBLIC);
                     let range = this.approach(creep);
                     if( range == 0 ){
+                        if( !creep.data.containerConstruction ) {
+                            let newContainers = creep.room.lookForAt(
+                               LOOK_CONSTRUCTION_SITES,
+                               creep.data.determinatedSpot.x,
+                               creep.data.determinatedSpot.y
+                            );
+                            if ( newContainers ) {
+                                creep.data.containerConstruction = newContainers[0];
+                            } else {
+                                creep.room.createConstructionSite(
+                                    creep.data.determinatedSpot.x,
+                                    creep.data.determinatedSpot.y,
+                                    STRUCTURE_CONTAINER
+                                );
+                            }
+                       }
                         if( carrying > ( creep.carryCapacity -
                             ( creep.data.body&&creep.data.body.work ? (creep.data.body.work*2) : (creep.carryCapacity/2) ))) {
                             if( OOPS ) creep.say(String.fromCharCode(8681), SAY_PUBLIC);
@@ -146,8 +153,8 @@ module.exports = {
                                 }
                                 
                             }
-                            let drop = r => { if(creep.carry[r] > 0 ) creep.drop(r); };
-                            _.forEach(Object.keys(creep.carry), drop);
+                            /*let drop = r => { if(creep.carry[r] > 0 ) creep.drop(r); };
+                            _.forEach(Object.keys(creep.carry), drop);*/
                         }
                         creep.harvest(source);
                     }
