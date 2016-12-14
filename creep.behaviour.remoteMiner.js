@@ -1,5 +1,5 @@
 module.exports = {
-    name: 'miner',
+    name: 'remoteMiner',
     approach: function(creep){
         let targetPos = new RoomPosition(creep.data.determinatedSpot.x, creep.data.determinatedSpot.y, creep.pos.roomName);
         let range = creep.pos.getRangeTo(targetPos);
