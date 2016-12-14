@@ -759,7 +759,7 @@ var mod = {
             }
             let invalidObject = o => {
                 return ((o.type == LOOK_TERRAIN && o.terrain == 'wall') ||
-                    o.type == LOOK_CONSTRUCTION_SITES ||
+                    (o.type == LOOK_CONSTRUCTION_SITES && OBSTACLE_OBJECT_TYPES.includes(o.structureType) ) ||
                     (o.type == LOOK_STRUCTURES && OBSTACLE_OBJECT_TYPES.includes(o.structure.structureType) ));
             };
             let isWalkable = (posX, posY) => look[posY][posX].filter(invalidObject).length == 0;
