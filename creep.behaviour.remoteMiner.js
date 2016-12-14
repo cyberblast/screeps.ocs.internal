@@ -132,7 +132,7 @@ module.exports = {
                                creep.data.determinatedSpot.y
                             );
                             if ( newContainers ) {
-                                creep.data.containerConstruction = newContainers[0];
+                                creep.data.containerConstruction = newContainers[0].id;
                             } else {
                                 creep.room.createConstructionSite(
                                     creep.data.determinatedSpot.x,
