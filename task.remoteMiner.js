@@ -17,7 +17,7 @@ var mod = {
         let destiny = { flagName: flag.name, task: "remoteMiner" };
         let existingCreep;
         if (flag.memory.tasks)
-          existingCreep = flag.memory.tasks.exploit;
+          existingCreep = flag.memory.tasks.remoteMiner;
         else
           flag.memory.tasks = {};
         if (existingCreep) {
@@ -36,7 +36,7 @@ var mod = {
             let multiBody = [];
             let body = Creep.Setup.compileBody(Game.rooms[spawnRoomName], fixedBody, multiBody);
             let name = setup + '-' + flag.name;
-            Game.rooms[spawnRoomName].spawnQueueHigh.push({
+            Game.rooms[spawnRoomName].spawnQueueLow.push({
                 parts: body,
                 name: name,
                 setup: setup,
