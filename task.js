@@ -13,8 +13,8 @@ var mod = {
     register: function() {
         let tasks = [
             Task.defense,
-            Task.exploit,
-            Task.remoteHauler
+            Task.remoteHauler,
+            Task.remoteMiner
         ];
         var loop = task => {
             task.register();
