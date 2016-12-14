@@ -38,6 +38,18 @@ module.exports = {
             source = Game.getObjectById(creep.data.determinatedTarget);
         }
 
+        if ( creep.data.newContainerConstruction ) {
+            delete( creep.data.newContainerConstruction );
+            let newContainers = creep.room.lookForAt(
+                            LOOK_CONSTRUCTION_SITES,
+                            creep.data.determinatedSpot.x,
+                            creep.data.determinatedSpot.y
+                        );
+            if ( newContainers ) {
+                creep.data.containerConstruction = newContainers[0].id;
+            }
+        }
+
         if( source ) {
             if( !creep.action ) Population.registerAction(creep, Creep.action.harvesting, source);
             if( !creep.data.determinatedSpot ) {
@@ -59,11 +71,12 @@ module.exports = {
                 _.forEach(Memory.population, findInvalid);
                 args.where = pos => { return !_.some(invalid,{x:pos.x,y:pos.y}); };
 
-                if( source.container )
+                if( source.container ) {
                     args.spots.push({
                         pos: source.container.pos,
                         range: 1
                     });
+                }
                 if( source.link )
                     args.spots.push({
                         pos: source.link.pos,
@@ -83,7 +96,23 @@ module.exports = {
                         y: spot.y
                     }
                 }
-                if( !creep.data.determinatedSpot ) logError('Unable to determine working location for miner in room ' + creep.pos.roomName);
+                if( !creep.data.determinatedSpot ) { 
+                    logError('Unable to determine working location for miner in room ' + creep.pos.roomName);
+                } else {
+                    if ( !source.container ) {
+                        creep.room.createConstructionSite(
+                            creep.data.determinatedSpot.x,
+                            creep.data.determinatedSpot.y,
+                            STRUCTURE_CONTAINER
+                        );
+                        let newContainers = creep.room.lookForAt(
+                            LOOK_CONSTRUCTION_SITES,
+                            creep.data.determinatedSpot.x,
+                            creep.data.determinatedSpot.y
+                        );
+                        creep.data.newContainerConstruction = 1;
+                    }
+                }
             }
 
             if( creep.data.determinatedSpot ) {
@@ -113,6 +142,15 @@ module.exports = {
                         if( carrying > ( creep.carryCapacity -
                             ( creep.data.body&&creep.data.body.work ? (creep.data.body.work*2) : (creep.carryCapacity/2) ))) {
                             if( OOPS ) creep.say(String.fromCharCode(8681), SAY_PUBLIC);
+                            if( creep.data.containerConstruction ) {
+                                let newContainer = Game.getObjectById(creep.data.containerConstruction);
+                                if (newContainer instanceof ConstructionSite) {
+                                    creep.build(newContainer);
+                                } else {
+                                    delete(creep.data.containerConstruction);
+                                }
+                                
+                            }
                             let drop = r => { if(creep.carry[r] > 0 ) creep.drop(r); };
                             _.forEach(Object.keys(creep.carry), drop);
                         }
