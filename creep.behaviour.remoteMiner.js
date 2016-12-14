@@ -105,11 +105,6 @@ module.exports = {
                             creep.data.determinatedSpot.y,
                             STRUCTURE_CONTAINER
                         );
-                        let newContainers = creep.room.lookForAt(
-                            LOOK_CONSTRUCTION_SITES,
-                            creep.data.determinatedSpot.x,
-                            creep.data.determinatedSpot.y
-                        );
                         creep.data.newContainerConstruction = 1;
                     }
                 }
