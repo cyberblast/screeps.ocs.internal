@@ -23,14 +23,14 @@ action.work = function(creep){
                 creep.rangedHeal(injured[0]);
             }
         }
-        return workResult = OK;
+        return OK;
     }
     else if (creep.hits === creep.hitsMax){
     //if (hop){
         action.newTarget = function(creep){
             return creep.target = FlagDir.find(FLAG_COLOR.invade.hopper);
         };
-        return workResult = OK;
+        return OK;
     }
 };
 
