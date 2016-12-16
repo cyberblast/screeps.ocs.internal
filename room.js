@@ -437,7 +437,7 @@ var mod = {
                     if( _.isUndefined(this._situation) ){
                         this._situation = {
                             noEnergy: this.sourceEnergyAvailable == 0,
-                            invasion: this.hostiles.length > 0
+                            invasion: this.hostiles.length > 0 && (!this.controller || !this.controller.safeMode)
                         }
                     }
                     return this._situation;
