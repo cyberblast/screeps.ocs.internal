@@ -1125,10 +1125,9 @@ var mod = {
                 if( orders.length > 0 ){
                     let order = _.max(orders, 'ratio');
                     let result = Game.market.deal(order.id, order.transactionAmount, that.name);
-                    let message = '<h2>Room ' + that.name + ' executed an order!</h2><br/>Result: ' + translateErrorCode(result) + '<br/>Details:<br/> ' + JSON.stringify(order).replace(',',',<br/>');
-                    if( DEBUG ) console.log(message);
-                    if( SELL_NOTIFICATION ) Game.notify( message );
-                    transacting = true;
+                    if( DEBUG ) logSystem(that.name, `Sold ${order.transactionAmount} ${mineral} for ${order.credits} (${order.ratio} ¢/${mineral}) ${translateErrorCode(result)}`);
+                    if( SELL_NOTIFICATION ) Game.notify( `<h2>Room ${that.name} executed an order!</h2><br/>Result: ${translateErrorCode(result)}<br/>Details:<br/>${JSON.stringify(order).replace(',',',<br/>')}` );
+                    transacting = result == OK;
                 }
             }
             if( this.controller.level == 8 && !transacting &&
@@ -1147,7 +1146,7 @@ var mod = {
                 if( targetRoom && Game.market.calcTransactionCost(50000, this.name, targetRoom.name) < (this.terminal.store.energy-50000)) {
                     targetRoom._isReceivingEnergy = true;
                     let response = this.terminal.send('energy', 50000, targetRoom.name, 'have fun');
-                    console.log(`Transfering 50k energy from room ${this.name} to ${targetRoom.name}. (${translateErrorCode(response)})`);
+                    if( DEBUG ) logSystem(that.name, `Transfering 50k energy from to ${targetRoom.name}. (${translateErrorCode(response)})`);
                 }
             }
         };
