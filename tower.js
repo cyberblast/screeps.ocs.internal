@@ -27,7 +27,7 @@ var mod = {
                 return;
             }
 
-            var closestHostile = tower.pos.findClosestByRange(creep.room.hostiles);
+            var closestHostile = tower.pos.findClosestByRange(tower.room.hostiles);
             if(closestHostile) {
                 // Attack
                 tower.attack(closestHostile);
