@@ -14,34 +14,43 @@ var mod = {
         }
     },
     checkForRequiredCreeps: (flag) => {
-        let destiny = { flagName: flag.name, task: "defense" };
-        let existingWarrior;
-        if (flag.memory.tasks)
-          existingWarrior = flag.memory.tasks.defense;
-        else
-          flag.memory.tasks = {};
-        if (existingWarrior) {
-            if (existingWarrior.spawning)
-                return;
-            if (!Game.creeps[existingWarrior.name]) {
-                delete(flag.memory.tasks.defense);
-                existingWarrior = null;
+        let numRequired;
+
+        // store numRequired in flagName.
+        // Flag1-10 is 10 creeps.
+        let stuff = flag.name.split('-');
+        numRequired = stuff[1] ? stuff[1] : 1;
+
+        for(let index = 1; index < numRequired; index++){
+            let destiny = { flagName: flag.name, task: "defense." + index };
+            let existingCreep;
+            if (flag.memory.tasks && flag.memory.tasks.defense)
+                existingCreep = flag.memory.tasks.defense.[index];
+            else
+                flag.memory.tasks.defense = {};
+            if (existingCreep) {
+                if (existingCreep.spawning)
+                    return;
+                if (!Game.creeps[existingCreep.name]) {
+                    delete(flag.memory.tasks.defense.[index]);
+                    existingCreep = null;
+                }
             }
-        }
-        if (!existingWarrior) {
-            let spawnRoomName = Room.bestSpawnRoomFor(flag);
-            let setup = 'warrior';
-            let fixedBody = [];
-            let multiBody = [TOUGH, ATTACK, RANGED_ATTACK, HEAL, MOVE, MOVE];
-            let body = Creep.Setup.compileBody(Game.rooms[spawnRoomName], fixedBody, multiBody, true);
-            let name = setup + '-' + flag.name;
-            Game.rooms[spawnRoomName].spawnQueueLow.push({
-                parts: body,
-                name: name,
-                setup: setup,
-                destiny: destiny
-            });
-            flag.memory.tasks.defense = { spawnName: name, spawnRoom: spawnRoomName, spawning: 1 };
+            if (!existingCreep) {
+                let spawnRoomName = Room.bestSpawnRoomFor(flag);
+                let setup = 'warrior';
+                let fixedBody = [];
+                let multiBody = [TOUGH, ATTACK, RANGED_ATTACK, HEAL, MOVE, MOVE];
+                let body = Creep.Setup.compileBody(Game.rooms[spawnRoomName], fixedBody, multiBody, true);
+                let name = setup + '-' + flag.name;
+                Game.rooms[spawnRoomName].spawnQueueLow.push({
+                    parts: body,
+                    name: name,
+                    setup: setup,
+                    destiny: destiny
+                });
+                flag.memory.tasks.defense = { spawnName: name, spawnRoom: spawnRoomName, spawning: 1 };
+            }
         }
     }
 };
