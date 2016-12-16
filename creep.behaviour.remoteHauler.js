@@ -21,6 +21,10 @@ module.exports = {
         let flag = Game.flags[creep.data.destiny.flagName];
         if( creep.sum < creep.carryCapacity/2 ) {
             if( flag && flag.pos.roomName != creep.pos.roomName ){
+                if( creep.data.getTick ) {
+                    flag.memory.tasks['remoteHauler'].walkTime = Game.time - creep.data.getTick;
+                    console.log(creep.name + ": walktime - " + flag.memory.tasks['remoteHauler'].walkTime);
+                }
                 Creep.action.travelling.assign(creep, flag);
                 Population.registerCreepFlag(creep, flag);
                 return true;
@@ -34,6 +38,7 @@ module.exports = {
         }
         else {
             if( creep.pos.roomName != creep.data.homeRoom ){
+                creep.data.getTick = Game.time;
                 Population.registerCreepFlag(creep, null);
                 Creep.action.travelling.assign(creep, Game.rooms[creep.data.homeRoom].controller);
                 return true;

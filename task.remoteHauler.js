@@ -14,6 +14,24 @@ var mod = {
         }
     },
     checkForRequiredCreeps: (flag) => {
+        let carryPartsNeeded = 1;
+        let extraHaulerNeeded = true;
+        if( flag.memory.tasks && flag.memory.tasks.remoteHauler && flag.memory.tasks.remoteHauler.walkTime ) {
+            let totalWalkTime = flag.memory.tasks.remoteHauler.walkTime * 2
+            carryPartsNeeded = Math.ceil(totalWalkTime / 5);
+            let task = 'remoteHauler.1';
+            let i = 1;
+            while( flag.memory.tasks[task] && flag.memory.tasks[task].name ) {
+                let c = Game.creeps[flag.memory.tasks[task].name];
+                _.filter(c.body, function(bp){return bp == CARRY;}).length;
+                carryPartsNeeded -= _.filter(c.body, function(bp){return bp == CARRY;}).length;
+                i++;
+                task = 'remoteHauler.' + i;
+            }
+            if ( carryPartsNeeded <= 0 ) {
+                extraHaulerNeeded 
+            }
+        }
         let destiny = { flagName: flag.name, task: "remoteHauler" };
         let existingCreep;
         if (flag.memory.tasks)
