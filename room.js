@@ -611,7 +611,7 @@ var mod = {
                         return PathFinder.CostMatrix.deserialize(Memory.pathfinder[this.name].costMatrix);
                     }
 
-                    if( DEBUG ) console.log("Calulating cost matrix for " + this.name);
+                    if( DEBUG ) logSystem(this.name, 'Calulating cost matrix');
                     var costMatrix = new PathFinder.CostMatrix;
                     let setCosts = structure => {
                         if(structure.structureType == STRUCTURE_ROAD) {
@@ -909,7 +909,7 @@ var mod = {
 
             // build roads on all most frequent used fields
             let setSite = pos => {
-                if( DEBUG ) console.log(`Constructing new road in ${this.name} at ${pos.x}'${pos.y} (${pos.n} traces)`);
+                if( DEBUG ) logSystem(this.name, `Constructing new road at ${pos.x}'${pos.y} (${pos.n} traces)`);
                 this.createConstructionSite(pos.x, pos.y, STRUCTURE_ROAD);
             };
             _.forEach(data, setSite);
@@ -1165,7 +1165,7 @@ var mod = {
                 let idleSpawns = this.structures.spawns.filter( s => !s.spawning );
                 for( let iSpawn = 0; iSpawn < idleSpawns.length && this.defenseLevel.sum < this.hostileThreatLevel; iSpawn++ ) {
                     let setup = RCL[this.controller.level];
-                    if( DEBUG ) console.log( dye(CRAYON.system, this.name + ' &gt; ') + 'Spring Gun System activated in room ' + this.name + '! Trying to spawn an additional ' + setup.type + '.');
+                    if( DEBUG ) logSystem(this.name, 'Spring Gun System activated! Trying to spawn an additional ' + setup.type + '.');
                     let creepParams = idleSpawns[iSpawn].createCreepBySetup(setup);
                     if( creepParams ){
                         // add to defenseLevel
@@ -1185,10 +1185,9 @@ var mod = {
                 var registerHostile = creep => {
                     if( !that.memory.hostileIds.includes(creep.id) ){
                         let bodyCount = JSON.stringify( _.countBy(creep.body, 'type') );
-                        let message = 'Hostile intruder ' + creep.id + ' (' + bodyCount + ') from "' + creep.owner.username + '" in room ' + that.name + ' at ' + toDateTimeString(toLocalDate(new Date()));
-                        if( DEBUG || NOTIFICATE_INVADER ) console.log(message);
+                        if( DEBUG || NOTIFICATE_INVADER ) logSystem(this.name, `Hostile intruder (${bodyCount}) from "${creep.owner.username}.`);
                         if( NOTIFICATE_INVADER || creep.owner.username != 'Invader' ){
-                            Game.notify(message);
+                            Game.notify(`Hostile intruder ${creep.id} (${bodyCount}) from "${creep.owner.username}" in room ${that.name} at ${toDateTimeString(toLocalDate(new Date()))}`);
                         }
                         if(that.memory.statistics.invaders === undefined)
                             that.memory.statistics.invaders = [];
