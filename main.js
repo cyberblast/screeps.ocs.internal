@@ -24,7 +24,7 @@ module.exports.loop = function () {
         try{        
             mod = require(path);
         }catch(e){
-            if( e.message.indexOf('Unknown module') > -1 ){
+            if( e.message && e.message.indexOf('Unknown module') > -1 ){
                 let reevaluate = getPath(modName, true);
                 if( path != reevaluate ){
                     try {
@@ -35,7 +35,7 @@ module.exports.loop = function () {
                     }
                 }
             }
-            if( e.message.indexOf('Unknown module') > -1 ){
+            if( e.message && e.message.indexOf('Unknown module') > -1 ){
                 console.log(`Module "${modName}" not found!`);
                 return null;
             }
