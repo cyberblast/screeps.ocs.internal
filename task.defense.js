@@ -9,11 +9,12 @@ var mod = {
     handleNewCreep:(creep) => {
         let flag = Game.flags[creep.data.destiny.flagName];
         if (flag) {
-            flag.memory.tasks[creep.data.destiny.task].name = creep.name;
-            flag.memory.tasks[creep.data.destiny.task].spawning = 0;
+            flag.memory.tasks[creep.data.destiny.task][creep.data.destiny.taskIndex].name = creep.name;
+            flag.memory.tasks[creep.data.destiny.task][creep.data.destiny.taskIndex].spawning = 0;
         }
     },
     checkForRequiredCreeps: (flag) => {
+        let taskName = "defense";
         let numRequired;
 
         // store numRequired in flagName.
@@ -22,14 +23,13 @@ var mod = {
         numRequired = stuff[1] ? stuff[1] : 1;
 
         for(let index = 1; index <= numRequired; index++){
-            let taskName = "defense." + index;
-            let destiny = { flagName: flag.name, task: taskName };
+            let destiny = { flagName: flag.name, task: taskName, taskIndex: index };
             let existingCreep;
-            if (flag.memory.tasks && flag.memory.tasks.defense)
-                existingCreep = flag.memory.tasks[taskName];
+            if (flag.memory.tasks && flag.memory.tasks[taskName])
+                existingCreep = flag.memory.tasks[taskName][index];
             else {
                 flag.memory.tasks = {};
-                flag.memory.tasks.defense = {};
+                flag.memory.tasks[taskName] = {};
             }
             if (existingCreep) {
                 if (existingCreep.spawning)
@@ -52,7 +52,7 @@ var mod = {
                     setup: setup,
                     destiny: destiny
                 });
-                flag.memory.tasks[taskName] = { spawnName: name, spawnRoom: spawnRoomName, spawning: 1 };
+                flag.memory.tasks[taskName][index] = { spawnName: name, spawnRoom: spawnRoomName, spawning: 1 };
             }
         }
     }
