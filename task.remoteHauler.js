@@ -40,7 +40,7 @@ var mod = {
         //let stuff = flag.name.split('-');
         //numRequired = stuff[1] ? stuff[1] : 1;
 
-        for(let index = 1; extraHaulerNeeded || (noWalkTime && index == 1); index++){
+        for(let index = 1; extraHaulerNeeded || !(noWalkTime && index == 1); index++){
             let destiny = { flagName: flag.name, task: taskName, taskIndex: index };
             let existingCreep;
             if (!flag.memory.tasks) 
