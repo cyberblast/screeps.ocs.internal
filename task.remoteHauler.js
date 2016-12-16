@@ -18,6 +18,10 @@ var mod = {
         let carryPartsNeeded = 1;
         let extraHaulerNeeded = true;
         let noWalkTime;
+        if (!flag.memory.tasks) 
+            flag.memory.tasks = {};
+        if (!flag.memory.tasks[taskName])
+            flag.memory.tasks[taskName] = {};
         if( flag.memory.tasks && flag.memory.tasks.remoteHauler && flag.memory.tasks.remoteHauler.walkTime ) {
             let carryParts = 0;
             let totalWalkTime = flag.memory.tasks.remoteHauler.walkTime * 2
@@ -40,16 +44,10 @@ var mod = {
         //let stuff = flag.name.split('-');
         //numRequired = stuff[1] ? stuff[1] : 1;
 
-        for(let index = 1; extraHaulerNeeded || !(noWalkTime && index == 1); index++){
+        for(let index = 1; extraHaulerNeeded; index++){
             let destiny = { flagName: flag.name, task: taskName, taskIndex: index };
             let existingCreep;
-            if (!flag.memory.tasks) 
-                flag.memory.tasks = {};
-            if (flag.memory.tasks && flag.memory.tasks[taskName])
-                existingCreep = flag.memory.tasks[taskName][index];
-            else {
-                flag.memory.tasks[taskName] = {};
-            }
+            existingCreep = flag.memory.tasks[taskName][index];
             if (existingCreep) {
                 if (existingCreep.spawning)
                     return;
@@ -74,6 +72,8 @@ var mod = {
                 flag.memory.tasks[taskName][index] = { spawnName: name, spawnRoom: spawnRoomName, spawning: 1 };
                 extraHaulerNeeded = false;
             }
+            if (noWalkTime)
+                extraHaulerNeeded = false;
         }
     }
 };
