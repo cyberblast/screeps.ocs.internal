@@ -24,14 +24,26 @@ module.exports.loop = function () {
         try{        
             mod = require(path);
         }catch(e){
-            let reevaluate = getPath(modName, true);
-            if( path != reevaluate ){
-                try {
-                    mod = require(reevaluate);
-                } catch(e2){}
+            if( e.message && e.message.indexOf('Unknown module') > -1 ){
+                let reevaluate = getPath(modName, true);
+                if( path != reevaluate ){
+                    try {
+                        mod = require(reevaluate);
+                    } catch(e2){
+                        mod = null;
+                        e = e2;
+                    }
+                }
+            }
+            if( e.message && e.message.indexOf('Unknown module') > -1 ){
+                console.log(`Module "${modName}" not found!`);
+                return null;
+            }
+            if(mod == null) {
+                console.log(`Error loading module "${modName}"!<br/>${e.toString()}`);
+                return null;
             }
         }
-        if( !mod ) console.log(`Module "${modName}" not found!`);
         return mod;
     };
 
