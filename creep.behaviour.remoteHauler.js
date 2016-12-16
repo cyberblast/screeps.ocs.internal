@@ -23,7 +23,6 @@ module.exports = {
             if( flag && flag.pos.roomName != creep.pos.roomName ){
                 if( creep.data.getTick ) {
                     flag.memory.tasks['remoteHauler'].walkTime = Game.time - creep.data.getTick;
-                    console.log(creep.name + ": walktime - " + flag.memory.tasks['remoteHauler'].walkTime);
                 }
                 Creep.action.travelling.assign(creep, flag);
                 Population.registerCreepFlag(creep, flag);
