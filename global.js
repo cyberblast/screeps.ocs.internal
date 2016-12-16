@@ -37,6 +37,16 @@ var mod = {
                         secondaryColor: COLOR_YELLOW,
                         filter: {'color': COLOR_RED, 'secondaryColor': COLOR_YELLOW }
                     },
+                    hopper: { // the room where tower is
+                        color: COLOR_RED,
+                        secondaryColor: COLOR_PURPLE,
+                        filter: {'color': COLOR_RED, 'secondaryColor': COLOR_PURPLE }
+                    },
+                    hopperHome: { // room to heal in
+                        color: COLOR_RED,
+                        secondaryColor: COLOR_BLUE,
+                        filter: {'color': COLOR_RED, 'secondaryColor': COLOR_BLUE }
+                    }
                 },
                 //COLOR_PURPLE,
                 //COLOR_BLUE,
