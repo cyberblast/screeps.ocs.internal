@@ -29,11 +29,12 @@ var mod = {
             let taskIndex = 1;
             while( flag.memory.tasks[taskName][taskIndex] && flag.memory.tasks[taskName][taskIndex].name ) {
                 let c = Game.creeps[flag.memory.tasks[taskName][taskIndex].name];
-                carryParts += _.filter(c.body, function(bp){return bp.type == CARRY;}).length;
+                if( c )
+                    carryParts += _.filter(c.body, function(bp){return bp.type == CARRY;}).length;
                 taskIndex++;
                 
             }
-            if ( carryParts < carryPartsNeeded || (flag.memory.tasks[taskName][taskIndex] && flag.memory.tasks[taskName][taskIndex].spawning) ) {
+            if ( carryParts > carryPartsNeeded || (flag.memory.tasks[taskName][taskIndex] && flag.memory.tasks[taskName][taskIndex].spawning) ) {
                 extraHaulerNeeded = false;
             }
         } else {
