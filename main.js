@@ -40,7 +40,7 @@ module.exports.loop = function () {
                 return null;
             }
             if(mod == null) {
-                console.log(`Error loading module "${modName}"!<br/>${e.message}<br/>${e.stack}`);
+                console.log(`Error loading module "${modName}"!<br/>${e.toString()}`);
                 return null;
             }
         }
