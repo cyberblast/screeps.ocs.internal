@@ -21,18 +21,21 @@ var mod = {
         let stuff = flag.name.split('-');
         numRequired = stuff[1] ? stuff[1] : 1;
 
-        for(let index = 1; index < numRequired; index++){
-            let destiny = { flagName: flag.name, task: "defense." + index };
+        for(let index = 1; index <= numRequired; index++){
+            let taskName = "defense." + index;
+            let destiny = { flagName: flag.name, task: taskName };
             let existingCreep;
             if (flag.memory.tasks && flag.memory.tasks.defense)
-                existingCreep = flag.memory.tasks.defense.[index];
-            else
+                existingCreep = flag.memory.tasks[taskName];
+            else {
+                flag.memory.tasks = {};
                 flag.memory.tasks.defense = {};
+            }
             if (existingCreep) {
                 if (existingCreep.spawning)
                     return;
                 if (!Game.creeps[existingCreep.name]) {
-                    delete(flag.memory.tasks.defense.[index]);
+                    delete(flag.memory.tasks[taskName]);
                     existingCreep = null;
                 }
             }
@@ -49,7 +52,7 @@ var mod = {
                     setup: setup,
                     destiny: destiny
                 });
-                flag.memory.tasks.defense = { spawnName: name, spawnRoom: spawnRoomName, spawning: 1 };
+                flag.memory.tasks[taskName] = { spawnName: name, spawnRoom: spawnRoomName, spawning: 1 };
             }
         }
     }
