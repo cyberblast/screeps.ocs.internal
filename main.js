@@ -25,10 +25,11 @@ module.exports.loop = function () {
             mod = require(path);
         }catch(e){
             let reevaluate = getPath(modName, true);
-            if( path != reevaluate )
-            try {
-                mod = require(reevaluate);
-            } catch(e2){}
+            if( path != reevaluate ){
+                try {
+                    mod = require(reevaluate);
+                } catch(e2){}
+            }
         }
         if( !mod ) console.log(`Module "$(modName)" not found!`);
         return mod;
