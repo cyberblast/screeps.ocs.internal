@@ -17,29 +17,30 @@ var mod = {
         let taskName = "remoteHauler";
         let carryPartsNeeded = 1;
         let extraHaulerNeeded = true;
+        let noWalkTime;
         if( flag.memory.tasks && flag.memory.tasks.remoteHauler && flag.memory.tasks.remoteHauler.walkTime ) {
-            let carryParts;
+            let carryParts = 0;
             let totalWalkTime = flag.memory.tasks.remoteHauler.walkTime * 2
             carryPartsNeeded = Math.ceil(totalWalkTime / 5);
             let taskIndex = 1;
             while( flag.memory.tasks[taskName][taskIndex] && flag.memory.tasks[taskName][taskIndex].name ) {
-                let c = Game.creeps[flag.memory.tasks[task].name];
-                _.filter(c.body, function(bp){return bp == CARRY;}).length;
-                carryParts += _.filter(c.body, function(bp){return bp == CARRY;}).length;
+                let c = Game.creeps[flag.memory.tasks[taskName][taskIndex].name];
+                carryParts += _.filter(c.body, function(bp){return bp.type == CARRY;}).length;
                 taskIndex++;
                 
             }
-            if ( carryParts < carryPartsNeeded || flag.memory.tasks[taskName][taskIndex].spawning ) {
+            if ( carryParts < carryPartsNeeded || (flag.memory.tasks[taskName][taskIndex] && flag.memory.tasks[taskName][taskIndex].spawning) ) {
                 extraHaulerNeeded = false;
             }
+        } else {
+            noWalkTime = true;
         }
         // store numRequired in flagName.
         // Flag1-10 is 10 creeps.
         //let stuff = flag.name.split('-');
         //numRequired = stuff[1] ? stuff[1] : 1;
 
-       
-        for(let index = 1; extraHaulerNeeded; index++){
+        for(let index = 1; extraHaulerNeeded || (noWalkTime && index == 1); index++){
             let destiny = { flagName: flag.name, task: taskName, taskIndex: index };
             let existingCreep;
             if (!flag.memory.tasks) 
