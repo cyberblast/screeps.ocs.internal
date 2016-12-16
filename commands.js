@@ -22,3 +22,8 @@ Game.market.createSellOrder(resourceType, price, totalAmount, roomName);
 
 //accept market sell or buy order
 Game.market.deal(orderId, amount, roomName);
+
+// To override a module file create a copy of an existing module and name it "custom.<originalModuleName>". Then call this method (without ".js"): 
+getPath('<originalModuleName>', true);
+// To completely re-evaluate all modules:
+delete Memory.modules; 

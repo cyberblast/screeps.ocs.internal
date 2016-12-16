@@ -239,9 +239,6 @@ var mod = {
             },
             unpave: function(roomname){
 
-            }, 
-            reloadModules: () => {
-                reload = true;
             }
         });
     }
