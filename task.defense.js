@@ -25,10 +25,11 @@ var mod = {
         for(let index = 1; index <= numRequired; index++){
             let destiny = { flagName: flag.name, task: taskName, taskIndex: index };
             let existingCreep;
-            if (flag.memory.tasks && flag.memory.tasks[taskName])
+            if (!flag.memory.tasks)
+                flag.memory.tasks = {};
+            if (flag.memory.tasks[taskName])
                 existingCreep = flag.memory.tasks[taskName][index];
             else {
-                flag.memory.tasks = {};
                 flag.memory.tasks[taskName] = {};
             }
             if (existingCreep) {

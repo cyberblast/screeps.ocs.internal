@@ -42,10 +42,11 @@ var mod = {
         for(let index = 1; extraHaulerNeeded; index++){
             let destiny = { flagName: flag.name, task: taskName, taskIndex: index };
             let existingCreep;
+            if (!flag.memory.tasks) 
+                flag.memory.tasks = {};
             if (flag.memory.tasks && flag.memory.tasks[taskName])
                 existingCreep = flag.memory.tasks[taskName][index];
             else {
-                flag.memory.tasks = {};
                 flag.memory.tasks[taskName] = {};
             }
             if (existingCreep) {
@@ -59,9 +60,9 @@ var mod = {
             if (!existingCreep) {
                 let spawnRoomName = Room.bestSpawnRoomFor(flag);
                 let setup = 'remoteHauler';
-                let fixedBody = [];
-                let multiBody = [TOUGH, ATTACK, RANGED_ATTACK, HEAL, MOVE, MOVE];
-                let body = Creep.Setup.compileBody(Game.rooms[spawnRoomName], fixedBody, multiBody, true);
+                let fixedBody = [WORK];
+                let multiBody = [CARRY, CARRY, MOVE];
+                let body = Creep.Setup.compileBody(Game.rooms[spawnRoomName], fixedBody, multiBody);
                 let name = setup + '-' + flag.name;
                 Game.rooms[spawnRoomName].spawnQueueLow.push({
                     parts: body,
