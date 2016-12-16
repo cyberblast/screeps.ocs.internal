@@ -396,7 +396,11 @@ var mod = {
                 configurable: true,
                 get: function() {
                     if( _.isUndefined(this._hostiles) ){
-                        this._hostiles = this.find(FIND_HOSTILE_CREEPS, { filter : c => _.indexOf(PLAYER_WHITELIST, c.owner.username) == -1 });
+                        let notWhitelisted = (creep) => 
+                            !(PLAYER_WHITELIST.some((player) => 
+                                player.toLowerCase() == creep.owner.username.toLowerCase()
+                            ));
+                        this._hostiles = this.find(FIND_HOSTILE_CREEPS, { filter : notWhitelisted });
                     }
                     return this._hostiles;
                 }
