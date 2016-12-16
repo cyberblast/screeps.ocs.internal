@@ -1089,6 +1089,7 @@ var mod = {
             let that = this;
             let mineral = this.mineralType;
             let transacting = false;
+            let terminalFull = (this.terminal.sum / this.terminal.storeCapacity) > 0.8;
             if( this.terminal.store[mineral] >= MIN_MINERAL_SELL_AMOUNT ) {
                 if(DEBUG) console.log('Executing terminalBroker in ' + this.name);
                 let orders = Game.market.getAllOrders( o => {
@@ -1116,7 +1117,7 @@ var mod = {
                     o.ratio = o.credits/o.transactionCost;
 
                     return (
-                        o.ratio >= MIN_SELL_RATIO[mineral] &&
+                        (terminalFull || o.ratio >= MIN_SELL_RATIO[mineral]) &&
                         //o.range <= MAX_SELL_RANGE &&
                         o.transactionCost <= that.terminal.store.energy);
                 });
