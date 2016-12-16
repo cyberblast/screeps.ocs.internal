@@ -32,7 +32,7 @@ module.exports.loop = function () {
                 } catch(e2){}
             }
         }
-        if( !mod ) console.log(`Module "$(modName)" not found!`);
+        if( !mod ) console.log(`Module "${modName}" not found!`);
         return mod;
     };
 
