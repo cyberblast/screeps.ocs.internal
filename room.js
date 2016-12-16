@@ -1125,8 +1125,8 @@ var mod = {
                     let order = _.max(orders, 'ratio');
                     let result = Game.market.deal(order.id, order.transactionAmount, that.name);
                     let message = '<h2>Room ' + that.name + ' executed an order!</h2><br/>Result: ' + translateErrorCode(result) + '<br/>Details:<br/> ' + JSON.stringify(order).replace(',',',<br/>');
-                    console.log(message);
-                    Game.notify( message );
+                    if( DEBUG ) console.log(message);
+                    if( SELL_NOTIFICATION ) Game.notify( message );
                     transacting = true;
                 }
             }
