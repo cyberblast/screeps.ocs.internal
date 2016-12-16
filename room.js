@@ -1091,7 +1091,7 @@ var mod = {
             let transacting = false;
             let terminalFull = (this.terminal.sum / this.terminal.storeCapacity) > 0.8;
             if( this.terminal.store[mineral] >= MIN_MINERAL_SELL_AMOUNT ) {
-                if(DEBUG) console.log('Executing terminalBroker in ' + this.name);
+                if(DEBUG) logSystem(this.name, 'Executing terminalBroker');
                 let orders = Game.market.getAllOrders( o => {
                     if( !o.roomName ||
                         o.resourceType != mineral ||
