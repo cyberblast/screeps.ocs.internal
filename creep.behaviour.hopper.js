@@ -8,10 +8,26 @@ module.exports = {
             delete creep.data.path;
         }
         // Do some work
-        if( creep.action && creep.target ) {
-            creep.action.step(creep);
-        } else {
-            logError('Creep without action/activity!\nCreep: ' + creep.name + '\ndata: ' + JSON.stringify(creep.data));
+        if( creep.data.body.heal !== undefined && creep.hits < creep.hitsMax ){
+            creep.heal(creep);
+        }
+        else if(creep.room.casualties.length > 0 ) {
+            let injured = creep.pos.findInRange(creep.room.casualties, 3);
+            if( injured.length > 0 ){
+                if(creep.pos.isNearTo(injured[0])) {
+                    creep.heal(injured[0]);
+                }
+                else {
+                    creep.rangedHeal(injured[0]);
+                }
+            }
+        }
+        if(creep.hits === creep.hitsMax){
+            if( creep.action && creep.target) {
+                creep.action.step(creep);
+            } else {
+                logError('Creep without action/activity!\nCreep: ' + creep.name + '\ndata: ' + JSON.stringify(creep.data));
+            }
         }
     },
     nextAction: function(creep){
