@@ -200,7 +200,7 @@ var mod = {
                                         ( !DECAYABLES.includes(structure.structureType) || (structure.hitsMax - structure.hits) > GAP_REPAIR_DECAYABLE ) &&
                                         ( structure.towers === undefined || structure.towers.length == 0) &&
                                         ( Memory.pavementArt[that.room.name] === undefined || Memory.pavementArt[that.room.name].indexOf('x'+structure.pos.x+'y'+structure.pos.y+'x') < 0 ) && 
-                                        ( !FlagDir.list.some(f => f.roomName == structure.pos.roomName && f.color == COLOR_ORANGE && f.x == structure.pos.x && f.y == structure.pos.x) )
+                                        ( !FlagDir.list.some(f => f.roomName == structure.pos.roomName && f.color == COLOR_ORANGE && f.x == structure.pos.x && f.y == structure.pos.y) )
                                     )
                                 ),
                                 'hits'
@@ -233,7 +233,7 @@ var mod = {
                                         ( structure.structureType != STRUCTURE_CONTAINER || structure.hits < MAX_FORTIFY_CONTAINER ) &&
                                         ( !DECAYABLES.includes(structure.structureType) || (structure.hitsMax - structure.hits) > GAP_REPAIR_DECAYABLE*3 ) &&
                                         ( Memory.pavementArt[that.room.name] === undefined || Memory.pavementArt[that.room.name].indexOf('x'+structure.pos.x+'y'+structure.pos.y+'x') < 0 ) && 
-                                        ( !FlagDir.list.some(f => f.roomName == structure.pos.roomName && f.color == COLOR_ORANGE && f.x == structure.pos.x && f.y == structure.pos.x) )
+                                        ( !FlagDir.list.some(f => f.roomName == structure.pos.roomName && f.color == COLOR_ORANGE && f.x == structure.pos.x && f.y == structure.pos.y) )
                                     )
                                 ),
                                 'hits'
@@ -396,7 +396,11 @@ var mod = {
                 configurable: true,
                 get: function() {
                     if( _.isUndefined(this._hostiles) ){
-                        this._hostiles = this.find(FIND_HOSTILE_CREEPS, { filter : c => _.indexOf(PLAYER_WHITELIST, c.owner.username) == -1 });
+                        let notWhitelisted = (creep) => 
+                            !(PLAYER_WHITELIST.some((player) => 
+                                player.toLowerCase() == creep.owner.username.toLowerCase()
+                            ));
+                        this._hostiles = this.find(FIND_HOSTILE_CREEPS, { filter : notWhitelisted });
                     }
                     return this._hostiles;
                 }
@@ -611,7 +615,7 @@ var mod = {
                         return PathFinder.CostMatrix.deserialize(Memory.pathfinder[this.name].costMatrix);
                     }
 
-                    if( DEBUG ) console.log("Calulating cost matrix for " + this.name);
+                    if( DEBUG ) logSystem(this.name, 'Calulating cost matrix');
                     var costMatrix = new PathFinder.CostMatrix;
                     let setCosts = structure => {
                         if(structure.structureType == STRUCTURE_ROAD) {
@@ -909,7 +913,7 @@ var mod = {
 
             // build roads on all most frequent used fields
             let setSite = pos => {
-                if( DEBUG ) console.log(`Constructing new road in ${this.name} at ${pos.x}'${pos.y} (${pos.n} traces)`);
+                if( DEBUG ) logSystem(this.name, `Constructing new road at ${pos.x}'${pos.y} (${pos.n} traces)`);
                 this.createConstructionSite(pos.x, pos.y, STRUCTURE_ROAD);
             };
             _.forEach(data, setSite);
@@ -1089,8 +1093,9 @@ var mod = {
             let that = this;
             let mineral = this.mineralType;
             let transacting = false;
+            let terminalFull = (this.terminal.sum / this.terminal.storeCapacity) > 0.8;
             if( this.terminal.store[mineral] >= MIN_MINERAL_SELL_AMOUNT ) {
-                if(DEBUG) console.log('Executing terminalBroker in ' + this.name);
+                if(DEBUG) logSystem(this.name, 'Executing terminalBroker');
                 let orders = Game.market.getAllOrders( o => {
                     if( !o.roomName ||
                         o.resourceType != mineral ||
@@ -1116,7 +1121,7 @@ var mod = {
                     o.ratio = o.credits/o.transactionCost;
 
                     return (
-                        o.ratio >= MIN_SELL_RATIO[mineral] &&
+                        (terminalFull || o.ratio >= MIN_SELL_RATIO[mineral]) &&
                         //o.range <= MAX_SELL_RANGE &&
                         o.transactionCost <= that.terminal.store.energy);
                 });
@@ -1124,10 +1129,9 @@ var mod = {
                 if( orders.length > 0 ){
                     let order = _.max(orders, 'ratio');
                     let result = Game.market.deal(order.id, order.transactionAmount, that.name);
-                    let message = '<h2>Room ' + that.name + ' executed an order!</h2><br/>Result: ' + translateErrorCode(result) + '<br/>Details:<br/> ' + JSON.stringify(order).replace(',',',<br/>');
-                    console.log(message);
-                    Game.notify( message );
-                    transacting = true;
+                    if( DEBUG ) logSystem(that.name, `Sold ${order.transactionAmount} ${mineral} for ${order.credits} (${order.ratio} ¢/${mineral}) ${translateErrorCode(result)}`);
+                    if( SELL_NOTIFICATION ) Game.notify( `<h2>Room ${that.name} executed an order!</h2><br/>Result: ${translateErrorCode(result)}<br/>Details:<br/>${JSON.stringify(order).replace(',',',<br/>')}` );
+                    transacting = result == OK;
                 }
             }
             if( this.controller.level == 8 && !transacting &&
@@ -1146,7 +1150,7 @@ var mod = {
                 if( targetRoom && Game.market.calcTransactionCost(50000, this.name, targetRoom.name) < (this.terminal.store.energy-50000)) {
                     targetRoom._isReceivingEnergy = true;
                     let response = this.terminal.send('energy', 50000, targetRoom.name, 'have fun');
-                    console.log(`Transfering 50k energy from room ${this.name} to ${targetRoom.name}. (${translateErrorCode(response)})`);
+                    if( DEBUG ) logSystem(that.name, `Transfering 50k energy from to ${targetRoom.name}. (${translateErrorCode(response)})`);
                 }
             }
         };
@@ -1165,7 +1169,7 @@ var mod = {
                 let idleSpawns = this.structures.spawns.filter( s => !s.spawning );
                 for( let iSpawn = 0; iSpawn < idleSpawns.length && this.defenseLevel.sum < this.hostileThreatLevel; iSpawn++ ) {
                     let setup = RCL[this.controller.level];
-                    if( DEBUG ) console.log( dye(CRAYON.system, this.name + ' &gt; ') + 'Spring Gun System activated in room ' + this.name + '! Trying to spawn an additional ' + setup.type + '.');
+                    if( DEBUG ) logSystem(this.name, 'Spring Gun System activated! Trying to spawn an additional ' + setup.type + '.');
                     let creepParams = idleSpawns[iSpawn].createCreepBySetup(setup);
                     if( creepParams ){
                         // add to defenseLevel
@@ -1185,10 +1189,9 @@ var mod = {
                 var registerHostile = creep => {
                     if( !that.memory.hostileIds.includes(creep.id) ){
                         let bodyCount = JSON.stringify( _.countBy(creep.body, 'type') );
-                        let message = 'Hostile intruder ' + creep.id + ' (' + bodyCount + ') from "' + creep.owner.username + '" in room ' + that.name + ' at ' + toDateTimeString(toLocalDate(new Date()));
-                        if( DEBUG || NOTIFICATE_INVADER ) console.log(message);
+                        if( DEBUG || NOTIFICATE_INVADER ) logSystem(this.name, `Hostile intruder (${bodyCount}) from "${creep.owner.username}.`);
                         if( NOTIFICATE_INVADER || creep.owner.username != 'Invader' ){
-                            Game.notify(message);
+                            Game.notify(`Hostile intruder ${creep.id} (${bodyCount}) from "${creep.owner.username}" in room ${that.name} at ${toDateTimeString(toLocalDate(new Date()))}`);
                         }
                         if(that.memory.statistics.invaders === undefined)
                             that.memory.statistics.invaders = [];

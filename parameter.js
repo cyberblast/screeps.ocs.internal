@@ -6,6 +6,7 @@ var mod = {
     SAY_PUBLIC: true, // creeps talk public
     DEBUG: true, // gimme some more details
     CENSUS_ANNOUNCEMENTS: true, // log birth and death
+    SELL_NOTIFICATION: true, // send mail when selling minerals
     SPAWN_INTERVAL: 5, // loops between regular spawn probe
     MAX_STORAGE_ENERGY: { // stop storing energy when reached
         4: 5000,
@@ -73,7 +74,7 @@ var mod = {
     NOTIFICATE_INVADER: false, // Also log common 'Invader' hostiles
     COMBAT_CREEPS_RESPECT_RAMPARTS: false, // causes own creeps not to leave through ramparts
     COST_MATRIX_VALIDITY: 1000,
-    PLAYER_WHITELIST: ['cyberblast','SirLovi','Asku','Kazume','Noxeth','MrDave','Telemac','Xephael','Zoiah','fsck-u','Kansir','FaceWound','forkmantis','DoctorPC','Vultured','C00k1e_93','Lolzor','Migaaresno','xAix1999','silentpoots','arguinyano','OokieCookie','OverlordQ','Nibinhilion','mmmd','Crowsbane','Yew','BogdanBiv','s1akr','Pandabear41']
+    PLAYER_WHITELIST: ['cyberblast','SirLovi','Asku','Kazume','Noxeth','MrDave','Telemac','Xephael','Zoiah','fsck-u','Kansir','FaceWound','forkmantis','DoctorPC','Vultured','C00k1e_93','Lolzor','Migaaresno','xAix1999','silentpoots','arguinyano','OokieCookie','OverlordQ','Nibinhilion','mmmd','Crowsbane','Yew','BogdanBiv','s1akr','Pandabear41','Logmadr','Patrik']
     // Don't attack. Must be a member of OCS for permanent whitelisting in git repository. But you can change your own copy... Please ask if you are interested in joining OCS :)
 }
 module.exports = mod;

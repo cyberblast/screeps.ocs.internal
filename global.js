@@ -157,6 +157,9 @@ var mod = {
             logError: function(message) {
                 console.log( dye(CRAYON.error, message) );
             },
+            logSystem: function(systemMessage, message) {
+                console.log( dye(CRAYON.system, systemMessage  + ' &gt; ') + message );
+            },
             isObj: function(val){
                 if (val === null) { return false;}
                 return ( (typeof val === 'function') || (typeof val === 'object') );
