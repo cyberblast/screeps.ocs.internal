@@ -22,12 +22,10 @@ module.exports = {
                 }
             }
         }
-        if(creep.hits === creep.hitsMax){
-            if( creep.action && creep.target) {
-                creep.action.step(creep);
-            } else {
-                logError('Creep without action/activity!\nCreep: ' + creep.name + '\ndata: ' + JSON.stringify(creep.data));
-            }
+        if( creep.action && creep.target) {
+            creep.action.step(creep);
+        } else {
+            logError('Creep without action/activity!\nCreep: ' + creep.name + '\ndata: ' + JSON.stringify(creep.data));
         }
     },
     nextAction: function(creep){

@@ -4,7 +4,7 @@ action.newTarget = function(creep){
 };
 
 action.work = function(creep){
-    if(creep.pos.x == 0 || creep.pos.y == 0 || creep.pos.x == 49 || creep.pos.y == 49) {
+    if(creep.hits < creep.hitsMax || creep.pos.x == 0 || creep.pos.y == 0 || creep.pos.x == 49 || creep.pos.y == 49) {
         action.newTarget = function(creep) {
             return creep.target = FlagDir.find(FLAG_COLOR.invade.hopperHome);
         }
