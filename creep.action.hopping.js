@@ -4,34 +4,17 @@ action.newTarget = function(creep){
 };
 
 action.work = function(creep){
-    //var injured = creep.pos.findInRange(creep.room.casualties, 3);
-    //if(creep.hits != creep.hitsMax || creep.hits < creep.hitsMax || (!injured.length > 0)){
-    if(creep.hits != creep.hitsMax || creep.hits < creep.hitsMax){
-    //if(!hop){
-        if(creep.pos.x == 0 || creep.pos.y == 0 || creep.pos.x == 49 || creep.pos.y == 49) {
-                action.newTarget = function(creep){
-                return creep.target = FlagDir.find(FLAG_COLOR.invade.hopperHome);
-            };
+    if(creep.pos.x == 0 || creep.pos.y == 0 || creep.pos.x == 49 || creep.pos.y == 49) {
+        action.newTarget = function(creep) {
+            return creep.target = FlagDir.find(FLAG_COLOR.invade.hopperHome);
         }
-        
-        let injured = creep.pos.findInRange(creep.room.casualties, 3);
-        if( injured.length > 0 ){
-            if(creep.pos.isNearTo(injured[0])) {
-                creep.heal(injured[0]);
-            }
-            else {
-                creep.rangedHeal(injured[0]);
-            }
-        }
-        return OK;
     }
-    else if (creep.hits === creep.hitsMax){
-    //if (hop){
-        action.newTarget = function(creep){
+    else if (creep.hits === creep.hitsMax) {
+        action.newTarget = function(creep) {
             return creep.target = FlagDir.find(FLAG_COLOR.invade.hopper);
-        };
-        return OK;
+        }
     }
+    return OK;
 };
 
 action.step = function(creep){
