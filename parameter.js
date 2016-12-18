@@ -24,6 +24,7 @@ var mod = {
     },
     MAX_STORAGE_MINERAL:200000, // keep a max of each type of minerals in store
     MIN_MINERAL_SELL_AMOUNT:20000,
+    ENERGY_VALUE_CREDITS: 0.15, // assumed energy exchange rate (in credits) to determine best mineral sell offer
     //MAX_SELL_RANGE: 60,
     TERMINAL_ENERGY: 100000,
     MIN_SELL_RATIO: {
