@@ -4,6 +4,7 @@ setup.globalMeasurement = true;
 setup.measureByHome = true;
 
 setup.maxCount = function(room){
+    // TODO: switch to task based system
     let maxRange = 3;
     let max = 0;
     let distance, flag;

@@ -14,7 +14,6 @@ var mod = {
             guarding: load("creep.action.guarding"), 
             harvesting: load("creep.action.harvesting"),
             healing: load("creep.action.healing"),
-            hopping: load("creep.action.hopping"),
             idle: load("creep.action.idle"),
             invading: load("creep.action.invading"),
             picking: load("creep.action.picking"), 

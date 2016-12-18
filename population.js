@@ -187,9 +187,7 @@ var mod = {
                     if( !spawnsToProbe.includes(entry.motherSpawn) && entry.motherSpawn != 'unknown' ) {
                         spawnsToProbe.push(entry.motherSpawn);
                     }
-                } else if( entry.destiny ) {
-                    // TODO: assign predefined destiny
-                }
+                } 
                 entry.ttl = creep.ticksToLive;
 
                 if( entry.creepType &&
