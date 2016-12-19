@@ -81,10 +81,7 @@ var mod = {
             };
             body.forEach(evaluatePart);
             return threat;
-        }
-        
-        Creep.spawningStarted = new LiteEvent();
-        Creep.spawningCompleted = new LiteEvent();
+        }        
 
         Creep.prototype.hasActiveOffensivePart = function(){
             return (this.body.find((part) => ( [ATTACK, RANGED_ATTACK].includes(part.type) && part.hits > 0 )) != null);

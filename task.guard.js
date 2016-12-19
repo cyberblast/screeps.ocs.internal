@@ -69,7 +69,7 @@ var mod = {
             let creep = Game.creeps[o];
             if( creep ){
                 count++;
-                spawning.push(o);
+                running.push(o);
             }
         };
         memory.running.forEach(validateRunning);
