@@ -41,38 +41,38 @@ var mod = {
         let count = 0;
         // validate queued creeps
         let queued = []
-        let validateQueue = o => {
+        let validateQueued = o => {
             let room = Game.rooms[o.room];
             if(room.spawnQueueLow.some( c => c.name == o.name)){
                 count++;
                 queued.push(o);
             }
         };
-        memory.queued.forEach(validateQueue);
+        memory.queued.forEach(validateQueued);
         memory.queued = queued;
         
         // validate spawning creeps
         let spawning = []
-        let validSpawn = o => {
+        let validateSpawning = o => {
             let spawn = Game.spawns[o.spawn];
             if( spawn && spawn.spawning && spawn.spawning.name == o.name){
                 count++;
                 spawning.push(o);
             }
         };
-        memory.spawning.forEach(validSpawn);
+        memory.spawning.forEach(validateSpawning);
         memory.spawning = spawning;
 
         // validate running creeps
         let running = []
-        let validRun = o => {
+        let validateRunning = o => {
             let creep = Game.creeps[o];
             if( creep ){
                 count++;
                 spawning.push(o);
             }
         };
-        memory.running.forEach(validRun);
+        memory.running.forEach(validateRunning);
         memory.running = running;
 
         // if creeps below requirement
@@ -82,13 +82,14 @@ var mod = {
             let fixedBody = [ATTACK, MOVE];
             let multiBody = [TOUGH, ATTACK, RANGED_ATTACK, HEAL, MOVE, MOVE];
             let name = 'warrior-' + flag.name;
+            
             let creep = {
                 parts: Creep.Setup.compileBody(room, fixedBody, multiBody, true),
                 name: name,
                 setup: 'warrior',
                 destiny: { task: "guard", flagName: flag.name }
             };
-            
+
             room.spawnQueueLow.push(creep);
             memory.queued.push({
                 room: room.name,

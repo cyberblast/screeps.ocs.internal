@@ -76,7 +76,6 @@ var mod = {
                     cost += BODYPART_COST[part];
                 });
                 this.room.reservedSpawnEnergy += cost;
-                Creep.spawningStarted.trigger({spawn: this.name, name: newName, destiny: destiny});
                 Population.registerCreep(
                     newName,
                     type,
@@ -85,6 +84,7 @@ var mod = {
                     this.name,
                     body,
                     destiny);
+                Creep.spawningStarted.trigger({spawn: this.name, name: newName, destiny: destiny});
                 if(CENSUS_ANNOUNCEMENTS) console.log( dye(CRAYON.system, this.pos.roomName  + ' &gt; ') + dye(CRAYON.birth, 'Good morning ' + newName + '!') );
                 return true;
             }
