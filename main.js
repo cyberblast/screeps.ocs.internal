@@ -71,17 +71,22 @@ module.exports.loop = function () {
         return mod;
     };
 
+    // initialize global & parameters
     let params = load("parameter");
     let glob = load("global");
     glob.init(params);
+
+    // Extend Server Objects
     Extensions.extend();
     Creep.extend();
     Room.extend();
     Spawn.extend();
     FlagDir.extend();
 
+    // Register task hooks
     Task.register();
 
+    // Analyze environment
     FlagDir.loop();
     Population.loop();
     let roomLoop = room => {
@@ -89,9 +94,12 @@ module.exports.loop = function () {
         Tower.loop(room);
     };
     _.forEach(Game.rooms, roomLoop);
+
+    // Execution
     Creep.loop();
     Spawn.loop();
 
+    // Evaluation
     if( Memory.statistics && Memory.statistics.tick && Memory.statistics.tick + TIME_REPORT <= Game.time )
         load("statistics").loop();
     processReports();
