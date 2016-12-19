@@ -1095,7 +1095,7 @@ var mod = {
             let transacting = false;
             let terminalFull = (this.terminal.sum / this.terminal.storeCapacity) > 0.8;
             if( this.terminal.store[mineral] >= MIN_MINERAL_SELL_AMOUNT ) {
-                if(DEBUG) logSystem(this.name, 'Executing terminalBroker');
+                // if(DEBUG) logSystem(this.name, 'Executing terminalBroker');
                 let orders = Game.market.getAllOrders( o => {
                     if( !o.roomName ||
                         o.resourceType != mineral ||
@@ -1118,7 +1118,10 @@ var mod = {
                     }
 
                     o.credits = o.transactionAmount*o.price;
-                    o.ratio = o.credits/o.transactionCost;
+                    //o.ratio = o.credits/o.transactionCost; // old formula
+                    //o.ratio = (o.credits-o.transactionCost)/o.transactionAmount; // best offer assuming 1e == 1 credit
+                    //o.ratio = o.credits/(o.transactionAmount+o.transactionCost); // best offer assuming 1e == 1 mineral
+                    o.ratio = (o.credits - (o.transactionCost*ENERGY_VALUE_CREDITS)) / o.transactionAmount; // best offer assuming 1e == ENERGY_VALUE_CREDITS credits
 
                     return (
                         (terminalFull || o.ratio >= MIN_SELL_RATIO[mineral]) &&
