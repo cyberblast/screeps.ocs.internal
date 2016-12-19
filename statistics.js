@@ -5,7 +5,7 @@ var mod = {
             Memory.statistics.reports = [];
 
         var message;
-        if( this.storedStatisticsTime > 0 ) {
+        if( SEND_STATISTIC_REPORTS && this.storedStatisticsTime > 0 ) {
             message = '<h3><b>Status report </b></h3>'
                 + '<h4>at ' + toDateTimeString(toLocalDate()) + ',<br/>'
                 + 'comparison to state before: ' + this.toTimeSpanString(new Date(), new Date(this.storedStatisticsTime)) + ' (' + (Game.time - Memory.statistics.tick) + ' loops)</h4>';
@@ -29,7 +29,7 @@ var mod = {
 
         var processRoom = room => {
             if( room.controller ) {
-                if( this.storedStatisticsTime > 0 ) { // send Report
+                if( SEND_STATISTIC_REPORTS && this.storedStatisticsTime > 0 ) { // send Report
                     if( room.controller.my ){
                         // controller
                         message = '<ul><li><b>Room ' + room.name + '</b><br/><u>Controller</u><ul>';
@@ -93,7 +93,7 @@ var mod = {
 
         Memory.statistics.tick = Game.time;
         Memory.statistics.time = Date.now();
-        Memory.statistics.bucket =Game.cpu.bucket;
+        Memory.statistics.bucket = Game.cpu.bucket;
     },
     toTimeSpanString: function(dateA, dateB){
         var spanTicks = dateA.getTime() - dateB.getTime();
