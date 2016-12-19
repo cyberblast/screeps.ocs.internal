@@ -82,17 +82,24 @@ var mod = {
             return threat;
         }
 
+        // Check if a creep has body parts of a certain type anf if it is still active. 
+        // Accepts a single part type (like RANGED_ATTACK) or an array of part types. 
+        // Returns true, if there is at least any one part with a matching type present and active.
         Creep.prototype.hasActiveBodyparts = function(partTypes){
             if(Array.isArray(parts))
-                return (this.body.find((part) => ( parts.includes(part.type) && part.hits > 0 )) != null);
-            else return (this.body.find((part) => ( part.type == parts && part.hits > 0 )) != null);
-        } // TODO: reduce functions
+                return (this.body.some((part) => ( parts.includes(part.type) && part.hits > 0 )));
+            else return (this.body.some((part) => ( part.type == parts && part.hits > 0 )));
+        } 
+        // TODO: reduce obsolete functions (check usage & update to use hasActiveBodyparts)
+        // obsolete
         Creep.prototype.hasActiveOffensivePart = function(){
             return this.hasActiveBodyparts([ATTACK, RANGED_ATTACK]);
         }
+        // obsolete
         Creep.prototype.hasActiveAttackPart = function(){
             return this.hasActiveBodyparts(ATTACK);
         }
+        // obsolete
         Creep.prototype.hasActiveRangedAttackPart = function(){
             return this.hasActiveBodyparts(RANGED_ATTACK);
         }
