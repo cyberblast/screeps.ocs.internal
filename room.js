@@ -1081,7 +1081,7 @@ var mod = {
         };
 
         Room.prototype.linkDispatcher = function () {
-            let filled = l => l.cooldown == 0 && l.energy > (l.energyCapacity * (l.source ? 0.85 : 0.5));
+            let filled = l => l.cooldown == 0 && l.energy >= (l.energyCapacity * (l.source ? 0.85 : 0.5));
             let empty = l =>  l.energy < l.energyCapacity * 0.15;
             let filledIn = this.structures.links.in.filter(filled);
             let emptyController = this.structures.links.controller.filter(empty);
@@ -1119,7 +1119,6 @@ var mod = {
             let transacting = false;
             let terminalFull = (this.terminal.sum / this.terminal.storeCapacity) > 0.8;
             if( this.terminal.store[mineral] >= MIN_MINERAL_SELL_AMOUNT ) {
-                // if(DEBUG) logSystem(this.name, 'Executing terminalBroker');
                 let orders = Game.market.getAllOrders( o => {
                     if( !o.roomName ||
                         o.resourceType != mineral ||
@@ -1177,7 +1176,7 @@ var mod = {
                 if( targetRoom && Game.market.calcTransactionCost(50000, this.name, targetRoom.name) < (this.terminal.store.energy-50000)) {
                     targetRoom._isReceivingEnergy = true;
                     let response = this.terminal.send('energy', 50000, targetRoom.name, 'have fun');
-                    if( DEBUG ) logSystem(that.name, `Transfering 50k energy to ${targetRoom.name}. (${translateErrorCode(response)})`);
+                    if( DEBUG ) logSystem(that.name, `Transferring 50k energy to ${targetRoom.name}: ${translateErrorCode(response)}`);
                 }
             }
         };
