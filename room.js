@@ -1150,7 +1150,7 @@ var mod = {
                 if( targetRoom && Game.market.calcTransactionCost(50000, this.name, targetRoom.name) < (this.terminal.store.energy-50000)) {
                     targetRoom._isReceivingEnergy = true;
                     let response = this.terminal.send('energy', 50000, targetRoom.name, 'have fun');
-                    if( DEBUG ) logSystem(that.name, `Transfering 50k energy from to ${targetRoom.name}. (${translateErrorCode(response)})`);
+                    if( DEBUG ) logSystem(that.name, `Transfering 50k energy to ${targetRoom.name}. (${translateErrorCode(response)})`);
                 }
             }
         };

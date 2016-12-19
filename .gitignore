@@ -1,6 +1,8 @@
 ### ignore individual custom module overrides
 custom.*
 custom/*
+viral.*
+viral/*
 
 ### Dreamweaver template
 # DW Dreamweaver added files
