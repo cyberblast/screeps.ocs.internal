@@ -30,11 +30,17 @@ module.exports = {
                 creep.room.structures.links.controller.forEach(addSpot);
             }
             let invalid = [];
+            // dont take already taken
             let findInvalid = entry => {
                 if( entry.roomName == args.roomName && ['miner', 'upgrader'].includes(entry.creepType) && entry.determinatedSpot && entry.ttl > entry.spawningTime)
                     invalid.push(entry.determinatedSpot)
             };
             _.forEach(Memory.population, findInvalid);
+            // dont take miner spots
+            let sourcesInRange = creep.room.controller.pos.findInRange(creep.room.sources, 4);
+            let addAdjacent = source => source.pos.adjacent.forEach(pos => invalid.push({x:pos.x,y:pos.y}))
+            sourcesInRange.forEach(addAdjacent);
+
             args.where = pos => { return !_.some(invalid,{x:pos.x,y:pos.y}); };
 
             let spots = Room.fieldsInRange(args);

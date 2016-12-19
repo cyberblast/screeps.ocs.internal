@@ -1274,18 +1274,3 @@ var mod = {
 }
 
 module.exports = mod;
-
-        /*
-        Room.adjacentFields = function(pos, where = null){
-            let fields = [];
-            for(x = pos.x-1; x < pos.x+2; x++){
-                for(y = pos.y-1; y < pos.y+2; y++){
-                    if( x > 1 && x < 48 && y > 1 && y < 48 ){
-                        let p = new RoomPosition(x, y, pos.roomName);
-                        if( !where || where(p) )
-                            fields.push(p);
-                    }
-                }
-            }
-            return fields;
-        };*/

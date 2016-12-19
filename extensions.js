@@ -57,6 +57,20 @@ var mod = {
                 Memory.sources[this.id] = value;
             }
         });
+        Object.defineProperty(RoomPosition.prototype, 'adjacent', {
+            configurable: true,
+            get: function() {
+                let fields = [];
+                for(x = pos.x-1; x < pos.x+2; x++){
+                    for(y = pos.y-1; y < pos.y+2; y++){
+                        if( x > 1 && x < 48 && y > 1 && y < 48 ){
+                            fields.push(new RoomPosition(x, y, pos.roomName));
+                        }
+                    }
+                }
+                return fields;
+            }
+        });
         Object.defineProperty(RoomObject.prototype, 'accessibleFields', {
             configurable: true,
             get: function() {
