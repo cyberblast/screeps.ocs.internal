@@ -2,29 +2,35 @@ var mod = {
     register: () => {
         Flag.FlagFound.on(f => {
             if( f.color == FLAG_COLOR.defense.color && f.secondaryColor == FLAG_COLOR.defense.secondaryColor ){
-                Task.defense.checkForRequiredCreeps(f);
+                Task.guard.checkForRequiredCreeps(f);
             }
         });
     },
     handleNewCreep:(creep) => {
         let flag = Game.flags[creep.data.destiny.flagName];
         if (flag) {
-            flag.memory.tasks[creep.data.destiny.task].name = creep.name;
-            flag.memory.tasks[creep.data.destiny.task].spawning = 0;
+            flag.memory.tasks.guard.name = creep.name;
+            flag.memory.tasks.guard.spawning = 0;
         }
     },
     checkForRequiredCreeps: (flag) => {
-        let destiny = { flagName: flag.name, task: "defense" };
+        let destiny = { flagName: flag.name, task: "guard" };
         let existingWarrior;
-        if (flag.memory.tasks)
-          existingWarrior = flag.memory.tasks.defense;
-        else
-          flag.memory.tasks = {};
+        if (flag.memory.tasks) {
+            // temporary migration: begin
+            if( flag.memory.tasks.defense ) {
+                flag.memory.tasks.guard = _.clone(flag.memory.tasks.defense, true);
+                delete flag.memory.tasks.defense;
+            }
+            // temporary migration: end
+            existingWarrior = flag.memory.tasks.guard;
+        }
+        else flag.memory.tasks = {};
         if (existingWarrior) {
             if (existingWarrior.spawning)
                 return;
             if (!Game.creeps[existingWarrior.name]) {
-                delete(flag.memory.tasks.defense);
+                delete(flag.memory.tasks.guard);
                 existingWarrior = null;
             }
         }
@@ -41,7 +47,7 @@ var mod = {
                 setup: setup,
                 destiny: destiny
             });
-            flag.memory.tasks.defense = { spawnName: name, spawnRoom: spawnRoomName, spawning: 1 };
+            flag.memory.tasks.guard = { spawnName: name, spawnRoom: spawnRoomName, spawning: 1 };
         }
     }
 };

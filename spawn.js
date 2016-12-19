@@ -55,11 +55,17 @@ var mod = {
                 return true;
             }
             var completeName;
+            var stumb = params.name;
             for (var son = 1; completeName == null || Game.creeps[completeName]; son++) {
              completeName = params.name + '-' + son;
             }
             params.name = completeName;
-            return this.create(params.parts, params.name, params.setup, params.destiny);
+            let result = this.create(params.parts, params.name, params.setup, params.destiny);
+            if( !result ){
+                params.name = stumb;
+                queue.unshift(params);
+            }
+            return result;
         };
         Spawn.prototype.create = function(body, name, type, destiny){
             if( body.length == 0 ) return false;
