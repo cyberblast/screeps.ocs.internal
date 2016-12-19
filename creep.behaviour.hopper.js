@@ -39,22 +39,24 @@ module.exports = {
             target = Game.rooms[creep.data.homeRoom].controller;
         }
         // full HP & not at target room 
-        else if (creep.hits > (creep.hitsMax * 0.85) && creep.pos.roomName != hopperTarget.pos.roomName) {
+        else if (creep.hits === creep.hitsMax && creep.pos.roomName != hopperTarget.pos.roomName) {
             // go to target room (hopper)
             target = hopperTarget;
             Population.registerCreepFlag(creep, target);
         }
         // at target room 
         else {
-            // go to hide room (hopperHome)
-            target= FlagDir.find(FLAG_COLOR.invade.hopperHome, creep.pos, false);
-            if( !target ) target = Game.rooms[creep.data.homeRoom].controller;   
+            // stay until < 85%
+            if( creep.hits < (creep.hitsMax * 0.85) ) {
+                // go to hide room (hopperHome)
+                target= FlagDir.find(FLAG_COLOR.invade.hopperHome, creep.pos, false);
+                if( !target ) target = Game.rooms[creep.data.homeRoom].controller;   
+            }
         }
         
-        //creep.drive( target.pos, 0, 0, Infinity );
-        if( creep.data.targetId != (target.id || target.name)) {
+        if( target && creep.data.targetId != (target.id || target.name)) {
             delete creep.data.path;
             Creep.action.travelling.assign(creep, target);
-        }
+        } // else keep old target
     }
 };
