@@ -31,7 +31,7 @@ var mod = {
         if (!existingWarrior) {
             let spawnRoomName = Room.bestSpawnRoomFor(flag);
             let setup = 'warrior';
-            let fixedBody = [];
+            let fixedBody = [ATTACK, MOVE];
             let multiBody = [TOUGH, ATTACK, RANGED_ATTACK, HEAL, MOVE, MOVE];
             let body = Creep.Setup.compileBody(Game.rooms[spawnRoomName], fixedBody, multiBody, true);
             let name = setup + '-' + flag.name;
