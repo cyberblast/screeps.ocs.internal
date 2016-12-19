@@ -83,7 +83,8 @@ var mod = {
                     this.room,
                     this.name,
                     body,
-                    destiny);
+                    destiny); 
+                this.newSpawn = {name: newName};
                 Creep.spawningStarted.trigger({spawn: this.name, name: newName, destiny: destiny});
                 if(CENSUS_ANNOUNCEMENTS) console.log( dye(CRAYON.system, this.pos.roomName  + ' &gt; ') + dye(CRAYON.birth, 'Good morning ' + newName + '!') );
                 return true;

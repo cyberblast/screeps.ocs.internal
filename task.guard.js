@@ -55,7 +55,7 @@ var mod = {
         let spawning = []
         let validateSpawning = o => {
             let spawn = Game.spawns[o.spawn];
-            if( spawn && spawn.spawning && spawn.spawning.name == o.name){
+            if( spawn && ((spawn.spawning && spawn.spawning.name == o.name) || (spawn.newSpawn && spawn.newSpawn.name == o.name))) {
                 count++;
                 spawning.push(o);
             }
@@ -82,7 +82,7 @@ var mod = {
             let fixedBody = [ATTACK, MOVE];
             let multiBody = [TOUGH, ATTACK, RANGED_ATTACK, HEAL, MOVE, MOVE];
             let name = 'warrior-' + flag.name;
-            
+
             let creep = {
                 parts: Creep.Setup.compileBody(room, fixedBody, multiBody, true),
                 name: name,
