@@ -18,7 +18,7 @@ var mod = {
             if( this.spawning ) return;
             let room = this.room;
             let busy = this.createCreepByQueue(room.spawnQueueHigh);
-            if( !busy && Game.time % SPAWN_INTERVAL == 0 ) {
+            if( !busy && room.spawnQueueHigh.length == 0 && Game.time % SPAWN_INTERVAL == 0 ) {
                 busy = this.createCreepByQueue(room.spawnQueueMedium);
 
                 // old spawning system 
@@ -28,7 +28,7 @@ var mod = {
                 }
                 busy = _.some(Spawn.priority, probe);
 
-                if( !busy ) busy = this.createCreepByQueue(room.spawnQueueLow);
+                if( !busy && room.spawnQueueMedium.length == 0 ) busy = this.createCreepByQueue(room.spawnQueueLow);
             }
             return busy;
         };
