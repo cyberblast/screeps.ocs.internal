@@ -353,6 +353,30 @@ var mod = {
                     return this._relativeEnergyAvailable;
                 }
             },
+            'reservedSpawnEnergy': {
+                configurable: true,
+                get: function() {
+                    if( _.isUndefined(this._reservedSpawnEnergy) ) {
+                        this._reservedSpawnEnergy = 0;
+                    }
+                    return this._reservedSpawnEnergy;
+                },
+                set: function(value) {
+                    this._reservedSpawnEnergy = value;;
+                }
+            },
+            'remainingEnergyAvailable': {
+                configurable: true,
+                get: function() {
+                    return this.energyAvailable - this.reservedSpawnEnergy;
+                }
+            },
+            'relativeRemainingEnergyAvailable': {
+                configurable: true,
+                get: function() {
+                    return this.energyCapacityAvailable > 0 ? this.remainingEnergyAvailable / this.energyCapacityAvailable : 0;
+                }
+            },
             'towerFreeCapacity': {
                 configurable: true,
                 get: function() {
@@ -1246,6 +1270,7 @@ var mod = {
             delete this._currentCostMatrix;
             delete this._my;
             delete this._isReceivingEnergy;
+            delete this._reservedSpawnEnergy;
         }
 
         Room.prototype.loop = function(){

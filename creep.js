@@ -82,6 +82,9 @@ var mod = {
             body.forEach(evaluatePart);
             return threat;
         }
+        
+        Creep.spawningStarted = new LiteEvent();
+        Creep.spawningCompleted = new LiteEvent();
 
         Creep.prototype.hasActiveOffensivePart = function(){
             return (this.body.find((part) => ( [ATTACK, RANGED_ATTACK].includes(part.type) && part.hits > 0 )) != null);
@@ -96,7 +99,7 @@ var mod = {
         Creep.prototype.run = function(behaviour){
             if( !this.spawning ){
                 if( this.data && this.ticksToLive == ( this.data.body.claim !== undefined ? 499 : 1499 )) {
-                    Task.handleNewCreep(this);
+                    Creep.spawningCompleted.trigger(this);
                 }
                 if(!behaviour && this.data && this.data.creepType) {
                     behaviour = Creep.behaviour[this.data.creepType];
