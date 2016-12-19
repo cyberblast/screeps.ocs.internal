@@ -46,8 +46,8 @@ module.exports = {
         }
         // at target room 
         else {
-            // stay until < 85%
-            if( creep.hits < (creep.hitsMax * 0.85) ) {
+            // stay a while
+            if( creep.hits < (creep.hitsMax * 0.6) || !creep.hasActiveBodyparts(TOUGH) ) {
                 // go to hide room (hopperHome)
                 target= FlagDir.find(FLAG_COLOR.invade.hopperHome, creep.pos, false);
                 if( !target ) target = Game.rooms[creep.data.homeRoom].controller;   

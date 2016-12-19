@@ -82,14 +82,19 @@ var mod = {
             return threat;
         }
 
+        Creep.prototype.hasActiveBodyparts = function(partTypes){
+            if(Array.isArray(parts))
+                return (this.body.find((part) => ( parts.includes(part.type) && part.hits > 0 )) != null);
+            else return (this.body.find((part) => ( part.type == parts && part.hits > 0 )) != null);
+        } // TODO: reduce functions
         Creep.prototype.hasActiveOffensivePart = function(){
-            return (this.body.find((part) => ( [ATTACK, RANGED_ATTACK].includes(part.type) && part.hits > 0 )) != null);
+            return hasActiveBodyparts([ATTACK, RANGED_ATTACK]);
         }
         Creep.prototype.hasActiveAttackPart = function(){
-            return (this.body.find((part) => ( ATTACK == part.type && part.hits > 0 )) != null);
+            return hasActiveBodyparts(ATTACK);
         }
         Creep.prototype.hasActiveRangedAttackPart = function(){
-            return (this.body.find((part) => ( RANGED_ATTACK == part.type && part.hits > 0 )) != null);
+            return hasActiveBodyparts(RANGED_ATTACK);
         }
 
         Creep.prototype.run = function(behaviour){
