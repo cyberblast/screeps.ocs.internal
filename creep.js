@@ -86,9 +86,9 @@ var mod = {
         // Accepts a single part type (like RANGED_ATTACK) or an array of part types. 
         // Returns true, if there is at least any one part with a matching type present and active.
         Creep.prototype.hasActiveBodyparts = function(partTypes){
-            if(Array.isArray(parts))
-                return (this.body.some((part) => ( parts.includes(part.type) && part.hits > 0 )));
-            else return (this.body.some((part) => ( part.type == parts && part.hits > 0 )));
+            if(Array.isArray(partTypes))
+                return (this.body.some((part) => ( partTypes.includes(part.type) && part.hits > 0 )));
+            else return (this.body.some((part) => ( part.type == partTypes && part.hits > 0 )));
         } 
         // TODO: reduce obsolete functions (check usage & update to use hasActiveBodyparts)
         // obsolete
