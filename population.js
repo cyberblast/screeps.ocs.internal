@@ -179,8 +179,9 @@ var mod = {
                 if( creep.spawning ) { // count spawning time
                     entry.spawningTime++;
                 }
-                else if( creep.ticksToLive == 1499 ){ // spawning complete
+                else if( creep.ticksToLive ==  ( creep.data.body.claim !== undefined ? 499 : 1499 ) ){ // spawning complete
                     spawnsToProbe.push(entry.motherSpawn);
+                    Creep.spawningCompleted.trigger(creep);
                 }
                 else if(creep.ticksToLive == entry.spawningTime) { // will die in ticks equal to spawning time
                     if(CENSUS_ANNOUNCEMENTS) console.log(dye(CRAYON.system, entry.creepName + ' &gt; ') + dye(CRAYON.death, 'Farewell!') );

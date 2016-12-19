@@ -87,8 +87,8 @@ module.exports.loop = function () {
     Task.register();
 
     // Analyze environment
-    FlagDir.loop();
     Population.loop();
+    FlagDir.loop();
     let roomLoop = room => {
         room.loop();
         Tower.loop(room);

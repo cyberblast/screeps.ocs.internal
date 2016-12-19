@@ -67,7 +67,7 @@ var mod = {
         let running = []
         let validateRunning = o => {
             let creep = Game.creeps[o];
-            if( creep ){
+            if( creep && creep.ticksToLive > (creep.data.spawningTime + (routeRange(creep.data.homeRoom, flag.pos.roomName)*50) ) ){
                 count++;
                 running.push(o);
             }
