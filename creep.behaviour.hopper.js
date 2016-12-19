@@ -38,7 +38,7 @@ module.exports = {
             logError("No target found for hopper creep!");
             target = Game.rooms[creep.data.homeRoom].controller;
         }
-        // full HP & not at target room 
+        // only move to target room at full HP & not at target room 
         else if (creep.hits === creep.hitsMax && creep.pos.roomName != hopperTarget.pos.roomName) {
             // go to target room (hopper)
             target = hopperTarget;

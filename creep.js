@@ -88,13 +88,13 @@ var mod = {
             else return (this.body.find((part) => ( part.type == parts && part.hits > 0 )) != null);
         } // TODO: reduce functions
         Creep.prototype.hasActiveOffensivePart = function(){
-            return hasActiveBodyparts([ATTACK, RANGED_ATTACK]);
+            return this.hasActiveBodyparts([ATTACK, RANGED_ATTACK]);
         }
         Creep.prototype.hasActiveAttackPart = function(){
-            return hasActiveBodyparts(ATTACK);
+            return this.hasActiveBodyparts(ATTACK);
         }
         Creep.prototype.hasActiveRangedAttackPart = function(){
-            return hasActiveBodyparts(RANGED_ATTACK);
+            return this.hasActiveBodyparts(RANGED_ATTACK);
         }
 
         Creep.prototype.run = function(behaviour){
