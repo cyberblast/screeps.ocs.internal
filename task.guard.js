@@ -1,15 +1,15 @@
 var mod = {
     register: () => {
-        Flag.FlagFound.on( flag => Task.guard.handleDefenseFlag(flag) );
-        Creep.spawningStarted.on( params => Task.guard.handleSpawningCreep(params) );
-        Creep.spawningCompleted.on( creep => Task.guard.handleNewCreep(creep) );
+        Flag.FlagFound.on( flag => Task.guard.handleFlagFound(flag) );
+        Creep.spawningStarted.on( params => Task.guard.handleSpawningStarted(params) );
+        Creep.spawningCompleted.on( creep => Task.guard.handleSpawningCompleted(creep) );
     },
-    handleDefenseFlag: flag => {
+    handleFlagFound: flag => {
         if( flag.color == FLAG_COLOR.defense.color && flag.secondaryColor == FLAG_COLOR.defense.secondaryColor ){
             Task.guard.checkForRequiredCreeps(flag);
         }
     },
-    handleSpawningCreep: params => { //{spawn: spawn.name, name: creep.name, destiny: creep.destiny}
+    handleSpawningStarted: params => { //{spawn: spawn.name, name: creep.name, destiny: creep.destiny}
         if ( !params.destiny || !params.destiny.task || params.destiny.task != 'guard' )
             return;
         let flag = Game.flags[params.destiny.flagName];
@@ -18,7 +18,7 @@ var mod = {
             memory.spawning.push(params);
         }
     },
-    handleNewCreep: creep => {
+    handleSpawningCompleted: creep => {
         if (!creep.data || !creep.data.destiny || !creep.data.destiny.task || creep.data.destiny.task != 'guard')
             return;
         let flag = Game.flags[creep.data.destiny.flagName];
@@ -29,8 +29,10 @@ var mod = {
     },
     memory: (flag) => {
         if( !flag.memory.tasks ) flag.memory.tasks = {};
+        // TODO: remove flag.memory.tasks.guard.name check
         if( !flag.memory.tasks.guard || flag.memory.tasks.guard.name ) flag.memory.tasks.guard = {};
         if( !flag.memory.tasks.guard.queued ) flag.memory.tasks.guard.queued = [];
+        // TODO: remove isArray check
         if( !flag.memory.tasks.guard.spawning || !Array.isArray(flag.memory.tasks.guard.spawning)) flag.memory.tasks.guard.spawning = [];
         if( !flag.memory.tasks.guard.running ) flag.memory.tasks.guard.running = [];
         return flag.memory.tasks.guard;

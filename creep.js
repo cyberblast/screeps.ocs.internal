@@ -80,7 +80,7 @@ var mod = {
             };
             body.forEach(evaluatePart);
             return threat;
-        }        
+        }
 
         // Check if a creep has body parts of a certain type anf if it is still active. 
         // Accepts a single part type (like RANGED_ATTACK) or an array of part types. 
