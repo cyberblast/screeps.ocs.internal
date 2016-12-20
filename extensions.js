@@ -4,7 +4,7 @@ var mod = {
 
         // occurs when a flag is found (each tick)
         // param: flag
-        Flag.FlagFound = new LiteEvent();
+        Flag.found = new LiteEvent();
 
         // occurs when a flag memory if found for which no flag exists (before memory removal)
         // param: flagName

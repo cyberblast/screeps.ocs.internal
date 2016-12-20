@@ -1,6 +1,6 @@
 var mod = {
     register: () => {
-        Flag.FlagFound.on( flag => Task.guard.handleFlagFound(flag) );
+        Flag.found.on( flag => Task.guard.handleFlagFound(flag) );
         Creep.spawningStarted.on( params => Task.guard.handleSpawningStarted(params) );
         Creep.spawningCompleted.on( creep => Task.guard.handleSpawningCompleted(creep) );
         Creep.predictedRenewal.on( creep => Task.guard.handlePredictedRenewal(creep) );
@@ -35,6 +35,7 @@ var mod = {
             return;
         let flag = Game.flags[creep.data.destiny.flagName];
         if (flag) {
+            // TODO: implement better distance calculation
             creep.data.predictedRenewal = creep.data.spawningTime + (routeRange(creep.data.homeRoom, flag.pos.roomName)*50);
 
             let memory = Task.guard.memory(flag);

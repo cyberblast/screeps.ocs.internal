@@ -79,7 +79,7 @@ var mod = {
                 y: flag.pos.y,
                 cloaking: flag.cloaking
             });
-            Flag.FlagFound.trigger(flag);
+            Flag.found.trigger(flag);
         };
         _.forEach(Game.flags, register);
         var clearStaleFlags = (flag,flagName) => {
