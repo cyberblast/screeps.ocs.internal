@@ -106,9 +106,6 @@ var mod = {
 
         Creep.prototype.run = function(behaviour){
             if( !this.spawning ){
-                if( this.data && this.ticksToLive == ( this.data.body.claim !== undefined ? 499 : 1499 )) {
-                    Task.handleNewCreep(this);
-                }
                 if(!behaviour && this.data && this.data.creepType) {
                     behaviour = Creep.behaviour[this.data.creepType];
                 }

@@ -67,8 +67,8 @@ var Setup = function(typeName){
         let rcl = this.RCL[room.controller.level];
         let minAbsEnergyAvailable = this.SelfOrCall(rcl.minAbsEnergyAvailable, room);
         let minEnergyAvailable = this.SelfOrCall(rcl.minEnergyAvailable, room);
-        if( room.energyAvailable < minAbsEnergyAvailable ||
-            room.relativeEnergyAvailable < minEnergyAvailable )
+        if( room.remainingEnergyAvailable < minAbsEnergyAvailable ||
+            room.relativeRemainingEnergyAvailable < minEnergyAvailable )
             return false;
 
         let maxCount = this.SelfOrCall(rcl.maxCount, room);
@@ -125,9 +125,9 @@ var Setup = function(typeName){
         if( max == 0 || multiCosts == 0 ) return 0;
         let maxWeight = this.SelfOrCall(rcl.maxWeight, room);
         if( maxWeight == null)
-            return _.min([Math.floor( (room.energyAvailable-fixedCosts) / multiCosts), max]);
+            return _.min([Math.floor( (room.remainingEnergyAvailable-fixedCosts) / multiCosts), max]);
         let existingWeight = this.existingWeight(room);
-        return Math.floor(_.min([((room.energyAvailable-fixedCosts) / multiCosts), max,((maxWeight - existingWeight - fixedCosts) / multiCosts)]));
+        return Math.floor(_.min([((room.remainingEnergyAvailable-fixedCosts) / multiCosts), max,((maxWeight - existingWeight - fixedCosts) / multiCosts)]));
     };
     this.parts = function(room){
         let rcl = this.RCL[room.controller.level];
