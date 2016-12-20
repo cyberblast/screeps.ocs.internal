@@ -3,19 +3,31 @@ var mod = {
         Flag.FlagFound.on( flag => Task.guard.handleFlagFound(flag) );
         Creep.spawningStarted.on( params => Task.guard.handleSpawningStarted(params) );
         Creep.spawningCompleted.on( creep => Task.guard.handleSpawningCompleted(creep) );
+        Creep.predictedRenewal.on( creep => Task.guard.handlePredictedRenewal(creep) );
     },
     handleFlagFound: flag => {
         if( flag.color == FLAG_COLOR.defense.color && flag.secondaryColor == FLAG_COLOR.defense.secondaryColor ){
             Task.guard.checkForRequiredCreeps(flag);
         }
     },
-    handleSpawningStarted: params => { //{spawn: spawn.name, name: creep.name, destiny: creep.destiny}
+    handleSpawningStarted: params => { // params: {spawn: spawn.name, name: creep.name, destiny: creep.destiny}
         if ( !params.destiny || !params.destiny.task || params.destiny.task != 'guard' )
             return;
         let flag = Game.flags[params.destiny.flagName];
         if (flag) {
             let memory = Task.guard.memory(flag);
+            // add to spawning creeps
             memory.spawning.push(params);
+            // validate queued creeps
+            let queued = []
+            let validateQueued = o => {
+                let room = Game.rooms[o.room];
+                if(room.spawnQueueMedium.some( c => c.name == o.name)){
+                    queued.push(o);
+                }
+            };
+            memory.queued.forEach(validateQueued);
+            memory.queued = queued;
         }
     },
     handleSpawningCompleted: creep => {
@@ -23,8 +35,42 @@ var mod = {
             return;
         let flag = Game.flags[creep.data.destiny.flagName];
         if (flag) {
+            creep.data.predictedRenewal = creep.data.spawningTime + (routeRange(creep.data.homeRoom, flag.pos.roomName)*50);
+
             let memory = Task.guard.memory(flag);
+            // add to running creeps
             memory.running.push(creep.name);
+            // validate spawning creeps
+            let spawning = []
+            let validateSpawning = o => {
+                let spawn = Game.spawns[o.spawn];
+                if( spawn && ((spawn.spawning && spawn.spawning.name == o.name) || (spawn.newSpawn && spawn.newSpawn.name == o.name))) {
+                    count++;
+                    spawning.push(o);
+                }
+            };
+            memory.spawning.forEach(validateSpawning);
+            memory.spawning = spawning;
+        }
+    },
+    handlePredictedRenewal: creep => {
+        if (!creep.data || !creep.data.destiny || !creep.data.destiny.task || creep.data.destiny.task != 'guard')
+            return;
+        let flag = Game.flags[creep.data.destiny.flagName];
+        if (flag) {
+            let memory = Task.guard.memory(flag);
+            // validate running creeps
+            let running = []
+            let validateRunning = o => {
+                let creep = Game.creeps[o];
+                // invalidate old creeps for predicted spawning
+                // TODO: better distance calculation
+                if( creep && creep.ticksToLive > (creep.data.spawningTime + (routeRange(creep.data.homeRoom, flag.pos.roomName)*50) ) ) {
+                    running.push(o);
+                }
+            };
+            memory.running.forEach(validateRunning);
+            memory.running = running;
         }
     },
     memory: (flag) => {
@@ -40,45 +86,7 @@ var mod = {
     checkForRequiredCreeps: (flag) => {
         let memory = Task.guard.memory(flag);
         // count creeps
-        let count = 0;
-        // validate queued creeps
-        let queued = []
-        let validateQueued = o => {
-            let room = Game.rooms[o.room];
-            if(room.spawnQueueMedium.some( c => c.name == o.name)){
-                count++;
-                queued.push(o);
-            }
-        };
-        memory.queued.forEach(validateQueued);
-        memory.queued = queued;
-        
-        // validate spawning creeps
-        let spawning = []
-        let validateSpawning = o => {
-            let spawn = Game.spawns[o.spawn];
-            if( spawn && ((spawn.spawning && spawn.spawning.name == o.name) || (spawn.newSpawn && spawn.newSpawn.name == o.name))) {
-                count++;
-                spawning.push(o);
-            }
-        };
-        memory.spawning.forEach(validateSpawning);
-        memory.spawning = spawning;
-
-        // validate running creeps
-        let running = []
-        let validateRunning = o => {
-            let creep = Game.creeps[o];
-            // invalidate old creeps for predicted spawning
-            // TODO: better distance calculation
-            if( creep && creep.ticksToLive > (creep.data.spawningTime + (routeRange(creep.data.homeRoom, flag.pos.roomName)*50) ) ){
-                count++;
-                running.push(o);
-            }
-        };
-        memory.running.forEach(validateRunning);
-        memory.running = running;
-
+        let count = memory.queued.length + memory.spawning.length + memory.running.length;
         // if creeps below requirement
         if( count < 1 ) {
             // add creep

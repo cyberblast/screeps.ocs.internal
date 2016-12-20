@@ -18,7 +18,14 @@ var mod = {
         // param: creep
         Creep.spawningCompleted = new LiteEvent();
 
-
+        // ocurrs when a creep will die in the amount of ticks required to renew it
+        // param: creep
+        Creep.predictedRenewal = new LiteEvent();
+        
+        // ocurrs when a creep dies
+        // param: creep name
+        Creep.died = new LiteEvent();
+        
         Object.defineProperty(Structure.prototype, 'towers', {
             configurable: true,
             get: function() {
