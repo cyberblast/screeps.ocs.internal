@@ -60,15 +60,17 @@ var mod = {
         Object.defineProperty(RoomPosition.prototype, 'adjacent', {
             configurable: true,
             get: function() {
-                let fields = [];
-                for(x = pos.x-1; x < pos.x+2; x++){
-                    for(y = pos.y-1; y < pos.y+2; y++){
-                        if( x > 1 && x < 48 && y > 1 && y < 48 ){
-                            fields.push(new RoomPosition(x, y, pos.roomName));
+                if( _.isUndefined(this._adjacent) )  {
+                    this._adjacent = [];
+                    for(x = pos.x-1; x < pos.x+2; x++){
+                        for(y = pos.y-1; y < pos.y+2; y++){
+                            if( x > 1 && x < 48 && y > 1 && y < 48 ){
+                                this._adjacent.push(new RoomPosition(x, y, pos.roomName));
+                            }
                         }
                     }
                 }
-                return fields;
+                return this._adjacent;
             }
         });
         Object.defineProperty(RoomObject.prototype, 'accessibleFields', {
