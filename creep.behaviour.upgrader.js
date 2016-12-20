@@ -29,21 +29,26 @@ module.exports = {
             if( creep.room.structures.links.controller ){
                 creep.room.structures.links.controller.forEach(addSpot);
             }
-            let invalid = [];
             // dont take already taken
+            let taken = [];
             let findInvalid = entry => {
                 if( entry.roomName == args.roomName && ['miner', 'upgrader'].includes(entry.creepType) && entry.determinatedSpot && entry.ttl > entry.spawningTime)
-                    invalid.push(entry.determinatedSpot)
+                    taken.push(entry.determinatedSpot)
             };
             _.forEach(Memory.population, findInvalid);
             // dont take miner spots
+            let invalid = taken.slice(0);
             let sourcesInRange = creep.room.controller.pos.findInRange(creep.room.sources, 4);
             let addAdjacent = source => source.pos.adjacent.forEach(pos => invalid.push({x:pos.x,y:pos.y}))
             sourcesInRange.forEach(addAdjacent);
 
             args.where = pos => { return !_.some(invalid,{x:pos.x,y:pos.y}); };
-
             let spots = Room.fieldsInRange(args);
+            if( spots.length == 0 ){ 
+                // no position found. allow pos near sources
+                args.where = pos => { return !_.some(taken,{x:pos.x,y:pos.y}); };
+                spots = Room.fieldsInRange(args);
+            }
             if( spots.length > 0 ){
                 let spot = creep.pos.findClosestByPath(spots, {filter: pos => {
                     return !_.some(
