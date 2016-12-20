@@ -67,7 +67,7 @@ var mod = {
                     this._adjacent = [];
                     for(x = this.x-1; x < this.x+2; x++){
                         for(y = this.y-1; y < this.y+2; y++){
-                            if( x > 1 && x < 48 && y > 1 && y < 48 ){
+                            if( x > 0 && x < 49 && y > 0 && y < 49 ){
                                 this._adjacent.push(new RoomPosition(x, y, this.roomName));
                             }
                         }
