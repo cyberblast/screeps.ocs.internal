@@ -45,7 +45,7 @@ var mod = {
         let queued = []
         let validateQueued = o => {
             let room = Game.rooms[o.room];
-            if(room.spawnQueueLow.some( c => c.name == o.name)){
+            if(room.spawnQueueMedium.some( c => c.name == o.name)){
                 count++;
                 queued.push(o);
             }
@@ -94,7 +94,7 @@ var mod = {
                 destiny: { task: "guard", flagName: flag.name }
             };
 
-            room.spawnQueueLow.push(creep);
+            room.spawnQueueMedium.push(creep);
             memory.queued.push({
                 room: room.name,
                 name: name

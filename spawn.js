@@ -1,34 +1,38 @@
 var mod = {
     extend: function(){
-        Spawn.priority = [
-                Creep.setup.miner,
-                Creep.setup.mineralMiner,
-                Creep.setup.worker,
-                Creep.setup.hauler,
-                Creep.setup.upgrader,
-//                Creep.setup.warrior,
-//                Creep.setup.melee,
-//                Creep.setup.ranger,
-                Creep.setup.healer,
-                Creep.setup.pioneer,
-                Creep.setup.privateer,
-                Creep.setup.claimer,
-                Creep.setup.hopper];
+        Spawn.priorityHigh = [
+            Creep.setup.miner,
+            Creep.setup.mineralMiner,
+            Creep.setup.worker,
+            Creep.setup.hauler,
+            Creep.setup.upgrader];
+        Spawn.priorityLow = [
+//            Creep.setup.warrior,
+//            Creep.setup.melee,
+//            Creep.setup.ranger,
+            Creep.setup.healer,
+            Creep.setup.pioneer,
+            Creep.setup.privateer,
+            Creep.setup.claimer,
+            Creep.setup.hopper];
         Spawn.prototype.loop = function(){
             if( this.spawning ) return;
             let room = this.room;
+            // old spawning system 
+            let that = this;
+            let probe = setup => {
+                return setup.isValidSetup(room) && that.createCreepBySetup(setup);
+            }
+
             let busy = this.createCreepByQueue(room.spawnQueueHigh);
+            // don't spawn lower if there is one waiting in the higher queue 
             if( !busy && room.spawnQueueHigh.length == 0 && Game.time % SPAWN_INTERVAL == 0 ) {
-                busy = this.createCreepByQueue(room.spawnQueueMedium);
-
-                // old spawning system 
-                let that = this;
-                let probe = setup => {
-                    return setup.isValidSetup(room) && that.createCreepBySetup(setup);
+                busy = _.some(Spawn.priorityHigh, probe);
+                if( !busy ) busy = this.createCreepByQueue(room.spawnQueueMedium);
+                if( !busy && room.spawnQueueMedium.length == 0 ) {
+                    busy = _.some(Spawn.priorityLow, probe);
+                    if( !busy ) busy = this.createCreepByQueue(room.spawnQueueLow);
                 }
-                busy = _.some(Spawn.priority, probe);
-
-                if( !busy && room.spawnQueueMedium.length == 0 ) busy = this.createCreepByQueue(room.spawnQueueLow);
             }
             return busy;
         };
