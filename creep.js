@@ -25,7 +25,8 @@ var mod = {
             upgrading: load("creep.action.upgrading"), 
             withdrawing: load("creep.action.withdrawing"),
             robbing:load("creep.action.robbing"),
-            reallocating:load("creep.action.reallocating")
+            reallocating:load("creep.action.reallocating"),
+            recycling:load("creep.action.recycling")
         };
         Creep.behaviour = {
             claimer: load("creep.behaviour.claimer"),
