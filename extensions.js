@@ -65,8 +65,8 @@ var mod = {
             get: function() {
                 if( _.isUndefined(this._adjacent) )  {
                     this._adjacent = [];
-                    for(x = this.x-1; x < this.x+2; x++){
-                        for(y = this.y-1; y < this.y+2; y++){
+                    for(let x = this.x-1; x < this.x+2; x++){
+                        for(let y = this.y-1; y < this.y+2; y++){
                             if( x > 0 && x < 49 && y > 0 && y < 49 ){
                                 this._adjacent.push(new RoomPosition(x, y, this.roomName));
                             }
