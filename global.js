@@ -27,10 +27,15 @@ var mod = {
                     color: COLOR_RED,
                     secondaryColor: COLOR_RED,
                     filter: {'color': COLOR_RED, 'secondaryColor': COLOR_RED },
-                    exploit: { // send privateers to exploit sources
+                    exploit: { // send remoteMiners and remoteHaulers to exploit sources
                         color: COLOR_RED,
                         secondaryColor: COLOR_GREEN,
                         filter: {'color': COLOR_RED, 'secondaryColor': COLOR_GREEN }
+                    },
+                    exploitEnemy: { // send privateers to exploit enemy owned room sources
+                        color: COLOR_RED,
+                        secondaryColor: COLOR_ORANGE,
+                        filter: {'color': COLOR_RED, 'secondaryColor': COLOR_ORANGE}
                     },
                     robbing: { // take energy from foreign structures
                         color: COLOR_RED,

@@ -508,7 +508,7 @@ var mod = {
                             let that = this;
                             let adjacent, ownNeighbor, room, mult;
 
-                            let flagEntries = FlagDir.filter([FLAG_COLOR.invade.robbing, FLAG_COLOR.invade.exploit]);
+                            let flagEntries = FlagDir.filter([FLAG_COLOR.invade.robbing, FLAG_COLOR.invade.exploitEnemy]);
                             let countOwn = roomName => {
                                 if( roomName == that.name ) return;
                                 if( Room.isMine(roomName) ) ownNeighbor++;
