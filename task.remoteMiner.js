@@ -93,7 +93,7 @@ var mod = {
         if( count < 1 ) {
             // add creep
             let room = Game.rooms[Room.bestSpawnRoomFor(flag)];
-            let fixedBody = [WORK, WORK, WORK, WORK, WORK, CARRY, MOVE, MOVE];
+            let fixedBody = [WORK, WORK, WORK, WORK, WORK, CARRY, MOVE, MOVE, MOVE];
             let multiBody = [];
             let name = taskName + '-' + flag.name;
 
