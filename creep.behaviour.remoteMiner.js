@@ -104,8 +104,12 @@ module.exports = {
                     let range = this.approach(creep);
                     if( range == 0 ){
                         if( carrying > ( creep.carryCapacity - ( creep.data.body&&creep.data.body.work ? (creep.data.body.work*2) : (creep.carryCapacity/2) ))){
-                            let transfer = r => { if(creep.carry[r] > 0 ) creep.transfer(source.container, r); };
-                            _.forEach(Object.keys(creep.carry), transfer);
+                            if (source.container.hits < MAX_FORTIFY_CONTAINER) {
+                                creep.repair(source.container);
+                            } else {
+                                let transfer = r => { if(creep.carry[r] > 0 ) creep.transfer(source.container, r); };
+                                _.forEach(Object.keys(creep.carry), transfer);
+                            }
                         }
                         creep.harvest(source);
                     }
