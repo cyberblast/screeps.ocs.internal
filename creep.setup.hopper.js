@@ -4,6 +4,7 @@ setup.globalMeasurement = true;
 setup.measureByHome = true;
 
 setup.maxCount = function(room){
+    // TODO: switch to task based system
     let maxRange = 3;
     let max = 0;
     let distance, flag;
@@ -13,7 +14,6 @@ setup.maxCount = function(room){
             return;
         flag = Game.flags[flagEntry.name];
         if( !flag.targetOf || flag.targetOf.length == 0 )
-            max ++;
             max ++;
     }
     let flagEntries = FlagDir.filter(FLAG_COLOR.invade.hopper);

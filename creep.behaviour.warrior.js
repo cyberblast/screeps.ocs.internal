@@ -19,9 +19,9 @@ module.exports = {
             logError('Creep without action/activity!\nCreep: ' + creep.name + '\ndata: ' + JSON.stringify(creep.data));
         }
 
-        if( !creep.attacking ){
+        if( !creep.attacking && creep.data.body.heal !== undefined){
             // Heal self
-            if( creep.data.body.heal !== undefined && creep.hits < creep.hitsMax ){
+            if( creep.hits < creep.hitsMax ){
                 creep.heal(creep);
             }
             // Heal other
