@@ -159,7 +159,7 @@ var mod = {
     loop: function(){
         // clear flag targetOf cache
         let clear = flag => delete flag.targetOf;
-        Game.flags.forEach(clear);
+        _.forEach(Game.flags, clear);
 
         if(_.isUndefined(Memory.population)) {
             Memory.population = {};
