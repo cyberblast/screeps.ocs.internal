@@ -32,6 +32,7 @@ module.exports = {
             priority = [
                 Creep.action.picking,
                 Creep.action.uncharging,
+                Creep.action.moveToArea,
                 Creep.action.idle];
         } else {
             if( creep.pos.roomName != creep.data.homeRoom ){
