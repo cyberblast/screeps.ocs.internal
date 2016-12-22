@@ -544,7 +544,7 @@ var mod = {
                         let distance, reserved, flag;
                         let rcl = this.controller.level;
 
-                        let flagEntries = FlagDir.filter([FLAG_COLOR.claim, FLAG_COLOR.claim.reserve, FLAG_COLOR.invade.exploit]);
+                        let flagEntries = FlagDir.filter([FLAG_COLOR.claim, FLAG_COLOR.claim.reserve]);
                         let calcWeight = flagEntry => {
                             // don't spawn claimer for reservation at RCL < 4 (claimer not big enough)
                             if( rcl > 3 || (flagEntry.color == FLAG_COLOR.claim.color && flagEntry.secondaryColor == FLAG_COLOR.claim.secondaryColor )) {
