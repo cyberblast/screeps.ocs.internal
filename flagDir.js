@@ -68,7 +68,6 @@ var mod = {
         delete this._hasInvasionFlag;
         var register = flag => {
             flag.creeps = {};
-            delete flag.targetOf;
             if( flag.cloaking && flag.cloaking > 0 ) flag.cloaking--;
             this.list.push({
                 name: flag.name,

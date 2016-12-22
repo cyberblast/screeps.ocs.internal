@@ -157,6 +157,10 @@ var mod = {
         return existingCreep || existingQueuedCreep ? true : false;
     },
     loop: function(){
+        // clear flag targetOf cache
+        let clear = flag => delete flag.targetOf;
+        Game.flags.forEach(clear);
+
         if(_.isUndefined(Memory.population)) {
             Memory.population = {};
         }
