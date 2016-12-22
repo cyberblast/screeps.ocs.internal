@@ -30,10 +30,8 @@ module.exports = {
                 return true;
             }
             priority = [
-                Creep.action.uncharging,
                 Creep.action.picking,
-                Creep.action.reallocating,
-                Creep.action.withdrawing,
+                Creep.action.uncharging,
                 Creep.action.idle];
         } else {
             if( creep.pos.roomName != creep.data.homeRoom ){
