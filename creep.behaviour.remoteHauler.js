@@ -37,10 +37,6 @@ module.exports = {
                 Creep.action.moveToArea,
                 Creep.action.idle];
 
-            // If a container is almost full, then prioritize it. 
-            if (_.filter(creep.room.structures.container.in, c => c.sum > 1500).length) {
-                priority.unshift(Creep.action.uncharging);
-            }
         } else {
             // Not in home room, then travel.
             if( creep.pos.roomName != creep.data.homeRoom ){
