@@ -77,11 +77,6 @@ module.exports = {
                         range: 1
                     });
                 }
-                if( source.link )
-                    args.spots.push({
-                        pos: source.link.pos,
-                        range: 1
-                    });
                 let spots = Room.fieldsInRange(args);
                 if( spots.length > 0 ){
                     let spot = creep.pos.findClosestByPath(spots, {filter: pos => {
@@ -103,15 +98,8 @@ module.exports = {
 
             if( creep.data.determinatedSpot ) {
                 let carrying = creep.sum;
-                if( source.link && source.link.energy < source.link.energyCapacity ) {
-                    if(CHATTY) creep.say('harvesting', SAY_PUBLIC);
-                    let range = this.approach(creep);
-                    if( range == 0 ){
-                        if(carrying > ( creep.carryCapacity - ( creep.data.body&&creep.data.body.work ? (creep.data.body.work*2) : (creep.carryCapacity/2) )))
-                            creep.transfer(source.link, RESOURCE_ENERGY);
-                        creep.harvest(source);
-                    }
-                } else if( source.container && source.container.sum < source.container.storeCapacity ) {
+                
+                if( source.container && source.container.sum < source.container.storeCapacity ) {
                     if(CHATTY) creep.say('harvesting', SAY_PUBLIC);
                     let range = this.approach(creep);
                     if( range == 0 ){
