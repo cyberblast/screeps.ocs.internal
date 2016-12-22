@@ -20,7 +20,7 @@ module.exports = {
         let priority;
         let flag = Game.flags[creep.data.destiny.flagName];
 
-        if( creep.sum < creep.carryCapacity/2 ) {
+        if( creep.sum < creep.carryCapacity * 0.75 ) {
             // Not in the target room, then travel.
             if( flag && flag.pos.roomName != creep.pos.roomName ){
                 if( creep.data.getTick ) {
