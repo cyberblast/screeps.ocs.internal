@@ -21,6 +21,7 @@ module.exports = {
         let flag = Game.flags[creep.data.destiny.flagName];
 
         if( creep.sum < creep.carryCapacity/2 ) {
+            // Not in the target room, then travel.
             if( flag && flag.pos.roomName != creep.pos.roomName ){
                 if( creep.data.getTick ) {
                     Task.remoteMiner.memory(flag).walkTime = Game.time - creep.data.getTick;
@@ -29,22 +30,31 @@ module.exports = {
                 Population.registerCreepFlag(creep, flag);
                 return true;
             }
+
             priority = [
                 Creep.action.picking,
                 Creep.action.uncharging,
                 Creep.action.moveToArea,
                 Creep.action.idle];
+
+            // If a container is almost full, then prioritize it. 
+            if (_.filter(creep.room.structures.container.in, c => c.sum > 1500).length) {
+                priority.unshift(Creep.action.uncharging);
+            }
         } else {
+            // Not in home room, then travel.
             if( creep.pos.roomName != creep.data.homeRoom ){
                 creep.data.getTick = Game.time;
                 Population.registerCreepFlag(creep, null);
                 Creep.action.travelling.assign(creep, Game.rooms[creep.data.homeRoom].controller);
                 return true;
             }
+
             priority = [
                 Creep.action.storing,
                 Creep.action.idle];
 
+            // If the room has urgentRepairable structures, then fill towers.
             if (creep.room.structures.urgentRepairable.length > 0 ) {
                 priority.unshift(Creep.action.fueling);
             }
