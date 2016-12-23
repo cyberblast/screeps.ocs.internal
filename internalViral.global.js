@@ -16,6 +16,7 @@ var mod = {
             secondaryColor: COLOR_BLUE,
             filter: {'color': COLOR_RED, 'secondaryColor': COLOR_BLUE }
         };
+        Spawn.priorityLow.push(Creep.setup.hopper);
     }
 }
 module.exports = mod;
