@@ -148,6 +148,9 @@ module.exports = {
                             /*let drop = r => { if(creep.carry[r] > 0 ) creep.drop(r); };
                             _.forEach(Object.keys(creep.carry), drop);*/
                         }
+                        if( source.container && carrying > ( creep.carryCapacity - ( creep.data.body&&creep.data.body.work ? (creep.data.body.work*2) : (creep.carryCapacity/2) )) && source.container.hits < MAX_FORTIFY_CONTAINER) {
+                            creep.repair(source.container);
+                        }
                         creep.harvest(source);
                     }
                 /*} else {
