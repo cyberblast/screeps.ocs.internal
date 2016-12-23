@@ -1,7 +1,51 @@
 TODO needed to merge with dev.
 
 FIX:
-RemoteMiners - find and fix them working in enemy rooms.
+RemoteMiners - find and fix them working in enemy rooms. currently they just sit in the room doing nothing. after this is completed remove the extra flag created to exploit enemy room with privateers.
+RemoteHaulers - find and fix line 69, getting following error. only happens sometimes. creep is still alive, spawningTime is written to memory.
+				JSON dump of creep.data
+				{
+				   "creepName":"remoteHauler-Room5A-3",
+				   "creepType":"remoteHauler",
+				   "weight":1350,
+				   "roomName":"E37N74",
+				   "homeRoom":"E37N74",
+				   "motherSpawn":"Spawn3",
+				   "spawningTime":65,
+				   "body":{
+				      "work":5,
+				      "carry":9,
+				      "move":8
+				   },
+				   "destiny":{
+				      "task":"remoteHauler",
+				      "flagName":"Room5A"
+				   },
+				   "predictedRenewal":115,
+				   "ttl":105,
+				   "carryCapacityLeft":0,
+				   "lastPos":{
+				      "x":41,
+				      "y":4,
+				      "roomName":"E37N74"
+				   },
+				   "moveMode":"auto",
+				   "flee":false,
+				   "getTick":16221387,
+				   "actionName":"storing",
+				   "targetId":"58578b08d5780b34339ca959",
+				   "path":"87666777776766688"
+				}
+				remoteHauler-Room5A-3 > Farewell!
+				[11:22:48 PM]TypeError: Cannot read property 'spawningTime' of undefined
+				    at validateRunning (task.remoteHauler:69:61)
+				    at Array.forEach (native)
+				    at Object.handlePredictedRenewal (task.remoteHauler:73:28)
+				    at Creep.predictedRenewal.on.creep (task.remoteHauler:6:63)
+				    at handlers.slice.forEach.h (global:17:57)
+				    at Array.forEach (native)
+				    at LiteEvent.trigger (global:17:44)
+				    at register (population:193:44)
 
 IMPROVE:
 RemoteHaulers - improve spawn queue placement. ie. when no haulers exist place in medium queue, when some exist place in low.
