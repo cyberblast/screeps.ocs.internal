@@ -86,65 +86,54 @@ var mod = {
     },
     checkForRequiredCreeps: (flag) => {
         let taskName = "remoteHauler";
-        let carryPartsNeeded = 1;
         let extraHaulerNeeded = false;
         let memory = Task.remoteHauler.memory(flag);
         let count = memory.running.length + memory.queued.length + memory.spawning.length;
 
-        if( memory.walkTime ) {
-            let carryParts = 0;
+        if( memory.walkTime && memory.queued.length < 1) {
             let totalWalkTime = memory.walkTime * 2
-            carryPartsNeeded = Math.ceil(totalWalkTime / 5);
-            let getCreeps = (memObj) => memObj.name ? Game.creeps[memObj.name] : {body: []}; 
-            let sumCarry = (creep) => {
-                _.filter(creep.body, (bp) => bp.type == CARRY ).length;
+            let carryPartsNeeded = Math.ceil(totalWalkTime / 5);
+            let creeps = [];
+
+            let getCreepsSpawning = o => {
+                let creep = Game.creeps[o.name];
+                if (creep && creep.body) creeps.push(creep); 
             };
+            let getCreepsRunning = o => {
+                let creep = Game.creeps[o];
+                if (creep && creep.body) creeps.push(creep); 
+            }; 
+            let sumCarry = creep => _.filter(creep.body, (bp) => bp.type == CARRY ).length;
 
-            let creepArr = _.union(_.map(memory.queued, getCreeps), _.map(memory.spawning, getCreeps), _.map(memory.running, getCreeps));
-            carryParts = _.sumBy(creepArr, sumCarry);
-
+            memory.spawning.forEach(getCreepsSpawning);
+            memory.running.forEach(getCreepsRunning);
+            
+            let carryParts = _.sum(creeps, sumCarry);
+       
             if ( carryParts < carryPartsNeeded ) extraHaulerNeeded = true;
         } else {
             if ( count < 1 ) extraHaulerNeeded = true; // No creeps, spawn a new one.
         }
-        // store numRequired in flagName.
-        // Flag1-10 is 10 creeps.
-        //let stuff = flag.name.split('-');
-        //numRequired = stuff[1] ? stuff[1] : 1;
-
+        
         if (extraHaulerNeeded) {
             let room = Game.rooms[Room.bestSpawnRoomFor(flag)];
-            let fixedBody = [WORK, MOVE];
+            let fixedBody = [];
             let multiBody = [CARRY, CARRY, MOVE];
             let name = taskName + '-' + flag.name;
 
             let parts = Creep.Setup.compileBody(room, fixedBody, multiBody, true);
-            let carryCount =  _.filter( parts , 'CARRY').length;
-            // to save on energy and spawn times remove carry parts that are not needed.
-            // TODO: Split creeps even.
-            if ( memory.walkTime && carryCount > carryPartsNeeded ) { 
-                let carryRemove = carryCount - carryPartsNeeded;
-                let index = parts.indexOf(CARRY);
-                parts.splice(index, carryRemove);
-                index = parts.indexOf(MOVE);
-                parts.splice(index, carryRemove / 2);
-                carryCount -= carryRemove;
-            }
-            
-            if (carryCount > 4) { // If the remaining parts are less than 5, not worth the cpu to spawn another creep.
-                let creep = {
-                    parts: parts,
-                    name: name,
-                    setup: taskName,
-                    destiny: { task: taskName, flagName: flag.name }
-                };
+            let creep = {
+                parts: parts,
+                name: name,
+                setup: taskName,
+                destiny: { task: taskName, flagName: flag.name }
+            };
 
-                room.spawnQueueLow.push(creep);
-                memory.queued.push({
-                    room: room.name,
-                    name: name
-                });
-            }
+            room.spawnQueueLow.push(creep);
+            memory.queued.push({
+                room: room.name,
+                name: name
+            });
         }      
     }
 };
