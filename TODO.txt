@@ -1,0 +1,16 @@
+TODO needed to merge with dev.
+
+FIX:
+RemoteMiners - find and fix them working in enemy rooms.
+
+IMPROVE:
+RemoteHaulers - improve spawn queue placement. ie. when no haulers exist place in medium queue, when some exist place in low.
+RemoteHaulers - improve CARRY needed to haul a source. The calculation of CARRY pieces for distance.
+RemoteHaulers - combine spawning remoteHaulers for a room. ie. when two sources exist, it will spawn 2 haulers for source 1 and 2 for source 2. Desired implementation would be to spawn 3 total, since there are some extra CARRY parts on the second hauler for each source.
+
+ADD:
+claimers - Task out claimers.
+remoteBuilders - Create remoteBuilder task and make them roam through rooms around a spawn repairing roads on swamps, repairing containers to almost max, and building roads on swamps for claimers and remoteHaulers.
+
+IMPLEMENT:
+Source Creeper killers - merge and combine features with other branches in repo.
