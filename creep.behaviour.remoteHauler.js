@@ -24,7 +24,7 @@ module.exports = {
             // Not in the target room, then travel.
             if( flag && flag.pos.roomName != creep.pos.roomName ){
                 if( creep.data.getTick ) {
-                    Task.remoteMiner.memory(flag).walkTime = Game.time - creep.data.getTick;
+                    Task.remoteHauler.memory(flag).walkTime = Game.time - creep.data.getTick;
                 }
                 Creep.action.travelling.assign(creep, flag);
                 Population.registerCreepFlag(creep, flag);
