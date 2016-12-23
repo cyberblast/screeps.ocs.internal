@@ -71,7 +71,7 @@ var mod = {
                 }
             };
             memory.running.forEach(validateRunning);
-            memory.running = running;
+            memory.running = _.uniq(running);
         }
     },
     memory: (flag) => {
