@@ -18,9 +18,10 @@ module.exports = {
     },
     nextAction: function(creep){
         let priority;
+        let carrySum = creep.sum;
         let flag = Game.flags[creep.data.destiny.flagName];
 
-        if( creep.sum < creep.carryCapacity * 0.75 ) {
+        if( carrySum < creep.carryCapacity * 0.75 ) {
             // Not in the target room, then travel.
             if( flag && flag.pos.roomName != creep.pos.roomName ){
                 if( creep.data.getTick ) {
@@ -49,6 +50,18 @@ module.exports = {
             priority = [
                 Creep.action.storing,
                 Creep.action.idle];
+
+
+            if( carrySum > 0 ){
+                let deposit = [];
+                if( creep.carry.energy == carrySum ) deposit = creep.room.structures.links.privateers;
+                if( creep.room.storage ) deposit.push(creep.room.storage);
+                if( deposit.length > 0 ){
+                    let target = creep.pos.findClosestByRange(deposit);
+                    if( target.structureType == STRUCTURE_STORAGE && Creep.action.storing.assign(creep, target) ) return;
+                    else if(Creep.action.charging.assign(creep, target) ) return;
+                }
+            }
 
             // If the room has urgentRepairable structures, then fill towers.
             if (creep.room.structures.urgentRepairable.length > 0 ) {
