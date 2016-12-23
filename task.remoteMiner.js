@@ -87,10 +87,17 @@ var mod = {
     checkForRequiredCreeps: (flag) => {
         let taskName = "remoteMiner";
         let memory = Task.remoteMiner.memory(flag);
+        
         // count creeps
         let count = memory.queued.length + memory.spawning.length + memory.running.length;
+
+        // Add more creeps if there are more sources in room.
+        let sourcesCount = 1; 
+        if (flag.room && flag.room.sources) 
+            sourcesCount = flag.room.source.length;
+        
         // if creeps below requirement
-        if( count < 1 ) {
+        if( count < sourcesCount) {
             // add creep
             let room = Game.rooms[Room.bestSpawnRoomFor(flag)];
             let fixedBody = [WORK, WORK, WORK, WORK, WORK, CARRY, MOVE, MOVE, MOVE];

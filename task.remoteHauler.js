@@ -88,10 +88,18 @@ var mod = {
         let taskName = "remoteHauler";
         let extraHaulerNeeded = false;
         let memory = Task.remoteHauler.memory(flag);
+
+        // count creeps
         let count = memory.running.length + memory.queued.length + memory.spawning.length;
 
+        // Count sources and add more creeps to fill every source
+        let sourcesCount = 1; 
+        if (flag.room && flag.room.sources) 
+            sourcesCount = flag.room.source.length;
+
         if( memory.walkTime && memory.queued.length < 1) {
-            let totalWalkTime = memory.walkTime * 2
+            // Add a better calculation for carry parts.
+            let totalWalkTime = memory.walkTime * sourcesCount * 2;
             let carryPartsNeeded = Math.ceil(totalWalkTime / 5);
             let creeps = [];
 
@@ -112,7 +120,7 @@ var mod = {
        
             if ( carryParts < carryPartsNeeded ) extraHaulerNeeded = true;
         } else {
-            if ( count < 1 ) extraHaulerNeeded = true; // No creeps, spawn a new one.
+            if ( count < sourcesCount ) extraHaulerNeeded = true; // No creeps or less than sourcesCount, then spawn a new one.
         }
         
         if (extraHaulerNeeded) {
