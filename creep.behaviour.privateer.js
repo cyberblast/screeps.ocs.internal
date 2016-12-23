@@ -57,13 +57,6 @@ module.exports = {
         else {
             // at target room
             if( creep.flag && creep.flag.pos.roomName == creep.pos.roomName ){
-                // check invader/cloaking state
-                if( creep.room.situation.invasion &&
-                    (creep.flag.color != FLAG_COLOR.invade.robbing.color || creep.flag.secondaryColor != FLAG_COLOR.invade.robbing.secondaryColor )) {
-                    creep.flag.cloaking = 50; // TODO: set to Infinity & release when solved
-                    this.exploitNextRoom(creep);
-                    return;
-                }
 
                 // get some energy
                 if( creep.sum < creep.carryCapacity*0.4 ) {
