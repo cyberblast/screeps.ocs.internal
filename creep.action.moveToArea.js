@@ -8,7 +8,7 @@ action.newTarget = creep => action.target[creep.data.creepType](creep);
 action.step = function(creep){
     if(CHATTY) creep.say(this.name, SAY_PUBLIC);
     let range = creep.pos.getRangeTo(creep.target);
-    if( range <= this.targetRange ) {
+    if( range < this.targetRange ) {
         delete creep.data.actionName;
         delete creep.data.targetId;
         creep.action = null;
