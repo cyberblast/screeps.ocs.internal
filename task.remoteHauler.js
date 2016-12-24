@@ -72,7 +72,7 @@ var mod = {
                 let creep = Game.creeps[o];
                 // invalidate old creeps for predicted spawning
                 // TODO: better distance calculation
-                if( creep && creep.ticksToLive > (creep.data.spawningTime + memory.walkTime ) ) {
+                if( creep && creep.data && creep.ticksToLive > (creep.data.spawningTime + memory.walkTime ) ) {
                     running.push(o);
                 }
             };
