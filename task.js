@@ -1,4 +1,5 @@
 var mod = {
+    claimer: load("task.claimer"),
     guard: load("task.guard"),
     remoteHauler: load("task.remoteHauler"),
     remoteMiner: load("task.remoteMiner"),
@@ -6,7 +7,8 @@ var mod = {
         let tasks = [
             Task.guard,
             Task.remoteMiner,
-            Task.remoteHauler
+            Task.remoteHauler,
+            Task.claimer,
         ];
         var loop = task => {
             task.register();
