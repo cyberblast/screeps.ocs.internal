@@ -52,7 +52,6 @@ var mod = {
             let validateSpawning = o => {
                 let spawn = Game.spawns[o.spawn];
                 if( spawn && ((spawn.spawning && spawn.spawning.name == o.name) || (spawn.newSpawn && spawn.newSpawn.name == o.name))) {
-                    count++;
                     spawning.push(o);
                 }
             };
@@ -82,7 +81,7 @@ var mod = {
         }
     },
     handleDied: creepData => {
-        if ( !creepData || !creepData.destiny || creepData.destiny.task || creepData.destiny.task != Task.remoteHauler.name) 
+        if ( !creepData || !creepData.destiny || !creepData.destiny.task || creepData.destiny.task != Task.remoteHauler.name) 
             return;
         let flag = Game.flags[creepData.destiny.flagName];
         if (flag) {
