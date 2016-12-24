@@ -97,6 +97,18 @@ var mod = {
         if( !memory.running ) memory.running = [];
         return memory;
     },
+    saveSources: (flag) => {
+        let memory = Task.remoteMiner.memory(flag);
+
+        if (flag.room && flag.room.sources && !memory.sources) {
+            memory.sources = [];
+            let saveSource = s => {
+                let obj = {id:s.id, pos:s.pos};
+                memory.sources.push(obj)
+            };
+            _.forEach(flag.room.sources, saveSource);
+        }
+    },
     checkForRequiredCreeps: (flag) => {
         let memory = Task.remoteMiner.memory(flag);
 
@@ -105,8 +117,8 @@ var mod = {
 
         // Add more creeps if there are more sources in room.
         let sourcesCount = 1; 
-        if (flag.room && flag.room.sources) 
-            sourcesCount = flag.room.sources.length;
+        if (!memory.sources) Task.remoteMiner.saveSources(flag);
+        if (memory.sources) sourceCount = memory.sources.length;
         
         // if creeps below requirement
         if( count < sourcesCount) {
