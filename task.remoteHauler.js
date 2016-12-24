@@ -72,7 +72,7 @@ var mod = {
                 let creep = Game.creeps[o];
                 // invalidate old creeps for predicted spawning
                 // TODO: better distance calculation
-                if( creep && creep.data && creep.ticksToLive > (creep.data.spawningTime + memory.walkTime ) ) {
+                if( !creep.data.spawningTime || (creep && creep.ticksToLive > (creep.data.spawningTime + memory.walkTime )) ) {
                     running.push(o);
                 }
             };
@@ -88,10 +88,7 @@ var mod = {
             let memory = Task.remoteHauler.memory(flag);
             let index = memory.running.indexOf(creepData.name);
             if (index > -1) {
-                console.log("removing hauler from memory");
                 memory.running.splice(index, 1);
-            } else {
-                console.log("error removing hauler from memory");
             }
         }
     },
