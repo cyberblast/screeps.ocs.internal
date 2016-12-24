@@ -169,6 +169,7 @@ var mod = {
             let creep = Game.creeps[entry.creepName];
             if ( !creep ) {
                 if(CENSUS_ANNOUNCEMENTS) console.log(dye(CRAYON.system, entry.homeRoom + ' &gt; ') + dye(CRAYON.death, 'Good night ' + entry.creepName + '!') );
+                Creep.died.trigger(entry.creepName);
                 this.unregisterCreep(entry.creepName);
             }
             else {
@@ -179,17 +180,17 @@ var mod = {
                 if( creep.spawning ) { // count spawning time
                     entry.spawningTime++;
                 }
-                else if( creep.ticksToLive == 1499 ){ // spawning complete
+                else if( creep.ticksToLive ==  ( creep.data.body.claim !== undefined ? 499 : 1499 ) ){ // spawning complete
                     spawnsToProbe.push(entry.motherSpawn);
+                    Creep.spawningCompleted.trigger(creep);
                 }
-                else if(creep.ticksToLive == entry.spawningTime) { // will die in ticks equal to spawning time
+                else if(creep.ticksToLive == ( entry.predictedRenewal ? entry.predictedRenewal : entry.spawningTime)) { // will die in ticks equal to spawning time or custom
                     if(CENSUS_ANNOUNCEMENTS) console.log(dye(CRAYON.system, entry.creepName + ' &gt; ') + dye(CRAYON.death, 'Farewell!') );
+                    Creep.predictedRenewal.trigger(creep);
                     if( !spawnsToProbe.includes(entry.motherSpawn) && entry.motherSpawn != 'unknown' ) {
                         spawnsToProbe.push(entry.motherSpawn);
                     }
-                } else if( entry.destiny ) {
-                    // TODO: assign predefined destiny
-                }
+                } 
                 entry.ttl = creep.ticksToLive;
 
                 if( entry.creepType &&

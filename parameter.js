@@ -6,6 +6,7 @@ var mod = {
     SAY_PUBLIC: true, // creeps talk public
     DEBUG: true, // gimme some more details
     CENSUS_ANNOUNCEMENTS: true, // log birth and death
+    SELL_NOTIFICATION: true, // send mail when selling minerals
     SPAWN_INTERVAL: 5, // loops between regular spawn probe
     MAX_STORAGE_ENERGY: { // stop storing energy when reached
         4: 5000,
@@ -23,6 +24,7 @@ var mod = {
     },
     MAX_STORAGE_MINERAL:200000, // keep a max of each type of minerals in store
     MIN_MINERAL_SELL_AMOUNT:20000,
+    ENERGY_VALUE_CREDITS: 0.15, // assumed energy exchange rate (in credits) to determine best mineral sell offer
     //MAX_SELL_RANGE: 60,
     TERMINAL_ENERGY: 100000,
     MIN_SELL_RATIO: {
@@ -61,7 +63,8 @@ var mod = {
     TIME_REPORT: 28000, // ticks between room reports
     REPORT_MAX_LENGTH: 500,
     REPORTS_PER_LOOP: 18,
-    ROAD_CONSTRUCTION_ENABLE: false, // Set to False to disable automatic road construction, or to a number to enable after reaching that RC Level
+    SEND_STATISTIC_REPORTS: true, // Set to true to receive room statistics per mail, otherwise set to false.
+    ROAD_CONSTRUCTION_ENABLE: false, // Set to False to disable automatic road construction, or to a number to enable for owned rooms reaching that RC Level
     ROAD_CONSTRUCTION_INTERVAL: 500,
     ROAD_CONSTRUCTION_MIN_DEVIATION: 1.2,
     ROAD_CONSTRUCTION_ABS_MIN: 3,
@@ -73,7 +76,7 @@ var mod = {
     NOTIFICATE_INVADER: false, // Also log common 'Invader' hostiles
     COMBAT_CREEPS_RESPECT_RAMPARTS: false, // causes own creeps not to leave through ramparts
     COST_MATRIX_VALIDITY: 1000,
-    PLAYER_WHITELIST: ['cyberblast','SirLovi','Asku','Kazume','Noxeth','MrDave','Telemac','Xephael','Zoiah','fsck-u','Kansir','FaceWound','forkmantis','DoctorPC','Vultured','C00k1e_93','Lolzor','Migaaresno','xAix1999','silentpoots','arguinyano','OokieCookie','OverlordQ','Nibinhilion','mmmd','Crowsbane','Yew','BogdanBiv','s1akr','Pandabear41']
+    PLAYER_WHITELIST: ['cyberblast','SirLovi','Asku','Kazume','Noxeth','MrDave','Telemac','Xephael','Zoiah','fsck-u','Kansir','FaceWound','forkmantis','DoctorPC','Vultured','C00k1e_93','Lolzor','Migaaresno','xAix1999','silentpoots','arguinyano','OokieCookie','OverlordQ','Nibinhilion','mmmd','Crowsbane','Yew','BogdanBiv','s1akr','Pandabear41','Logmadr','Patrik']
     // Don't attack. Must be a member of OCS for permanent whitelisting in git repository. But you can change your own copy... Please ask if you are interested in joining OCS :)
 }
 module.exports = mod;

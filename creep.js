@@ -14,7 +14,6 @@ var mod = {
             guarding: load("creep.action.guarding"), 
             harvesting: load("creep.action.harvesting"),
             healing: load("creep.action.healing"),
-            hopping: load("creep.action.hopping"),
             idle: load("creep.action.idle"),
             invading: load("creep.action.invading"),
             picking: load("creep.action.picking"), 
@@ -26,7 +25,8 @@ var mod = {
             upgrading: load("creep.action.upgrading"), 
             withdrawing: load("creep.action.withdrawing"),
             robbing:load("creep.action.robbing"),
-            reallocating:load("creep.action.reallocating")
+            reallocating:load("creep.action.reallocating"),
+            recycling:load("creep.action.recycling")
         };
         Creep.behaviour = {
             claimer: load("creep.behaviour.claimer"),
@@ -85,21 +85,30 @@ var mod = {
             return threat;
         }
 
+        // Check if a creep has body parts of a certain type anf if it is still active. 
+        // Accepts a single part type (like RANGED_ATTACK) or an array of part types. 
+        // Returns true, if there is at least any one part with a matching type present and active.
+        Creep.prototype.hasActiveBodyparts = function(partTypes){
+            if(Array.isArray(partTypes))
+                return (this.body.some((part) => ( partTypes.includes(part.type) && part.hits > 0 )));
+            else return (this.body.some((part) => ( part.type == partTypes && part.hits > 0 )));
+        } 
+        // TODO: reduce obsolete functions (check usage & update to use hasActiveBodyparts)
+        // obsolete
         Creep.prototype.hasActiveOffensivePart = function(){
-            return (this.body.find((part) => ( [ATTACK, RANGED_ATTACK].includes(part.type) && part.hits > 0 )) != null);
+            return this.hasActiveBodyparts([ATTACK, RANGED_ATTACK]);
         }
+        // obsolete
         Creep.prototype.hasActiveAttackPart = function(){
-            return (this.body.find((part) => ( ATTACK == part.type && part.hits > 0 )) != null);
+            return this.hasActiveBodyparts(ATTACK);
         }
+        // obsolete
         Creep.prototype.hasActiveRangedAttackPart = function(){
-            return (this.body.find((part) => ( RANGED_ATTACK == part.type && part.hits > 0 )) != null);
+            return this.hasActiveBodyparts(RANGED_ATTACK);
         }
 
         Creep.prototype.run = function(behaviour){
             if( !this.spawning ){
-                if( this.data && this.ticksToLive == ( this.data.body.claim !== undefined ? 499 : 1499 )) {
-                    Task.handleNewCreep(this);
-                }
                 if(!behaviour && this.data && this.data.creepType) {
                     behaviour = Creep.behaviour[this.data.creepType];
                 }

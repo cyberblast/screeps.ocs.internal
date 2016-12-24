@@ -135,7 +135,7 @@ action.run = {
             }
         }
         // attack
-        var targets = creep.pos.findInRange(FIND_HOSTILE_CREEPS, 3);
+        var targets = creep.pos.findInRange(creep.room.hostiles, 3);
         if(targets.length > 2) { // TODO: calc damage dealt
             if(CHATTY) creep.say('MassAttack');
             creep.attackingRanged = creep.rangedMassAttack() == OK;
@@ -185,14 +185,14 @@ action.run = {
         if( hasAttack ){
             let attacking = creep.attack(creep.target);
             if( attacking == ERR_NOT_IN_RANGE ) {
-                let targets = creep.pos.findInRange(FIND_HOSTILE_CREEPS, 1);
+                let targets = creep.pos.findInRange(creep.room.hostiles, 1);
                 if( targets.length > 0)
                     creep.attacking = creep.attack(targets[0]) == OK;
             } else creep.attacking = attacking == OK;
         }
         // attack ranged
         if( hasRangedAttack ) {
-            let targets = creep.pos.findInRange(FIND_HOSTILE_CREEPS, 3);
+            let targets = creep.pos.findInRange(creep.room.hostiles, 3);
             if(targets.length > 2) { // TODO: precalc damage dealt
                 if(CHATTY) creep.say('MassAttack');
                 creep.attackingRanged = creep.rangedMassAttack() == OK;
