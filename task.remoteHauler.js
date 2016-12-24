@@ -13,11 +13,11 @@ var mod = {
         }
     },
     handleSpawningStarted: params => { // params: {spawn: spawn.name, name: creep.name, destiny: creep.destiny}
-        if ( !params.destiny || !params.destiny.task || params.destiny.task != this.name )
+        if ( !params.destiny || !params.destiny.task || params.destiny.task != Task.remoteHauler.name )
             return;
         let flag = Game.flags[params.destiny.flagName];
         if (flag) {
-            let memory = this.memory(flag);
+            let memory = Task.remoteHauler.memory(flag);
             // add to spawning creeps
             memory.spawning.push(params);
             // validate queued creeps
@@ -36,11 +36,11 @@ var mod = {
         }
     },
     handleSpawningCompleted: creep => {
-        if (!creep.data || !creep.data.destiny || !creep.data.destiny.task || creep.data.destiny.task != this.name )
+        if (!creep.data || !creep.data.destiny || !creep.data.destiny.task || creep.data.destiny.task != Task.remoteHauler.name )
             return;
         let flag = Game.flags[creep.data.destiny.flagName];
         if (flag) {
-            let memory = this.memory(flag);
+            let memory = Task.remoteHauler.memory(flag);
 
             // TODO: implement better distance calculation
             creep.data.predictedRenewal = creep.data.spawningTime + memory.walkTime;
@@ -61,11 +61,11 @@ var mod = {
         }
     },
     handlePredictedRenewal: creep => {
-        if (!creep.data || !creep.data.destiny || !creep.data.destiny.task || creep.data.destiny.task != this.name )
+        if (!creep.data || !creep.data.destiny || !creep.data.destiny.task || creep.data.destiny.task != Task.remoteHauler.name )
             return;
         let flag = Game.flags[creep.data.destiny.flagName];
         if (flag) {
-            let memory = this.memory(flag);
+            let memory = Task.remoteHauler.memory(flag);
 
             // validate running creeps
             let running = []
@@ -82,11 +82,11 @@ var mod = {
         }
     },
     handleDied: creepData => {
-        if ( !creepData || !creepData.destiny || creepData.destiny.task || creepData.destiny.task != this.name) 
+        if ( !creepData || !creepData.destiny || creepData.destiny.task || creepData.destiny.task != Task.remoteHauler.name) 
             return;
         let flag = Game.flags[creepData.destiny.flagName];
         if (flag) {
-            let memory = this.memory(flag);
+            let memory = Task.remoteHauler.memory(flag);
             let index = memory.running.indexOf(creepData.name);
             if (index > -1) {
                 console.log("removing hauler from memory");
@@ -97,15 +97,15 @@ var mod = {
         }
     },
     memory: (flag) => {
-        let memory = Task.memory(this.name, flag.name);
+        let memory = Task.memory(Task.remoteHauler.name, flag.name);
         if( !memory.queued ) memory.queued = [];
         if( !memory.spawning ) memory.spawning = [];
         if( !memory.running ) memory.running = [];
-        return flag.memory.tasks.remoteHauler;
+        return memory;
     },
     checkForRequiredCreeps: (flag) => {
         let extraHaulerNeeded = false;
-        let memory = this.memory(flag);
+        let memory = Task.remoteHauler.memory(flag);
 
         // count creeps
         let count = memory.running.length + memory.queued.length + memory.spawning.length;
@@ -145,15 +145,15 @@ var mod = {
             let room = Game.rooms[Room.bestSpawnRoomFor(flag)];
             let fixedBody = [];
             let multiBody = [CARRY, CARRY, MOVE];
-            let name = this.name + '-' + flag.name;
+            let name = Task.remoteHauler.name + '-' + flag.name;
 
             console.log("Added hauler to queue:" + name);
             let parts = Creep.Setup.compileBody(room, fixedBody, multiBody, true);
             let creep = {
                 parts: parts,
                 name: name,
-                setup: this.name,
-                destiny: { task: this.name, flagName: flag.name }
+                setup: Task.remoteHauler.name,
+                destiny: { task: Task.remoteHauler.name, flagName: flag.name }
             };
 
             room.spawnQueueLow.push(creep);

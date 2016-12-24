@@ -13,11 +13,11 @@ var mod = {
         }
     },
     handleSpawningStarted: params => { // params: {spawn: spawn.name, name: creep.name, destiny: creep.destiny}
-        if ( !params.destiny || !params.destiny.task || params.destiny.task != this.name )
+        if ( !params.destiny || !params.destiny.task || params.destiny.task != Task.remoteMiner.name )
             return;
         let flag = Game.flags[params.destiny.flagName];
         if (flag) {
-            let memory = this.memory(flag);
+            let memory = Task.remoteMiner.memory(flag);
             // add to spawning creeps
             memory.spawning.push(params);
             // validate queued creeps
@@ -33,14 +33,14 @@ var mod = {
         }
     },
     handleSpawningCompleted: creep => {
-        if (!creep.data || !creep.data.destiny || !creep.data.destiny.task || creep.data.destiny.task != this.name)
+        if (!creep.data || !creep.data.destiny || !creep.data.destiny.task || creep.data.destiny.task != Task.remoteMiner.name)
             return;
         let flag = Game.flags[creep.data.destiny.flagName];
         if (flag) {
             // TODO: implement better distance calculation
             creep.data.predictedRenewal = creep.data.spawningTime + (routeRange(creep.data.homeRoom, flag.pos.roomName)*50);
 
-            let memory = this.memory(flag);
+            let memory = Task.remoteMiner.memory(flag);
             // add to running creeps
             memory.running.push(creep.name);
             // validate spawning creeps
@@ -57,11 +57,11 @@ var mod = {
         }
     },
     handlePredictedRenewal: creep => {
-        if (!creep.data || !creep.data.destiny || !creep.data.destiny.task || creep.data.destiny.task != this.name)
+        if (!creep.data || !creep.data.destiny || !creep.data.destiny.task || creep.data.destiny.task != Task.remoteMiner.name)
             return;
         let flag = Game.flags[creep.data.destiny.flagName];
         if (flag) {
-            let memory = this.memory(flag);
+            let memory = Task.remoteMiner.memory(flag);
             // validate running creeps
             let running = []
             let validateRunning = o => {
@@ -77,11 +77,11 @@ var mod = {
         }
     },
     handleDied: creepData => {
-        if ( !creepData || !creepData.destiny || creepData.destiny.task || creepData.destiny.task != this.name) 
+        if ( !creepData || !creepData.destiny || creepData.destiny.task || creepData.destiny.task != Task.remoteMiner.name) 
             return;
         let flag = Game.flags[creepData.destiny.flagName];
         if (flag) {
-            let memory = this.memory(flag);
+            let memory = Task.remoteMiner.memory(flag);
             let index = memory.running.indexOf(creepData.name);
             if (index > -1) {
                 console.log("removing miner from memory");
@@ -92,14 +92,14 @@ var mod = {
         }
     },
     memory: (flag) => {
-        let memory = Task.memory(this.name, flag.name);
+        let memory = Task.memory(Task.remoteMiner.name, flag.name);
         if( !memory.queued ) memory.queued = [];
         if( !memory.spawning ) memory.spawning = [];
         if( !memory.running ) memory.running = [];
-        return flag.memory.tasks.remoteHauler;
+        return memory;
     },
     checkForRequiredCreeps: (flag) => {
-        let memory = this.memory(flag);
+        let memory = Task.remoteMiner.memory(flag);
 
         // count creeps
         let count = memory.queued.length + memory.spawning.length + memory.running.length;
@@ -115,14 +115,14 @@ var mod = {
             let room = Game.rooms[Room.bestSpawnRoomFor(flag)];
             let fixedBody = [WORK, WORK, WORK, WORK, WORK, CARRY, MOVE, MOVE, MOVE];
             let multiBody = [];
-            let name = this.name + '-' + flag.name;
+            let name = Task.remoteMiner.name + '-' + flag.name;
 
             console.log("Added miner to queue:" + name);
             let creep = {
                 parts: Creep.Setup.compileBody(room, fixedBody, multiBody),
                 name: name,
-                setup: this.name,
-                destiny: { task: this.name, flagName: flag.name }
+                setup: Task.remoteMiner.name,
+                destiny: { task: Task.remoteMiner.name, flagName: flag.name }
             };
 
             room.spawnQueueMedium.push(creep);
