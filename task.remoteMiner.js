@@ -5,6 +5,7 @@ var mod = {
         Creep.spawningStarted.on( params => Task.remoteMiner.handleSpawningStarted(params) );
         Creep.spawningCompleted.on( creep => Task.remoteMiner.handleSpawningCompleted(creep) );
         Creep.predictedRenewal.on( creep => Task.remoteMiner.handlePredictedRenewal(creep) );
+        Creep.died.on(creepData => Task.remoteMiner.handleDied(creepData) );
     },
     handleFlagFound: flag => {
         if( flag.color == FLAG_COLOR.invade.exploit.color && flag.secondaryColor == FLAG_COLOR.invade.exploit.secondaryColor ){
@@ -75,6 +76,21 @@ var mod = {
             memory.running = _.uniq(running);
         }
     },
+    handleDied: creepData => {
+        if ( !creepData || !creepData.destiny || creepData.destiny.task || creepData.destiny.task != this.name) 
+            return;
+        let flag = Game.flags[creepData.destiny.flagName];
+        if (flag) {
+            let memory = this.memory(flag);
+            let index = memory.running.indexOf(creepData.name);
+            if (index > -1) {
+                console.log("removing miner from memory");
+                memory.running.splice(index, 1);
+            } else {
+                console.log("error removing miner from memory");
+            }
+        }
+    },
     memory: (flag) => {
         let memory = Task.memory(this.name, flag.name);
         if( !memory.queued ) memory.queued = [];
@@ -91,7 +107,7 @@ var mod = {
         // Add more creeps if there are more sources in room.
         let sourcesCount = 1; 
         if (flag.room && flag.room.sources) 
-            sourcesCount = flag.room.source.length;
+            sourcesCount = flag.room.sources.length;
         
         // if creeps below requirement
         if( count < sourcesCount) {
@@ -101,6 +117,7 @@ var mod = {
             let multiBody = [];
             let name = this.name + '-' + flag.name;
 
+            console.log("Added miner to queue:" + name);
             let creep = {
                 parts: Creep.Setup.compileBody(room, fixedBody, multiBody),
                 name: name,

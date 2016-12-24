@@ -5,6 +5,7 @@ var mod = {
         Creep.spawningStarted.on( params => Task.remoteHauler.handleSpawningStarted(params) );
         Creep.spawningCompleted.on( creep => Task.remoteHauler.handleSpawningCompleted(creep) );
         Creep.predictedRenewal.on( creep => Task.remoteHauler.handlePredictedRenewal(creep) );
+        Creep.died.on(creepData => Task.remoteHauler.handleDied(creepData) );
     },
     handleFlagFound: flag => {
         if( flag.color == FLAG_COLOR.invade.exploit.color && flag.secondaryColor == FLAG_COLOR.invade.exploit.secondaryColor ){
@@ -39,12 +40,13 @@ var mod = {
             return;
         let flag = Game.flags[creep.data.destiny.flagName];
         if (flag) {
-            // TODO: implement better distance calculation
-            creep.data.predictedRenewal = creep.data.spawningTime + (routeRange(creep.data.homeRoom, flag.pos.roomName)*50);
-
             let memory = this.memory(flag);
+
+            // TODO: implement better distance calculation
+            creep.data.predictedRenewal = creep.data.spawningTime + memory.walkTime;
             // add to running creeps
             memory.running.push(creep.name);
+
             // validate spawning creeps
             let spawning = []
             let validateSpawning = o => {
@@ -64,18 +66,34 @@ var mod = {
         let flag = Game.flags[creep.data.destiny.flagName];
         if (flag) {
             let memory = this.memory(flag);
+
             // validate running creeps
             let running = []
             let validateRunning = o => {
                 let creep = Game.creeps[o];
                 // invalidate old creeps for predicted spawning
                 // TODO: better distance calculation
-                if( creep && creep.data && creep.ticksToLive > (creep.data.spawningTime + (routeRange(creep.data.homeRoom, flag.pos.roomName)*50) ) ) {
+                if( creep && creep.ticksToLive > (creep.data.spawningTime + memory.walkTime ) ) {
                     running.push(o);
                 }
             };
             memory.running.forEach(validateRunning);
             memory.running = _.uniq(running);
+        }
+    },
+    handleDied: creepData => {
+        if ( !creepData || !creepData.destiny || creepData.destiny.task || creepData.destiny.task != this.name) 
+            return;
+        let flag = Game.flags[creepData.destiny.flagName];
+        if (flag) {
+            let memory = this.memory(flag);
+            let index = memory.running.indexOf(creepData.name);
+            if (index > -1) {
+                console.log("removing hauler from memory");
+                memory.running.splice(index, 1);
+            } else {
+                console.log("error removing hauler from memory");
+            }
         }
     },
     memory: (flag) => {
@@ -95,7 +113,7 @@ var mod = {
         // Count sources and add more creeps to fill every source
         let sourcesCount = 1; 
         if (flag.room && flag.room.sources) 
-            sourcesCount = flag.room.source.length;
+            sourcesCount = flag.room.sources.length;
 
         if( memory.walkTime && memory.queued.length < 1) {
             // Add a better calculation for carry parts.
@@ -129,6 +147,7 @@ var mod = {
             let multiBody = [CARRY, CARRY, MOVE];
             let name = this.name + '-' + flag.name;
 
+            console.log("Added hauler to queue:" + name);
             let parts = Creep.Setup.compileBody(room, fixedBody, multiBody, true);
             let creep = {
                 parts: parts,
