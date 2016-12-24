@@ -1,4 +1,5 @@
 var action = new Creep.Action('feeding');
+action.maxPerTarget = 1;
 action.isValidAction = function(creep){
     return ( creep.carry.energy > 0 && creep.room.energyAvailable < creep.room.energyCapacityAvailable );
 };
