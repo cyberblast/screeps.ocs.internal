@@ -1,7 +1,7 @@
 TODO needed to merge with dev.
 
 FIX:
-RemoteMiners - find and fix them working in enemy rooms. currently they just sit in the room doing nothing. after this is completed remove the extra flag created to exploit enemy room with privateers.
+RemoteMiners and RemoteHaulers - traveling action paths to flag rather than sources/containers. This causes the internal pathfinding to fail when roads exist in previous rooms. The creep will hop between rooms saying "NO PATH!" until it dies. Started to add in a fix which caches sources in memory and gives remoteMiner travel action a source position when it spawns.
 RemoteHaulers - find and fix line 69, getting following error. only happens sometimes. creep is still alive, spawningTime is written to memory.
 				JSON dump of creep.data
 				{
@@ -50,7 +50,6 @@ RemoteHaulers - find and fix line 69, getting following error. only happens some
 IMPROVE:
 RemoteHaulers - improve spawn queue placement. ie. when no haulers exist place in medium queue, when some exist place in low.
 RemoteHaulers - improve CARRY needed to haul a source. The calculation of CARRY pieces for distance.
-RemoteHaulers - combine spawning remoteHaulers for a room. ie. when two sources exist, it will spawn 2 haulers for source 1 and 2 for source 2. Desired implementation would be to spawn 3 total, since there are some extra CARRY parts on the second hauler for each source.
 
 ADD:
 claimers - Task out claimers.
