@@ -118,7 +118,7 @@ var mod = {
         // Add more creeps if there are more sources in room.
         let sourcesCount = 1; 
         if (!memory.sources) Task.remoteMiner.saveSources(flag);
-        if (memory.sources) sourceCount = memory.sources.length;
+        if (memory.sources) sourcesCount = memory.sources.length;
         
         // if creeps below requirement
         if( count < sourcesCount) {
