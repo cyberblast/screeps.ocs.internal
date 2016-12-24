@@ -85,27 +85,24 @@ var mod = {
         return flag.memory.tasks.remoteHauler;
     },
     checkForRequiredCreeps: (flag) => {
+        let memory = Task.remoteHauler.memory(flag);
         let taskName = "remoteHauler";
         let carryPartsNeeded = 1;
         let extraHaulerNeeded = true;
         let noWalkTime;
-        if (!flag.memory.tasks) 
-            flag.memory.tasks = {};
-        if (!flag.memory.tasks[taskName])
-            flag.memory.tasks[taskName] = {};
-        if( flag.memory.tasks && flag.memory.tasks.remoteHauler && flag.memory.tasks.remoteHauler.walkTime ) {
+        if( memory.walkTime ) {
             let carryParts = 0;
-            let totalWalkTime = flag.memory.tasks.remoteHauler.walkTime * 2
+            let totalWalkTime = memory.walkTime * 2
             carryPartsNeeded = Math.ceil(totalWalkTime / 5);
             let taskIndex = 1;
-            while( flag.memory.tasks[taskName][taskIndex] && flag.memory.tasks[taskName][taskIndex].name ) {
-                let c = Game.creeps[flag.memory.tasks[taskName][taskIndex].name];
+            while( memory && memory[taskIndex].name ) {
+                let c = Game.creeps[memory[taskIndex].name];
                 if( c )
                     carryParts += _.filter(c.body, function(bp){return bp.type == CARRY;}).length;
                 taskIndex++;
                 
             }
-            if ( carryParts > carryPartsNeeded || (flag.memory.tasks[taskName][taskIndex] && flag.memory.tasks[taskName][taskIndex].spawning) ) {
+            if ( carryParts > carryPartsNeeded || (memory[taskIndex] && memory[taskIndex].spawning) ) {
                 extraHaulerNeeded = false;
             }
         } else {
@@ -119,12 +116,12 @@ var mod = {
         for(let index = 1; extraHaulerNeeded; index++){
             let destiny = { flagName: flag.name, task: taskName, taskIndex: index };
             let existingCreep;
-            existingCreep = flag.memory.tasks[taskName][index];
+            existingCreep = memory[index];
             if (existingCreep) {
                 if (existingCreep.spawning)
                     return;
                 if (!Game.creeps[existingCreep.name]) {
-                    delete(flag.memory.tasks[taskName]);
+                    delete(memory[index]);
                     existingCreep = null;
                 }
             }
@@ -141,7 +138,11 @@ var mod = {
                     setup: setup,
                     destiny: destiny
                 });
-                flag.memory.tasks[taskName][index] = { spawnName: name, spawnRoom: spawnRoomName, spawning: 1 };
+                memory[index] = { spawnName: name, spawnRoom: spawnRoomName, spawning: 1 };
+                memory.queued.push({
+                    room: room.name,
+                    name: name
+                });
                 extraHaulerNeeded = false;
             }
             if (noWalkTime)

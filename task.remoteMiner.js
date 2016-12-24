@@ -85,25 +85,29 @@ var mod = {
         return flag.memory.tasks.remoteMiner;
     },
     checkForRequiredCreeps: (flag) => {
-        let memory = Task.guard.memory(flag);
+        let memory = Task.remoteMiner.memory(flag);
         // count creeps
         let count = memory.queued.length + memory.spawning.length + memory.running.length;
         // if creeps below requirement
         if( count < 1 ) {
-            let spawnRoomName = Room.bestSpawnRoomFor(flag);
-            destiny.roomName = spawnRoomName;
-            let setup = 'remoteMiner';
+            // add creep
+            let room = Game.rooms[Room.bestSpawnRoomFor(flag)];
             let fixedBody = [WORK, WORK, WORK, WORK, WORK, CARRY, MOVE, MOVE];
             let multiBody = [];
-            let body = Creep.Setup.compileBody(Game.rooms[spawnRoomName], fixedBody, multiBody);
-            let name = setup + '-' + flag.name;
-            Game.rooms[spawnRoomName].spawnQueueLow.push({
-                parts: body,
+            let name = 'remoteMiner-' + flag.name;
+
+            let creep = {
+                parts: Creep.Setup.compileBody(room, fixedBody, multiBody, true),
                 name: name,
-                setup: setup,
-                destiny: destiny
+                setup: 'remoteMiner',
+                destiny: { task: "remoteMiner", flagName: flag.name }
+            };
+
+            room.spawnQueueMedium.push(creep);
+            memory.queued.push({
+                room: room.name,
+                name: name
             });
-            flag.memory.tasks.remoteMiner = { spawnName: name, spawnRoom: spawnRoomName, spawning: 1 };
         }
     }
 };
