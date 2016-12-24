@@ -173,7 +173,7 @@ var mod = {
             let creep = Game.creeps[entry.creepName];
             if ( !creep ) {
                 if(CENSUS_ANNOUNCEMENTS) console.log(dye(CRAYON.system, entry.homeRoom + ' &gt; ') + dye(CRAYON.death, 'Good night ' + entry.creepName + '!') );
-                Creep.died.trigger(entry.creepName);
+                Creep.died.trigger(entry);
                 this.unregisterCreep(entry.creepName);
             }
             else {
