@@ -17,6 +17,25 @@ var mod = {
             filter: {'color': COLOR_RED, 'secondaryColor': COLOR_BLUE }
         };
         Spawn.priorityLow.push(Creep.setup.hopper);
+
+        // attackTrain
+        Creep.setup.trainDestroyer = load("creep.setup.trainDestroyer");
+        Creep.setup.trainHealer = load("creep.setup.trainHealer");
+        Creep.setup.trainTurret = load("creep.setup.trainTurret");
+
+        Creep.behaviour.trainDestroyer = load("creep.behaviour.trainDestroyer");
+        Creep.behaviour.trainHealer = load("creep.behaviour.trainHealer");
+        Creep.behaviour.trainTurret = load("creep.behaviour.trainTurret");
+
+        global.FLAG_COLOR.attackTrain = {
+            color: COLOR_RED,
+            secondaryColor: COLOR_WHITE,
+            filter: {'color': COLOR_RED, 'secondaryColor': COLOR_WHITE}
+        }
+
+        Spawn.priorityLow.push(Creep.setup.trainDestroyer);
+        Spawn.priorityLow.push(Creep.setup.trainHealer);
+        Spawn.priorityLow.push(Creep.setup.trainTurret);
     }
 }
 module.exports = mod;
