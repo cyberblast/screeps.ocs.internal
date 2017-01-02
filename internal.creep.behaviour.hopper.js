@@ -31,7 +31,7 @@ module.exports = {
     },
     nextAction: function(creep, oldTargetId){
         let target = null;
-        let hopperTarget = FlagDir.find(FLAG_COLOR.invade.hopper, creep.pos, false); // nearest hopper flag
+        let hopperTarget = FlagDir.find(FLAG_COLOR.hopper, creep.pos, false); // nearest hopper flag
         // no hopper flag found
         if( !hopperTarget ) {
             // TODO: disassemble creep at home to get energy back
@@ -49,7 +49,7 @@ module.exports = {
             // stay a while
             if( creep.hits < (creep.hitsMax * 0.6) || !creep.hasActiveBodyparts(TOUGH) ) {
                 // go to hide room (hopperHome)
-                target= FlagDir.find(FLAG_COLOR.invade.hopperHome, creep.pos, false);
+                target= FlagDir.find(FLAG_COLOR.hopperHome, creep.pos, false);
                 if( !target ) target = Game.rooms[creep.data.homeRoom].controller;   
             }
         }
