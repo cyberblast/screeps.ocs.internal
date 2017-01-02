@@ -7,7 +7,9 @@ module.exports = {
         // Assign next Action
         let oldTargetId = creep.data.targetId;
         if( creep.action == null || creep.action.name == 'idle' || ( creep.action.name == 'guarding' && (!creep.flag || creep.flag.pos.roomName == creep.pos.roomName ) ) ) {
-            this.nextAction(creep);
+            if( creep.destiny && creep.destiny.task && Task[creep.destiny.task] && Task[creep.destiny.task].nextAction ) 
+                Task[creep.destiny.task].nextAction(creep);
+            else this.nextAction(creep);
         }
         if( creep.data.targetId != oldTargetId ) {
             delete creep.data.path;
