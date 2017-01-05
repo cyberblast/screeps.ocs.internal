@@ -15,7 +15,7 @@ setup.maxCount = function(room) {
         if( !flag.targetOf || flag.targetOf.length == 0 )
             max ++;
     }
-    let flagEntries = FlagDir.filter(FLAG_COLOR.hopper);
+    let flagEntries = FlagDir.filter(FLAG_COLOR.attackTrain);
     flagEntries.forEach(calcMax);
     return max;
 };
