@@ -16,7 +16,7 @@ module.exports = {
                 creep.heal(creep);
             }
             // Heal other
-            else if( !creep.attackingRanged && creep.room.casualties.length > 0 ) {
+            else if(creep.room.casualties.length > 0 ) {
                 let injured = creep.pos.findInRange(creep.room.casualties, 3);
                 if( injured.length > 0 ){
                     if(creep.pos.isNearTo(injured[0])) {
