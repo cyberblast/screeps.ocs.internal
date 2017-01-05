@@ -19,6 +19,7 @@ module.exports = {
                 creep.attackingRanged = creep.rangedMassAttack() == OK;
                 return;
             }
+
             let range = creep.pos.getRangeTo(creep.target);
             if( range < 4 ) {
                 creep.attackingRanged = creep.rangedAttack(creep.target) == OK;
@@ -30,11 +31,14 @@ module.exports = {
         }
     },
     nextAction: function(creep){
-        let target = Game.creeps[Creep.prototype.findByType("trainHealer")];
+        let flag = FlagDir.find(FLAG_COLOR.attackTrain, creep.pos, false);
+
+        Population.registerCreepFlag(creep, flag);
+
+        let target = Game.creeps[Creep.prototype.findGroupMemberByType("trainHealer", creep.data.flagName)];
 
         if(!target) {
-            logError("No target found for trainTurret!");
-            target = Game.rooms[creep.data.homeRoom].controller;
+            Creep.action.idle.assign(creep);
         } else {
             Creep.action.travelling.assign(creep, target);
         }

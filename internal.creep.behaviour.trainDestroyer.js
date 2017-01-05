@@ -10,27 +10,22 @@ module.exports = {
             logError('Creep without action/activity!\nCreep: ' + creep.name + '\ndata: ' + JSON.stringify(creep.data));
         }
     },
-    nextAction: function(creep){
+    nextAction: function(creep) {
         let target = FlagDir.find(FLAG_COLOR.attackTrain, creep.pos, false);
         let dismantleFlag = FlagDir.find(FLAG_COLOR.destroy.dismantle, creep.pos, false);
 
-        if(!target) {
-            logError("No target found for attackTrain!");
-            target = Game.rooms[creep.data.homeRoom].controller;
-        } else if(creep.pos.roomName != target.pos.roomName) {
-            Population.registerCreepFlag(creep, target);
-        } else if(dismantleFlag) {
-            let dismantleStructure = dismantleFlag.room.lookForAt(LOOK_STRUCTURES, dismantleFlag.pos.x, dismantleFlag.pos.y);
-            target = Game.getObjectById(dismantleStructure[0].id);
+        Population.registerCreepFlag(creep, target);
 
-            if(target) {
-                if(creep.dismantle(target) == ERR_NOT_IN_RANGE) {
-                    creep.moveTo(target);
-                }
-            } else {
-                dismantleFlag.remove();
-            }
-        } else {
+        let trainHealer = Game.creeps[Creep.prototype.findGroupMemberByType("trainHealer", creep.data.flagName)];
+        let trainTurret =Game.creeps[Creep.prototype.findGroupMemberByType("trainTurret", creep.data.flagName)];
+
+        if(!target || !trainHealer || !trainTurret) {
+            Creep.action.idle.assign(creep);
+        } else if(creep.pos.roomName != target.pos.roomName) {
+            Creep.action.travelling.assign(creep, target);
+        } else if(dismantleFlag) {
+            Creep.action.dismantling.assign(creep);
+        } else { // todo: Improve idle assignment, maybe use grouping assignment?
             Creep.action.idle.assign(creep);
         }
     }

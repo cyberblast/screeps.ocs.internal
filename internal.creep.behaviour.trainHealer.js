@@ -29,11 +29,14 @@ module.exports = {
         }
     },
     nextAction: function(creep){
-        let target = Game.creeps[Creep.prototype.findByType("trainDestroyer")];
+        let flag = FlagDir.find(FLAG_COLOR.attackTrain, creep.pos, false);
+
+        Population.registerCreepFlag(creep, flag);
+
+        let target = Game.creeps[Creep.prototype.findGroupMemberByType("trainDestroyer", creep.data.flagName)];
 
         if(!target) {
-            logError("No target found for attackTrain!");
-            target = Game.rooms[creep.data.homeRoom].controller;
+            Creep.action.idle.assign(creep);
         } else {
             Creep.action.travelling.assign(creep, target);
         }
