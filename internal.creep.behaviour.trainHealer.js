@@ -37,8 +37,10 @@ module.exports = {
 
         if(!target) {
             Creep.action.idle.assign(creep);
-        } else {
+        } else if(flag) {
             Creep.action.travelling.assign(creep, target);
+        } else {
+            Creep.action.recycling.assign(creep);
         }
     }
 };

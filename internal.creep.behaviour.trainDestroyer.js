@@ -25,8 +25,8 @@ module.exports = {
             Creep.action.travelling.assign(creep, target);
         } else if(dismantleFlag) {
             Creep.action.dismantling.assign(creep);
-        } else { // todo: Improve idle assignment, maybe use grouping assignment?
-            Creep.action.idle.assign(creep);
+        } else {
+            Creep.action.recycling.assign(creep);
         }
     }
 };
