@@ -37,6 +37,32 @@ let mod = {
                 creep.attackingRanged = creep.rangedAttack(targets[0]) == OK;
             }
         },
+        sourceKiller: function(creep) {
+            if( !creep.flee ){
+                var path = creep.room.findPath(creep.pos, creep.target.pos);
+                // not standing in rampart or next step is rampart as well
+                creep.move(path[0].direction);
+            }
+            // attack
+            let keeperLair = []
+            let keeperFind = creep.room.find(FIND_STRUCTURES, {
+                    filter: (structure) => {return (structure.structureType == STRUCTURE_KEEPER_LAIR)}
+            });
+            for(index in keeperFind){
+                keeperLair.push(keeperFind[index]);
+            }
+            var lowLair = keeperFind.sort(function(a, b){return a.ticksToSpawn - b.ticksToSpawn});
+            creep.memory.lairs = lowLair[0];
+        
+            //console.log(JSON.stringify(test[0]));
+            //if(creep.target.length > 0){
+            let attacking = creep.attack(creep.target);
+            if( attacking == ERR_NOT_IN_RANGE ) {
+                let targets = creep.pos.findInRange(creep.room.hostiles, 1);
+                if( targets.length > 0)
+                    creep.attacking = creep.attack(targets[0]) == OK;
+                } else creep.attacking = attacking == OK;  
+            },
         melee: function(creep) {
             if( !creep.flee ){
                 var path = creep.room.findPath(creep.pos, creep.target.pos);
