@@ -54,9 +54,13 @@ module.exports = {
             }
         }
         
-        if( target && creep.data.targetId != (target.id || target.name)) {
+                 // a target has been specified. check if it needs to be assigned (may be already assigned)
+        if( target && creep.data.targetId != (target.id || target.name)) { //
             delete creep.data.path;
             Creep.action.travelling.assign(creep, target);
-        } // else keep old target
+        } else if (!creep.action) { 
+            // no new target specified and travelling completed (e.g. flag reached but now staying a while)
+            Creep.action.idle.assign(creep);
+        } // else keep old target and action
     }
 };
