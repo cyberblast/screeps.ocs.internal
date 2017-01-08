@@ -6,7 +6,7 @@ var mod = {
         // if creeps below requirement
         if( count < 1 ) {
             // add creep
-            let room = Room.bestSpawnRoomFor(flag);
+            let room = Room.bestSpawnRoomFor(flag.pos.roomName);
             let fixedBody = [ATTACK, MOVE];
             let multiBody = [TOUGH, ATTACK, RANGED_ATTACK, HEAL, MOVE, MOVE];
             let name = 'warrior-' + flag.name;
