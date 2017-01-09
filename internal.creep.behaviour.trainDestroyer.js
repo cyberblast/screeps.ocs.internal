@@ -1,3 +1,5 @@
+const goCommand = /execute order/i;
+
 module.exports = {
     name: 'trainDestroyer',
     run: function(creep) {
@@ -14,17 +16,22 @@ module.exports = {
         let target = FlagDir.find(FLAG_COLOR.attackTrain, creep.pos, false);
         let dismantleFlag = FlagDir.find(FLAG_COLOR.destroy.dismantle, creep.pos, false);
 
-        Population.registerCreepFlag(creep, target);
+        Population.registerCreepFlag(creep, target || dismantleFlag);
 
-        let trainHealer = Game.creeps[Creep.prototype.findGroupMemberByType("trainHealer", creep.data.flagName)];
-        let trainTurret =Game.creeps[Creep.prototype.findGroupMemberByType("trainTurret", creep.data.flagName)];
+        let trainHealer = creep.data.flagName && Game.creeps[Creep.prototype.findGroupMemberByType("trainHealer", creep.data.flagName)];
+        let trainTurret = creep.data.flagName && Game.creeps[Creep.prototype.findGroupMemberByType("trainTurret", creep.data.flagName)];
 
-        if(!target || !trainHealer || !trainTurret) {
+        const soloDismantle = dismantleFlag && goCommand.test(dismantleFlag.name);
+        if(!(soloDismantle) || !(target && trainHealer && trainTurret)) {
             Creep.action.idle.assign(creep);
-        } else if(creep.pos.roomName != target.pos.roomName) {
+        } else if(target && creep.pos.roomName != target.pos.roomName) {
             Creep.action.travelling.assign(creep, target);
         } else if(dismantleFlag) {
-            Creep.action.dismantling.assign(creep);
+            if(creep.pos.roomName != dismantleFlag.pos.roomName) {
+                Creep.action.travelling.assign(creep, dismantleFlag);
+            } else {
+                Creep.action.dismantling.assign(creep);
+            }
         } else {
             Creep.action.recycling.assign(creep);
         }
