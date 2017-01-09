@@ -1,5 +1,5 @@
 var setup = new Creep.Setup('trainDestroyer');
-setup.minControllerLevel = 4;
+setup.minControllerLevel = 7;
 setup.globalMeasurement = true;
 setup.measureByHome = true;
 
@@ -23,9 +23,9 @@ setup.maxCount = function(room) {
 setup.default = {
     fixedBody: [],
     multiBody: [MOVE, WORK],
-    minAbsEnergyAvailable: 1500,
+    minAbsEnergyAvailable: 3750,
     minEnergyAvailable: 0.5,
-    minMulti: 10,
+    minMulti: 25,
     maxMulti: 25,
     maxCount: setup.maxCount,
     maxWeight: null
