@@ -19,14 +19,18 @@ module.exports = {
         let trainHealer = Game.creeps[Creep.prototype.findGroupMemberByType("trainHealer", creep.data.flagName)];
         let trainTurret =Game.creeps[Creep.prototype.findGroupMemberByType("trainTurret", creep.data.flagName)];
 
-        if(!target || !trainHealer || !trainTurret) {
-            Creep.action.idle.assign(creep);
+        if(!target) {
+            Creep.action.recycling.assign(creep);
+        } else if(!trainHealer || !trainTurret) {
+            if(creep.pos.roomName != creep.data.homeRoom) {
+                Creep.action.travelling.assign(creep, Game.rooms[creep.data.homeRoom].controller);
+            } else {
+                Creep.action.idle.assign(creep);
+            }
         } else if(creep.pos.roomName != target.pos.roomName) {
             Creep.action.travelling.assign(creep, target);
         } else if(dismantleFlag) {
             Creep.action.dismantling.assign(creep);
-        } else {
-            Creep.action.recycling.assign(creep);
         }
     }
 };

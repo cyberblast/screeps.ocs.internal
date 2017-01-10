@@ -35,12 +35,16 @@ module.exports = {
 
         let target = Game.creeps[Creep.prototype.findGroupMemberByType("trainDestroyer", creep.data.flagName)];
 
-        if(!target) {
-            Creep.action.idle.assign(creep);
-        } else if(flag) {
-            Creep.action.travelling.assign(creep, target);
-        } else {
+        if(!flag) {
             Creep.action.recycling.assign(creep);
+        } else if(!target) {
+            if(creep.pos.roomName != creep.data.homeRoom) {
+                Creep.action.travelling.assign(creep, Game.rooms[creep.data.homeRoom].controller);
+            } else {
+                Creep.action.idle.assign(creep);
+            }
+        } else {
+            Creep.action.travelling.assign(creep, target);
         }
     }
 };
