@@ -31,7 +31,6 @@ module.exports = {
         }
     },
     nextAction: function(creep){
-        creep.say("ChooChoo!", true);
         let flag = FlagDir.find(FLAG_COLOR.attackTrain, creep.pos, false);
 
         Population.registerCreepFlag(creep, flag);
