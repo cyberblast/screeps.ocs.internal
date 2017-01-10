@@ -12,7 +12,8 @@ setup.big = {
     minAbsEnergyAvailable: 4100,
     minEnergyAvailable: 0.5,
     maxCount: setup.maxCount,
-    maxWeight: null//(room) => room.defenseMaxWeight(2500, 'warrior')
+    maxWeight: null, //(room) => room.defenseMaxWeight(2500, 'warrior')
+    lowPriority: -20,
 };
 setup.RCL = {
     1: setup.none,

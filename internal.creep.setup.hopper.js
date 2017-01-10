@@ -14,7 +14,8 @@ setup.default = {
     maxMulti: 12, 
     minMulti: 3, 
     maxCount: setup.maxCount,
-    maxWeight: null
+    maxWeight: null,
+    lowPriority: -10,
 };
 
 setup.RCL = {
