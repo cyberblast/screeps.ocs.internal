@@ -14,7 +14,6 @@ setup.maxCount = function(room) {
         flag = Game.flags[flagEntry.name];
         if( !flag.targetOf || flag.targetOf.length == 0 )
             max ++;
-            max ++;
     }
     let flagEntries = FlagDir.filter(FLAG_COLOR.attackTrain);
     flagEntries.forEach(calcMax);
