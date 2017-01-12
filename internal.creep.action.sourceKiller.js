@@ -16,7 +16,13 @@ action.newTarget = function(creep){
         }else{
         if( creep.action && creep.action.name == 'sourceKiller' && creep.flag )
             return creep.flag;
-        if( flag ) Population.registerCreepFlag(creep, flag);
+        if( flag ) {
+            Population.registerCreepFlag(creep, flag);
+            let spawn = Game.spawns[creep.data.motherSpawn];
+            if( spawn ) {
+                creep.data.predictedRenewal = creep.data.spawningTime + 50 + 50 * routeRange(spawn.pos.roomName, flag.roomName);
+            }
+        }
         return flag;}
     
 };
