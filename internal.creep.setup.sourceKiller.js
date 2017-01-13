@@ -3,7 +3,15 @@ setup.minControllerLevel = 7;
 setup.globalMeasurement = true;
 setup.measureByHome = true;
 setup.sortedParts = false;
-setup.maxCount = Creep.Setup.maxPerFlag(FLAG_COLOR.sourceKiller, 2, setup.measureByHome);
+const spawnExtraOnPredictedExpiration = function(flagMax, creep, index, roomMax) {
+    if (creep.data && creep.data.predictedRenewal > creep.ticksToLive) {
+        return flagMax + 2;
+    } else {
+        return flagMax + 1;
+    }
+};
+setup.maxCount = Creep.Setup.maxPerFlag(FLAG_COLOR.sourceKiller, 2,
+    setup.measureByHome, spawnExtraOnPredictedExpiration);
 
 setup.big = {
     fixedBody: [MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,ATTACK,ATTACK,ATTACK,ATTACK,ATTACK,ATTACK,ATTACK,ATTACK,ATTACK,ATTACK,ATTACK,ATTACK,ATTACK,ATTACK,ATTACK,ATTACK,ATTACK,ATTACK,ATTACK,ATTACK,HEAL,HEAL,HEAL,HEAL,HEAL],
