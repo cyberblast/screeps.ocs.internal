@@ -3,22 +3,7 @@ setup.minControllerLevel = 7;
 setup.globalMeasurement = true;
 setup.measureByHome = true;
 
-setup.maxCount = function(room) {
-    let maxRange = 3;
-    let max = 0;
-    let distance, flag;
-    let calcMax = flagEntry => {
-        distance = routeRange(room.name, flagEntry.roomName);
-        if( distance > maxRange )
-            return;
-        flag = Game.flags[flagEntry.name];
-        if( !flag.targetOf || flag.targetOf.length == 0 )
-            max ++;
-    }
-    let flagEntries = FlagDir.filter(FLAG_COLOR.attackTrain);
-    flagEntries.forEach(calcMax);
-    return max;
-};
+setup.maxCount = Creep.Setup.maxPerFlag(FLAG_COLOR.attackTrain, 3, setup.measureByHome);
 
 setup.default = {
     fixedBody: [],
