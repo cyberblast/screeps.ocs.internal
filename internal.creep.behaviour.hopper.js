@@ -30,6 +30,9 @@ module.exports = {
         }
     },
     nextAction: function(creep, oldTargetId){
+        if (creep.action === Creep.action.recycling) {
+            return creep.action;
+        }
         let target = null;
         let hopperTarget = FlagDir.find(FLAG_COLOR.hopper, creep.pos, false); // nearest hopper flag
         // no hopper flag found
