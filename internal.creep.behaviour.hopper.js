@@ -34,9 +34,12 @@ module.exports = {
         let hopperTarget = FlagDir.find(FLAG_COLOR.hopper, creep.pos, false); // nearest hopper flag
         // no hopper flag found
         if( !hopperTarget ) {
-            // TODO: disassemble creep at home to get energy back
-            logError("No target found for hopper creep!");
-            target = Game.rooms[creep.data.homeRoom].controller;
+             // recycle self if no target
+            let mother = Game.spawns[creep.data.motherSpawn];
+            if( mother ) {
+            Creep.action.recycling.assign(creep, mother);
+                return;
+            }
         }
         // only move to target room at full HP & not at target room 
         else if (creep.hits === creep.hitsMax && creep.pos.roomName != hopperTarget.pos.roomName) {
