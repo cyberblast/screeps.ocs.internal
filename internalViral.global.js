@@ -23,7 +23,6 @@ var mod = {
         };
 
         // warrior
-        Creep.setup.warrior = load("creep.setup.warrior");
         Creep.behaviour.warrior = load("creep.behaviour.warrior");
         // hopper
         Creep.setup.hopper = load("creep.setup.hopper");
