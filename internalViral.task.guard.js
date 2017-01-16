@@ -12,7 +12,7 @@ var mod = {
             let name = 'warrior-' + flag.name;
 
             let creep = {
-                parts: Creep.Setup.compileBody(room, fixedBody, multiBody, true),
+                parts: Creep.compileBody(room, fixedBody, multiBody, true),
                 name: name,
                 setup: 'warrior',
                 destiny: { task: "guard", flagName: flag.name }
