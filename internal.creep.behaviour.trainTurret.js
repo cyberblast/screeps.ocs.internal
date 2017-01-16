@@ -10,7 +10,7 @@ module.exports = {
             logError('Creep without action/activity!\nCreep: ' + creep.name + '\ndata: ' + JSON.stringify(creep.data));
         }
 
-        let hasRangedAttack = creep.hasActiveRangedAttackPart();
+        let hasRangedAttack = creep.hasActiveBodyparts(RANGED_ATTACK);
 
         if( hasRangedAttack ) {
             let targets = creep.pos.findInRange(creep.room.hostiles, 3);

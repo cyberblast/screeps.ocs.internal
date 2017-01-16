@@ -85,8 +85,8 @@ let mod = {
         },
         warrior: function(creep) {
             let range = creep.pos.getRangeTo(creep.target);
-            let hasAttack = creep.hasActiveAttackPart();
-            let hasRangedAttack = creep.hasActiveRangedAttackPart();
+            let hasAttack = creep.hasActiveBodyparts(ATTACK);
+            let hasRangedAttack = creep.hasActiveBodyparts(RANGED_ATTACK);
             if( !creep.flee ){
                 if( hasAttack ){
                     let path = creep.room.findPath(creep.pos, creep.target.pos, {'maxRooms': 1});
