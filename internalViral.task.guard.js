@@ -9,4 +9,4 @@ var mod = {
     }
 };
 
-module.exports = mod; 
+module.exports = mod;

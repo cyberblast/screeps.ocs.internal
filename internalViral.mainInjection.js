@@ -1,5 +1,7 @@
-var mod = {
-    extend: function(){
+let mod = {};
+module.exports = mod;
+mod.extend = function(){
+    try {
         // flags
         global.FLAG_COLOR.hopper = { // the room where tower is
             color: COLOR_RED,
@@ -21,31 +23,34 @@ var mod = {
             secondaryColor: COLOR_WHITE,
             filter: {'color': COLOR_RED, 'secondaryColor': COLOR_WHITE}
         };
-
         // warrior
         Creep.behaviour.warrior = load("creep.behaviour.warrior");
         // hopper
         Creep.setup.hopper = load("creep.setup.hopper");
-        Creep.behaviour.hopper = load("creep.behaviour.hopper");
-        Spawn.priorityLow.push(Creep.setup.hopper);
         //sourceKiller
         Creep.action.sourceKiller = load("creep.action.sourceKiller");
         Creep.setup.sourceKiller = load("creep.setup.sourceKiller");
         Creep.behaviour.sourceKiller = load("creep.behaviour.sourceKiller");
-        Spawn.priorityHigh.push(Creep.setup.sourceKiller); //probably important
-
         // attackTrain
         Creep.setup.trainDestroyer = load("creep.setup.trainDestroyer");
         Creep.setup.trainHealer = load("creep.setup.trainHealer");
         Creep.setup.trainTurret = load("creep.setup.trainTurret");
-
         Creep.behaviour.trainDestroyer = load("creep.behaviour.trainDestroyer");
         Creep.behaviour.trainHealer = load("creep.behaviour.trainHealer");
         Creep.behaviour.trainTurret = load("creep.behaviour.trainTurret");
-
+        
+        Spawn.priorityLow.push(Creep.setup.hopper);
+        Spawn.priorityLow.push(Creep.setup.sourceKiller);
         Spawn.priorityLow.push(Creep.setup.trainDestroyer);
         Spawn.priorityLow.push(Creep.setup.trainHealer);
         Spawn.priorityLow.push(Creep.setup.trainTurret);
     }
-}
-module.exports = mod;
+    catch(e){
+        console.log(e);
+    }
+};
+//mod.flush = function(){};
+//mod.analyze = function(){};
+//mod.register = function(){};
+//mod.execute = function(){};
+//mod.cleanup = function(){};
