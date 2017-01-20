@@ -4,7 +4,8 @@ var mod = {
             fixedBody: [ATTACK, MOVE],
             multiBody: [TOUGH, ATTACK, RANGED_ATTACK, HEAL, MOVE, MOVE],
             name: "defender", 
-            behaviour: "warrior"
+            behaviour: "warrior", 
+            queue: 'Low'
         },
     },
 };
