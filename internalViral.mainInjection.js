@@ -27,6 +27,7 @@ mod.extend = function(){
         Creep.behaviour.warrior = load("creep.behaviour.warrior");
         // hopper
         Creep.setup.hopper = load("creep.setup.hopper");
+        Creep.behaviour.hopper = load("creep.behaviour.hopper");
         //sourceKiller
         Creep.action.sourceKiller = load("creep.action.sourceKiller");
         Creep.setup.sourceKiller = load("creep.setup.sourceKiller");
