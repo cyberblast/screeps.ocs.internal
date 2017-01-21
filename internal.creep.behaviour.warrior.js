@@ -42,8 +42,8 @@ module.exports = {
     },
     nextAction: function(creep){
         let priority = [
-            Creep.action.defending,
             Creep.action.invading,
+            Creep.action.defending,
             Creep.action.guarding,
             Creep.action.idle
         ];
