@@ -1,4 +1,5 @@
 var setup = new Creep.Setup('sourceKiller');
+module.exports = setup;
 setup.minControllerLevel = 7;
 setup.globalMeasurement = true;
 setup.measureByHome = true;
@@ -23,4 +24,3 @@ setup.RCL = {
     7: setup.big,
     8: setup.big
 };
-module.exports = setup;

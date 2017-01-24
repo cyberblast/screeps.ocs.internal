@@ -1,4 +1,5 @@
 var setup = new Creep.Setup('hopper');
+module.exports = setup;
 setup.minControllerLevel = 4;
 setup.globalMeasurement = true;
 setup.measureByHome = true;
@@ -26,5 +27,3 @@ setup.RCL = {
     7: setup.default,
     8: setup.default
 };
-
-module.exports = setup;

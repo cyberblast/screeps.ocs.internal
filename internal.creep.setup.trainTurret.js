@@ -1,4 +1,5 @@
 var setup = new Creep.Setup('trainTurret');
+module.exports = setup;
 setup.minControllerLevel = 7;
 setup.globalMeasurement = true;
 setup.measureByHome = true;
@@ -26,4 +27,3 @@ setup.RCL = {
     7: setup.default,
     8: setup.default
 };
-module.exports = setup;
