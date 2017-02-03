@@ -10,21 +10,21 @@ mod.getCombatStats = function(body) {
 
     let armor = 99;
     let hullHits = body.length * 100 - 99;
-    while (i < body.length) {
-        if (!Population.stats.creep.armorParts[body[i++].type]) {
+    for(;i < body.length; i++) {
+        if (!Population.stats.creep.armorParts[body[i].type]) {
             break;
         }
-        armor = armor + (Population.stats.creep.boost.hits[body[i++].boost] || 100);
+        armor = armor + (Population.stats.creep.boost.hits[body[i].boost] || 100);
         hullHits = hullHits - 100;
     }
 
     let hull = armor;
     let coreHits = hullHits;
-    while (i < body.length) {
-        if (Population.stats.creep.coreParts[body[i++].type]) {
+    for(;i < body.length; i++) {
+        if (Population.stats.creep.coreParts[body[i].type]) {
             break;
         }
-        hull = hull + (Population.stats.creep.boost.hits[body[i++].boost] || 100);
+        hull = hull + (Population.stats.creep.boost.hits[body[i].boost] || 100);
         coreHits = coreHits - 100;
     }
 
