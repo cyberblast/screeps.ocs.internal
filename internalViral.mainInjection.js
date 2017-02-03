@@ -1,3 +1,5 @@
+const XYIterator = load("xyIterator");
+
 let mod = {};
 module.exports = mod;
 mod.extend = function(){
@@ -22,6 +24,11 @@ mod.extend = function(){
             color: COLOR_RED,
             secondaryColor: COLOR_WHITE,
             filter: {'color': COLOR_RED, 'secondaryColor': COLOR_WHITE}
+        };
+        global.FLAG_COLOR.defense.smurf = { // throw bodies at the problem
+            color: COLOR_YELLOW,
+            secondaryColor: COLOR_BLUE,
+            filter: {'color': COLOR_YELLOW, 'secondaryColor': COLOR_BLUE}
         };
         // warrior
         Creep.behaviour.warrior = load("creep.behaviour.warrior");
@@ -63,5 +70,7 @@ mod.extend = function(){
 //mod.flush = function(){};
 //mod.analyze = function(){};
 //mod.register = function(){};
-//mod.execute = function(){};
+mod.execute = function(){
+
+};
 //mod.cleanup = function(){};
