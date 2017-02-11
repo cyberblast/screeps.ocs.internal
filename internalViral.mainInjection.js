@@ -47,7 +47,7 @@ mod.extend = function(){
         Spawn.priorityLow.push(Creep.setup.trainTurret);
     }
     catch(e){
-        console.log(e);
+        console.log(e.stack || e);
     }
 };
 //mod.flush = function(){};
