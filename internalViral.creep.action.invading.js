@@ -16,6 +16,7 @@ mod.run = {
             creep.attacking = creep.attack(creep.target) == OK;
     },
     ranger: function(creep){
+        var range = creep.pos.getRangeTo(creep.target);
         if( !creep.flee ){
             if( creep.target instanceof Flag ){
                 creep.drive( creep.target.pos, 1, 1, Infinity);
@@ -24,7 +25,6 @@ mod.run = {
                 creep.drive( creep.target.pos, 0, 0, Infinity);
                 return;
             }
-            var range = creep.pos.getRangeTo(creep.target);
             if( range > 3 ){
                 creep.moveTo(creep.target, {reusePath: 0});
             }
