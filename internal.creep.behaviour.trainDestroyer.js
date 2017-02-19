@@ -3,9 +3,9 @@ module.exports = mod;
 mod.name = 'trainDestroyer';
 mod.run = function(creep) {
     // Assign next Action
-    this.nextAction(creep);
+    if (!creep.action || creep.action.name === 'idle') this.nextAction(creep);
     // Do some work
-    if( creep.action && creep.target ) {
+    if( creep.action ) {
         creep.action.step(creep);
     } else {
         logError('Creep without action/activity!\nCreep: ' + creep.name + '\ndata: ' + JSON.stringify(creep.data));
@@ -13,25 +13,30 @@ mod.run = function(creep) {
 };
 mod.nextAction = function(creep) {
     let target = FlagDir.find(FLAG_COLOR.attackTrain, creep.pos, false);
-    let dismantleFlag = FlagDir.find(FLAG_COLOR.destroy.dismantle, creep.pos, false);
 
     Population.registerCreepFlag(creep, target);
 
     let trainHealer = Game.creeps[Creep.prototype.findGroupMemberByType("trainHealer", creep.data.flagName)];
-    let trainTurret =Game.creeps[Creep.prototype.findGroupMemberByType("trainTurret", creep.data.flagName)];
+    let trainTurret = Game.creeps[Creep.prototype.findGroupMemberByType("trainTurret", creep.data.flagName)];
 
-    if(!target) {
-        Creep.action.recycling.assign(creep);
-    } else if(!trainHealer || !trainTurret) {
-        if(creep.pos.roomName != creep.data.homeRoom) {
-            Creep.action.travelling.assign(creep, Game.rooms[creep.data.homeRoom].controller);
+    if( !target ) {
+        return Creep.action.recycling.assign(creep);
+    } else if( !trainHealer || !trainTurret ) {
+        if( creep.pos.roomName != creep.data.homeRoom ) {
+            return Creep.action.travelling.assignRoom(creep, creep.data.homeRoom);
         } else {
-            Creep.action.idle.assign(creep);
+            return Creep.action.idle.assign(creep);
         }
-    } else if(creep.pos.roomName != target.pos.roomName) {
-        Creep.action.travelling.assign(creep, target);
-    } else if(dismantleFlag) {
-        Creep.action.dismantling.assign(creep);
+    } else if( creep.pos.roomName === target.pos.roomName ) {
+        const dismantleFlag = FlagDir.find(FLAG_COLOR.destroy.dismantle, creep.pos, true);
+        if( dismantleFlag ) {
+            return Creep.action.dismantling.assign(creep);
+        }
+    }
+    if( creep.pos.getRangeTo(target) > 1 ) {
+        return Creep.action.travelling.assign(creep, target);
+    } else {
+        Creep.action.idle.assign(creep);
     }
 };
 mod.strategies = {

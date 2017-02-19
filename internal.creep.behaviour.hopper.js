@@ -1,9 +1,24 @@
 let mod = {};
 module.exports = mod;
 mod.name = 'hopper';
+mod.actionInvalid = function(creep, action) {
+    if (creep.hits === creep.hitsMax) {
+        const hopperTarget = FlagDir.find(FLAG_COLOR.hopper, creep.pos, false); // nearest hopper flag
+        // if we're fully healed, but not moving towards the hopper flag, or we've arrived in the target room
+        let ret = action.name === 'travelling' &&
+            (!creep.target ||
+                (!creep.target.name || creep.target.pos.roomName !== hopperTarget.pos.roomName)
+            );
+        return ret;
+    }
+    return false;
+};
 mod.run = function(creep) { 
     // Assign next Action
-    this.nextAction(creep);
+    const hopperTarget = FlagDir.find(FLAG_COLOR.hopper, creep.pos, false); // nearest hopper flag
+    if (!creep.action || creep.action.name === 'idle' || mod.actionInvalid(creep, creep.action)) {
+        this.nextAction(creep);
+    }
     // Do some work
     if( creep.action && creep.target ) {
         creep.action.step(creep);
@@ -37,34 +52,25 @@ mod.nextAction = function(creep, oldTargetId){
     if( !hopperTarget ) {
         // recycle self if no target
         let mother = Game.spawns[creep.data.motherSpawn];
-        if( mother ) {
-        Creep.action.recycling.assign(creep, mother);
-            return;
-        }
+        if( mother ) return Creep.action.recycling.assign(creep, mother);
     }
     // only move to target room at full HP & not at target room 
     else if (creep.hits === creep.hitsMax && creep.pos.roomName != hopperTarget.pos.roomName) {
         // go to target room (hopper)
-        target = hopperTarget;
-        Population.registerCreepFlag(creep, target);
-    }
-    // at target room 
-    else {
-        // stay a while
+        Population.registerCreepFlag(creep, hopperTarget);
+        creep.data.travelRange = 23; // stay next to the border
+        return Creep.action.travelling.assignRoom(creep, hopperTarget.pos.roomName);
+    } else {
+        // at target room, so stay a while
         if( creep.hits < (creep.hitsMax * 0.6) || !creep.hasActiveBodyparts(TOUGH) ) {
             // go to hide room (hopperHome)
-            target= FlagDir.find(FLAG_COLOR.hopperHome, creep.pos, false);
-            if( !target ) target = Game.rooms[creep.data.homeRoom].controller;   
+            const hopperHome = FlagDir.find(FLAG_COLOR.hopperHome, creep.pos, false);
+            if (hopperHome) return Creep.action.assign(creep, hopperHome);
+            else return Creep.action.travelling.assignRoom(creep, creep.data.homeRoom);
         }
     }
-    
-    // a target has been specified. check if it needs to be assigned (may be already assigned)
-    if( target && creep.data.targetId != (target.id || target.name)) { //
-        Creep.action.travelling.assign(creep, target);
-    } else if (!creep.action) { 
-        // no new target specified and travelling completed (e.g. flag reached but now staying a while)
-        Creep.action.idle.assign(creep);
-    } // else keep old target and action
+    // no new target specified and travelling completed (e.g. flag reached but now staying a while)
+    Creep.action.idle.assign(creep);
 };
 mod.strategies = {
     defaultStrategy: {
