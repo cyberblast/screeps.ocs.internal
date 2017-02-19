@@ -4,10 +4,10 @@ mod.run = {
     melee: function(creep){
         if( !creep.flee ){
             if( creep.target instanceof Flag ){
-                creep.drive( creep.target.pos, 1, 1, Infinity);
+                creep.travelTo(creep.target.pos);
                 return;
             } else if( creep.target instanceof ConstructionSite ){
-                creep.drive( creep.target.pos, 0, 0, Infinity);
+                creep.travelTo(creep.target.pos, {range:0});
                 return;
             }
             creep.moveTo(creep.target, {reusePath: 0});
@@ -19,10 +19,10 @@ mod.run = {
         var range = creep.pos.getRangeTo(creep.target);
         if( !creep.flee ){
             if( creep.target instanceof Flag ){
-                creep.drive( creep.target.pos, 1, 1, Infinity);
+                creep.travelTo(creep.target.pos);
                 return;
             } else if( creep.target instanceof ConstructionSite ){
-                creep.drive( creep.target.pos, 0, 0, Infinity);
+                creep.travelTo(creep.target.pos, {range:0});
                 return;
             }
             if( range > 3 ){
@@ -54,20 +54,20 @@ mod.run = {
         if( !creep.flee ) {
             if( hasAttack ){
                 if( creep.target instanceof Flag ){
-                    creep.drive( creep.target.pos, 1, 1, Infinity);
+                    creep.travelTo(creep.target.pos);
                     return;
                 } else if( creep.target instanceof ConstructionSite ){
-                    creep.drive( creep.target.pos, 0, 0, Infinity);
+                    creep.travelTo(creep.target.pos, {range:0});
                     return;
                 }
                 let path = creep.room.findPath(creep.pos, creep.target.pos);
                 if( path && path.length > 0 ) creep.move(path[0].direction);
             } else if( hasRangedAttack ) {
                 if( creep.target instanceof Flag ){
-                    creep.drive( creep.target.pos, 1, 1, Infinity);
+                    creep.travelTo(creep.target.pos);
                     return;
                 } else if( creep.target instanceof ConstructionSite ){
-                    creep.drive( creep.target.pos, 0, 0, Infinity);
+                    creep.travelTo(creep.target.pos, {range:0});
                     return;
                 }
                 if( range > 3 ){
