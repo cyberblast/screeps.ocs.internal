@@ -35,7 +35,7 @@ mod.nextAction = function(creep, oldTargetId){
     let hopperTarget = FlagDir.find(FLAG_COLOR.hopper, creep.pos, false); // nearest hopper flag
     // no hopper flag found
     if( !hopperTarget ) {
-            // recycle self if no target
+        // recycle self if no target
         let mother = Game.spawns[creep.data.motherSpawn];
         if( mother ) {
         Creep.action.recycling.assign(creep, mother);
@@ -58,9 +58,8 @@ mod.nextAction = function(creep, oldTargetId){
         }
     }
     
-                // a target has been specified. check if it needs to be assigned (may be already assigned)
+    // a target has been specified. check if it needs to be assigned (may be already assigned)
     if( target && creep.data.targetId != (target.id || target.name)) { //
-        delete creep.data.path;
         Creep.action.travelling.assign(creep, target);
     } else if (!creep.action) { 
         // no new target specified and travelling completed (e.g. flag reached but now staying a while)
