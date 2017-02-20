@@ -45,6 +45,7 @@ mod.nextAction = function(creep){
             return Creep.action.idle.assign(creep);
         }
     } else {
+        creep.data.ignoreCreeps = false;
         return Creep.action.travelling.assign(creep, target);
     }
 };
