@@ -42,9 +42,7 @@ mod.run = {
     },
     sourceKiller: function(creep) {
         if( !creep.flee ){
-            let path = creep.room.findPath(creep.pos, creep.target.pos);
-            // not standing in rampart or next step is rampart as well
-            if(path[0]) creep.move(path[0].direction);
+            creep.travelTo(creep.target);
         }
         // attack
         let keeperLair = [];

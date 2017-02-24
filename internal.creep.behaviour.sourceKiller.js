@@ -1,6 +1,6 @@
 let mod = {};
 module.exports = mod;
-mod.name = 'warrior';
+mod.name = 'sourceKiller';
 mod.run = function(creep) {
     creep.flee = creep.flee || !creep.hasActiveBodyparts([ATTACK, RANGED_ATTACK]);
     creep.attacking = false;
