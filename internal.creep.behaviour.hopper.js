@@ -5,7 +5,7 @@ mod.actionInvalid = function(creep, action) {
     if (creep.hits === creep.hitsMax) {
         const hopperTarget = FlagDir.find(FLAG_COLOR.hopper, creep.pos, false); // nearest hopper flag
         // if we're fully healed, but not moving towards the hopper flag, or we've arrived in the target room
-        let ret = action.name === 'travelling' &&
+        let ret = hopperTarget && action.name === 'travelling' &&
             (!creep.target ||
                 (!creep.target.name || creep.target.pos.roomName !== hopperTarget.pos.roomName)
             );
@@ -65,7 +65,7 @@ mod.nextAction = function(creep, oldTargetId){
         if( creep.hits < (creep.hitsMax * 0.6) || !creep.hasActiveBodyparts(TOUGH) ) {
             // go to hide room (hopperHome)
             const hopperHome = FlagDir.find(FLAG_COLOR.hopperHome, creep.pos, false);
-            if (hopperHome) return Creep.action.assign(creep, hopperHome);
+            if (hopperHome) return Creep.action.travelling.assign(creep, hopperHome);
             else return Creep.action.travelling.assignRoom(creep, creep.data.homeRoom);
         }
     }
