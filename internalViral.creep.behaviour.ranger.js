@@ -15,11 +15,11 @@ mod.heal = function(creep){
             if( injured.length > 0 ){
                 const target = injured[0];
                 const canHeal = creep.pos.isNearTo(target) && !mustHealSelf;
-                const shouldHeal = target.data && target.hits < target.data.coreHits;
+                const shouldHeal = target.data && target.hits < target.data.hullHits;
                 // Heal other if not attacking or they are badly hurt
                 if( canHeal && (shouldHeal || !creep.attacking) ) {
                     creep.heal(target);
-                } else if( !(!mustHealSelf || !shouldHeal || creep.attackingRanged || creep.attacking) ) {
+                } else if( shouldHeal && !(creep.attackingRanged || creep.attacking || mustHealSelf)) {
                     creep.rangedHeal(target);
                 }
             }
