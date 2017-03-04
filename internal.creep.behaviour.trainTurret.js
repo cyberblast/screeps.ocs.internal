@@ -40,8 +40,11 @@ mod.nextAction = function(creep){
             return Creep.action.idle.assign(creep);
         }
     } else {
-        creep.data.ignoreCreeps = false;
-        return Creep.action.travelling.assign(creep, target);
+        if (creep.pos.roomName === target.pos.roomName) {
+            return Creep.action.travelling.assign(creep, target);
+        } else {
+            return Creep.action.travelling.assignRoom(creep, target.pos.roomName);
+        }
     }
 };
 mod.strategies = {
