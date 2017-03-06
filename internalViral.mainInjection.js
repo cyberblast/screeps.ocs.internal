@@ -18,10 +18,21 @@ mod.extend = function(){
             secondaryColor: COLOR_RED,
             filter: {'color': COLOR_YELLOW, 'secondaryColor': COLOR_RED }
         };
-        global.FLAG_COLOR.attackTrain = { // placed in room to attack, once there will dismantle/attack orange/yellow flags
-            color: COLOR_RED,
+       //train flags CYAN - to be expanded for different train types
+        global.FLAG_COLOR.trainFollow = { // attack trains follow this flag
+            color: COLOR_CYAN,
+            secondaryColor: COLOR_CYAN,
+            filter: {'color': COLOR_CYAN, 'secondaryColor': COLOR_CYAN}
+        };
+        global.FLAG_COLOR.trainHeal = { // spawns destroyer/heal/heal train
+            color: COLOR_CYAN,
+            secondaryColor: COLOR_GREEN,
+            filter: {'color': COLOR_CYAN, 'secondaryColor': COLOR_GREEN}
+        };
+        global.FLAG_COLOR.trainTurret = { // spawns destroyer/heal/turret train
+            color: COLOR_CYAN,
             secondaryColor: COLOR_WHITE,
-            filter: {'color': COLOR_RED, 'secondaryColor': COLOR_WHITE}
+            filter: {'color': COLOR_CYAN, 'secondaryColor': COLOR_WHITE}
         };
         // warrior
         Creep.behaviour.warrior = load("creep.behaviour.warrior");
@@ -33,18 +44,14 @@ mod.extend = function(){
         Creep.setup.sourceKiller = load("creep.setup.sourceKiller");
         Creep.behaviour.sourceKiller = load("creep.behaviour.sourceKiller");
         // attackTrain
-        Creep.setup.trainDestroyer = load("creep.setup.trainDestroyer");
-        Creep.setup.trainHealer = load("creep.setup.trainHealer");
-        Creep.setup.trainTurret = load("creep.setup.trainTurret");
-        Creep.behaviour.trainDestroyer = load("creep.behaviour.trainDestroyer");
-        Creep.behaviour.trainHealer = load("creep.behaviour.trainHealer");
-        Creep.behaviour.trainTurret = load("creep.behaviour.trainTurret");
+        Task.train = load("task.train");
+        Creep.behaviour.leader = load("creep.behaviour.leader");
+        Creep.behaviour.follower = load("creep.behaviour.follower");
 
+        //setup prio's (old - to be migrated to tasks)
         Spawn.priorityLow.push(Creep.setup.hopper);
         Spawn.priorityLow.push(Creep.setup.sourceKiller);
-        Spawn.priorityLow.push(Creep.setup.trainDestroyer);
-        Spawn.priorityLow.push(Creep.setup.trainHealer);
-        Spawn.priorityLow.push(Creep.setup.trainTurret);
+
 
         // combat effectiveness calc TODO Population.extend()
         Population.stats.creep.armorParts = { // combat buffer
