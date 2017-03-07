@@ -18,21 +18,21 @@ mod.extend = function(){
             secondaryColor: COLOR_RED,
             filter: {'color': COLOR_YELLOW, 'secondaryColor': COLOR_RED }
         };
-       //train flags CYAN - to be expanded for different train types
+       //train flags BLUE - to be expanded for different train types
         global.FLAG_COLOR.trainFollow = { // attack trains follow this flag
-            color: COLOR_CYAN,
-            secondaryColor: COLOR_CYAN,
-            filter: {'color': COLOR_CYAN, 'secondaryColor': COLOR_CYAN}
+            color: COLOR_BLUE,
+            secondaryColor: COLOR_BLUE,
+            filter: {'color': COLOR_BLUE, 'secondaryColor': COLOR_BLUE}
         };
         global.FLAG_COLOR.trainHeal = { // spawns destroyer/heal/heal train
-            color: COLOR_CYAN,
+            color: COLOR_BLUE,
             secondaryColor: COLOR_GREEN,
-            filter: {'color': COLOR_CYAN, 'secondaryColor': COLOR_GREEN}
+            filter: {'color': COLOR_BLUE, 'secondaryColor': COLOR_GREEN}
         };
         global.FLAG_COLOR.trainTurret = { // spawns destroyer/heal/turret train
-            color: COLOR_CYAN,
+            color: COLOR_BLUE,
             secondaryColor: COLOR_WHITE,
-            filter: {'color': COLOR_CYAN, 'secondaryColor': COLOR_WHITE}
+            filter: {'color': COLOR_BLUE, 'secondaryColor': COLOR_WHITE}
         };
         // warrior
         Creep.behaviour.warrior = load("creep.behaviour.warrior");
