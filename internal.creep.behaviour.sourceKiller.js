@@ -37,3 +37,18 @@ mod.nextAction = function(creep){
         }
     }
 };
+mod.strategies = {
+    defaultStrategy: {
+        name: `default-${mod.name}`,
+    },
+    defending: {
+        targetFilter: function(creep) {
+            return function (hostile) {
+                return true;
+            }
+        }
+    }
+};
+mod.selectStrategies = function(actionName) {
+    return [mod.strategies.defaultStrategy, mod.strategies[actionName]];
+};
