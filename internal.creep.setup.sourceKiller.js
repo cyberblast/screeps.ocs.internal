@@ -2,7 +2,7 @@ var setup = new Creep.Setup('sourceKiller');
 module.exports = setup;
 setup.minControllerLevel = 7;
 setup.globalMeasurement = true;
-setup.measureByHome = true;
+setup.measureByHome = false;
 setup.sortedParts = false;
 setup.maxCount = Creep.Setup.maxPerFlag(FLAG_COLOR.sourceKiller, 2, setup.measureByHome);
 

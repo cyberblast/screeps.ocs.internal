@@ -2,7 +2,7 @@ var setup = new Creep.Setup('trainTurret');
 module.exports = setup;
 setup.minControllerLevel = 7;
 setup.globalMeasurement = true;
-setup.measureByHome = true;
+setup.measureByHome = false;
 
 setup.maxCount = Creep.Setup.maxPerFlag(FLAG_COLOR.attackTrain, 3, setup.measureByHome);
 
