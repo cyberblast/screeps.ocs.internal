@@ -13,7 +13,11 @@ mod.actionInvalid = function(creep, action) {
     }
     return false;
 };
-mod.run = function(creep) { 
+mod.run = function(creep) {
+    if (Creep.action.avoiding.run(creep)) {
+        return;
+    }
+
     // Assign next Action
     const hopperTarget = FlagDir.find(FLAG_COLOR.hopper, creep.pos, false); // nearest hopper flag
     if (!creep.action || creep.action.name === 'idle' || mod.actionInvalid(creep, creep.action)) {
@@ -25,37 +29,27 @@ mod.run = function(creep) {
     } else {
         logError('Creep without action/activity!\nCreep: ' + creep.name + '\ndata: ' + JSON.stringify(creep.data));
     }
-    // heal
-    if( creep.data.body.heal !== undefined ) {
-        // heal self
-        if( creep.hits < creep.hitsMax ){
-            creep.heal(creep);
-        }
-        // heal other
-        else if(creep.room.casualties.length > 0 ) {
-            let injured = creep.pos.findInRange(creep.room.casualties, 3);
-            if( injured.length > 0 ){
-                if(creep.pos.isNearTo(injured[0])) {
-                    creep.heal(injured[0]);
-                }
-                else {
-                    creep.rangedHeal(injured[0]);
-                }
-            }
-        }
-    }
+
+    Creep.behaviour.ranger.heal(creep);
 };
 mod.nextAction = function(creep, oldTargetId){
     let target = null;
     let hopperTarget = FlagDir.find(FLAG_COLOR.hopper, creep.pos, false); // nearest hopper flag
+    let mother = Game.spawns[creep.data.motherSpawn];
     // no hopper flag found
     if( !hopperTarget ) {
-        // recycle self if no target
-        let mother = Game.spawns[creep.data.motherSpawn];
-        if( mother ) return Creep.action.recycling.assign(creep, mother);
+        // recycle self if no target (TODO closest spawn)
+        return Creep.action.recycling.assign(creep, mother);
     }
-    // only move to target room at full HP & not at target room 
-    else if (creep.hits === creep.hitsMax && creep.pos.roomName != hopperTarget.pos.roomName) {
+
+    let travelTarget = !creep.flag && hopperTarget && FlagDir.find(FLAG_COLOR.hopperHome, hopperTarget.pos, false);
+    if (travelTarget && creep.pos.roomName !== travelTarget.pos.roomName) {
+        creep.data.travelRange = TRAVELLING_BORDER_RANGE;
+        return Creep.action.travelling.assignRoom(creep, travelTarget.pos.roomName);
+    }
+
+    // only move to target room at full HP & not at target room
+    if (creep.hits === creep.hitsMax && creep.pos.roomName != hopperTarget.pos.roomName) {
         // go to target room (hopper)
         Population.registerCreepFlag(creep, hopperTarget);
         creep.data.travelRange = 23; // stay next to the border
