@@ -2,6 +2,9 @@ let mod = {};
 module.exports = mod;
 mod.name = 'warrior';
 mod.run = function(creep) {
+    if (creep.flag && !creep.data.predictedRenewal) {
+        creep.data.predictedRenewal = creep.data.spawningTime + 50 + 50 * routeRange(creep.data.homeRoom, creep.flag.pos.roomName);
+    }
     creep.flee = creep.flee || !creep.hasActiveBodyparts([ATTACK, RANGED_ATTACK]);
     creep.attacking = false;
     creep.attackingRanged = false;

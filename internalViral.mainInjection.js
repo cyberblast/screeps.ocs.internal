@@ -41,7 +41,7 @@ mod.extend = function(){
         Creep.behaviour.trainTurret = load("creep.behaviour.trainTurret");
 
         Spawn.priorityLow.push(Creep.setup.hopper);
-        Spawn.priorityLow.push(Creep.setup.sourceKiller);
+        Spawn.priorityLow.unshift(Creep.setup.sourceKiller);
         Spawn.priorityLow.push(Creep.setup.trainDestroyer);
         Spawn.priorityLow.push(Creep.setup.trainHealer);
         Spawn.priorityLow.push(Creep.setup.trainTurret);
