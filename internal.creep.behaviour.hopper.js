@@ -29,25 +29,8 @@ mod.run = function(creep) {
     } else {
         logError('Creep without action/activity!\nCreep: ' + creep.name + '\ndata: ' + JSON.stringify(creep.data));
     }
-    // heal
-    if( creep.data.body.heal !== undefined ) {
-        // heal self
-        if( creep.hits < creep.hitsMax ){
-            creep.heal(creep);
-        }
-        // heal other
-        else if(creep.room.casualties.length > 0 ) {
-            let injured = creep.pos.findInRange(creep.room.casualties, 3);
-            if( injured.length > 0 ){
-                if(creep.pos.isNearTo(injured[0])) {
-                    creep.heal(injured[0]);
-                }
-                else {
-                    creep.rangedHeal(injured[0]);
-                }
-            }
-        }
-    }
+
+    Creep.behaviour.ranger.heal(creep);
 };
 mod.nextAction = function(creep, oldTargetId){
     let target = null;
