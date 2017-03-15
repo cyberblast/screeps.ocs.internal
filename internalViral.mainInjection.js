@@ -52,8 +52,7 @@ mod.extend = function(){
 
         //setup prio's (old - to be migrated to tasks)
         Spawn.priorityLow.push(Creep.setup.hopper);
-        Spawn.priorityLow.push(Creep.setup.sourceKiller);
-
+        Spawn.priorityLow.unshift(Creep.setup.sourceKiller);
 
         // combat effectiveness calc TODO Population.extend()
         Population.stats.creep.armorParts = { // combat buffer
