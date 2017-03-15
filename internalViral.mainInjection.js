@@ -44,9 +44,7 @@ mod.extend = function(){
         Creep.setup.sourceKiller = load("creep.setup.sourceKiller");
         Creep.behaviour.sourceKiller = load("creep.behaviour.sourceKiller");
         // attackTrain
-        //Task.newTask('train', 'task.train');
-        Task.train = load("task.train");
-        Task.addTasks(Task.train)
+        Task.installTask('train', 'task.train');
         Creep.behaviour.leader = load("creep.behaviour.leader");
         Creep.behaviour.follower = load("creep.behaviour.follower");
 
