@@ -58,7 +58,7 @@ mod.extend = function(){
         };
     }
     catch(e){
-        console.log(e);
+        console.log(e.stack || e);
     }
 };
 //mod.flush = function(){};
