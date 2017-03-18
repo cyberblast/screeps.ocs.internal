@@ -45,6 +45,7 @@ mod.strategies = {
         name: `default-${mod.name}`,
     },
     defending: {
+        name: `defending-${mod.name}`,
         targetFilter: function(creep) {
             return function (hostile) {
                 return true;
