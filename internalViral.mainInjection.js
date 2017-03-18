@@ -40,9 +40,10 @@ mod.extend = function(){
         Creep.behaviour.trainHealer = load("creep.behaviour.trainHealer");
         Creep.behaviour.trainTurret = load("creep.behaviour.trainTurret");
 
-        Spawn.priorityLow.unshift(Creep.setup.sourceKiller);
         Spawn.priorityLow.push(Creep.setup.trainDestroyer);
         Spawn.priorityLow.push(Creep.setup.trainHealer);
+        // attempt to get around merge conflict, remove once this is in /dev
+        if (!_.isUndefined(Creep.setup.sourceKiller)) Spawn.priorityLow.unshift(Creep.setup.sourceKiller);
         Spawn.priorityLow.push(Creep.setup.trainTurret);
 
         // combat effectiveness calc TODO Population.extend()
