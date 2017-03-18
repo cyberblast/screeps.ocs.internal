@@ -16,9 +16,7 @@ mod.run = function(creep) {
             Task[creep.data.destiny.task].nextAction(creep);
         else this.nextAction(creep);
     }
-    if( creep.data.targetId != oldTargetId ) {
-        delete creep.data.path;
-    }
+
     // Do some work
     if( creep.action && creep.target ) {
         creep.action.step(creep);
@@ -43,4 +41,17 @@ mod.nextAction = function(creep){
                 return;
         }
     }
+};
+mod.strategies = {
+    defaultStrategy: {
+        name: `default-${mod.name}`,
+        moveOptions: function(options) {
+            // // allow routing in and through hostile rooms
+            // if (_.isUndefined(options.allowHostile)) options.allowHostile = true;
+            return options;
+        }
+    }
+};
+mod.selectStrategies = function(actionName) {
+    return [mod.strategies.defaultStrategy, mod.strategies[actionName]];
 };

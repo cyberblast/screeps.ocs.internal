@@ -3,9 +3,9 @@ module.exports = mod;
 mod.name = 'trainHealer';
 mod.run = function(creep) {
     // Assign next Action
-    this.nextAction(creep);
+    if (!creep.action || creep.action.name === 'idle') this.nextAction(creep);
     // Do some work
-    if( creep.action && creep.target ) {
+    if( creep.action ) {
         creep.action.step(creep);
     } else {
         logError('Creep without action/activity!\nCreep: ' + creep.name + '\ndata: ' + JSON.stringify(creep.data));
@@ -24,11 +24,28 @@ mod.nextAction = function(creep){
         Creep.action.recycling.assign(creep);
     } else if(!target) {
         if(creep.pos.roomName != creep.data.homeRoom) {
-            Creep.action.travelling.assign(creep, Game.rooms[creep.data.homeRoom].controller);
+            return Creep.action.travelling.assignRoom(creep, creep.data.homeRoom);
         } else {
-            Creep.action.idle.assign(creep);
+            return Creep.action.idle.assign(creep);
         }
     } else {
-        Creep.action.travelling.assign(creep, target);
+        if (creep.pos.roomName === target.pos.roomName) {
+            return Creep.action.travelling.assign(creep, target);
+        } else {
+            return Creep.action.travelling.assignRoom(creep, target.pos.roomName);
+        }
     }
+};
+mod.strategies = {
+    defaultStrategy: {
+        name: `default-${mod.name}`,
+        moveOptions: function(options) {
+            // // allow routing in and through hostile rooms
+            // if (_.isUndefined(options.allowHostile)) options.allowHostile = true;
+            return options;
+        }
+    }
+};
+mod.selectStrategies = function(actionName) {
+    return [mod.strategies.defaultStrategy, mod.strategies[actionName]];
 };
