@@ -233,7 +233,7 @@ mod.checkForRequiredCreeps = (flag) => {
     	let maxHaulers = Math.ceil(flag.room.powerBank.power / 1250);
         let neededCarryParts = Math.ceil(flag.room.powerBank.power / 50) - (haulerCount * 25);
         if((POWER_MINE_LOG && Game.time % 20 == 0) || room.name == 'sim'){
-            logSystem('Power Mining', '- Target: '+flag+' | '+flag.pos.roomName+' | Power: '+flag.room.powerBank.power+ ' | Hits Left: '+flag.room.powerBank.hits+' Haulers: '+haulerCount+'/'+maxHaulers+' Time left: '+flag.room.powerBank.ticksToDecay)
+            logSystem('Power Mining', 'Target: '+flag+' | '+flag.pos.roomName+' | Power: '+flag.room.powerBank.power+ ' | Hits Left: '+flag.room.powerBank.hits+' Haulers: '+haulerCount+'/'+maxHaulers+' Time left: '+flag.room.powerBank.ticksToDecay)
         }
         if(haulerCount < maxHaulers && (flag && flag.room.powerBank && flag.room.powerBank.hits < 400000)) {
             for(let i = haulerCount; i < maxHaulers; i++) {
