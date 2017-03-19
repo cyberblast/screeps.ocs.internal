@@ -48,7 +48,7 @@ mod.nextAction = function(creep){
 mod.getFlag = function(creep) {
     let flag = creep.data.destiny && Game.flags[creep.data.destiny.targetName];
     if (flag) return flag;
-    else return FlagDir.find(FLAG_COLOR.invade.powerMining, creep.pos, false);
+    else return FlagDir.find(FLAG_COLOR.powerMining, creep.pos, false);
 };
 mod.strategies = {
     defaultStrategy: {
