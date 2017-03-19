@@ -13,7 +13,7 @@ mod.register = () => {
     Creep.died.on( name => Task.powerMining.handleCreepDied(name));
 };
 mod.checkFlag = (flag) => {
-    if( flag.color == FLAG_COLOR.invade.powerMining.color && flag.secondaryColor == FLAG_COLOR.invade.powerMining.secondaryColor ) {
+    if( flag.color == FLAG_COLOR.powerMining.color && flag.secondaryColor == FLAG_COLOR.powerMining.secondaryColor ) {
         flag.memory.roomName = flag.pos.roomName;
         flag.memory.task = mod.name;
         return true;
