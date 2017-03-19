@@ -14,7 +14,7 @@ mod.run = function(creep) {
 };
 mod.nextAction = function(creep) {
     if( creep.data.destiny ) target = Game.flags[creep.data.destiny.targetName || creep.data.destiny.flagName || creep.data.flagName];
-    if ( !target ) target = FlagDir.find(FLAG_COLOR.invade.powerMining, creep.pos, false);
+    if ( !target ) target = FlagDir.find(FLAG_COLOR.powerMining, creep.pos, false);
     const attackTarget = creep.pos.findClosestByPath(FIND_HOSTILE_STRUCTURES, { filter: (structure) => { return structure.structureType == STRUCTURE_POWER_BANK;}});
     const roomName = creep.data.destiny.room;
     const memory = Task.powerMining.memory(roomName);
