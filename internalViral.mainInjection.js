@@ -23,6 +23,17 @@ mod.extend = function(){
             secondaryColor: COLOR_WHITE,
             filter: {'color': COLOR_RED, 'secondaryColor': COLOR_WHITE}
         };
+        global.FLAG_COLOR.powerMining = { // triggers power mining task. Place ON the Power Bank. 
+            color: COLOR_RED,
+            secondaryColor: COLOR_BROWN,
+            filter: {'color': COLOR_RED, 'secondaryColor': COLOR_BROWN },
+        };
+        //powerMining
+        Task.installTask('powerMining');
+        Creep.action.pickPower = load("creep.action.pickPower");
+        Creep.behaviour.powerMiner = load("creep.behaviour.powerMiner");
+        Creep.behaviour.powerHealer = load("creep.behaviour.powerHealer");
+        Creep.behaviour.powerHauler = load("creep.behaviour.powerHauler");
         // warrior
         Creep.behaviour.warrior = load("creep.behaviour.warrior");
         // hopper
