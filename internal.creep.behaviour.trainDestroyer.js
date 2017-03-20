@@ -2,8 +2,11 @@ let mod = {};
 module.exports = mod;
 mod.name = 'trainDestroyer';
 mod.run = function(creep) {
-    // Assign next Action
-    if (!creep.action || creep.action.name === 'idle') this.nextAction(creep);
+    if (!creep.action || creep.action.name === 'idle') {
+        // Assign next Action
+        this.nextAction(creep);
+    }
+
     // Do some work
     if( creep.action ) {
         creep.action.step(creep);

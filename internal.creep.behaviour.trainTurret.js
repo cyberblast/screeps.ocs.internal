@@ -2,8 +2,11 @@ let mod = {};
 module.exports = mod;
 mod.name = 'trainTurret';
 mod.run = function(creep) {
-    // Assign next Action
-    if (!creep.action || creep.action.name === 'idle') this.nextAction(creep);
+    if (!creep.action || creep.action.name === 'idle') {
+        // Assign next Action
+        this.nextAction(creep);
+    }
+
     // Do some work
     if( creep.action && creep.target ) {
         creep.action.step(creep);
@@ -19,7 +22,14 @@ mod.run = function(creep) {
             if(CHATTY) creep.say('MassAttack');
             creep.attackingRanged = creep.rangedMassAttack() == OK;
             return;
-        } else if (targets.length > 0){
+        }
+
+        let range = creep.pos.getRangeTo(creep.target);
+        if( range < 4 && Task.reputation.hostileOwner(creep.target)) {
+            creep.attackingRanged = creep.rangedAttack(creep.target) == OK;
+            return;
+        }
+        if(targets.length > 0){
             creep.attackingRanged = creep.rangedAttack(targets[0]) == OK;
         }
     }
