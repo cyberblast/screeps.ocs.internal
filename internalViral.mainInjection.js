@@ -26,7 +26,7 @@ mod.extend = function(){
         // warrior
         Creep.behaviour.warrior = load("creep.behaviour.warrior");
         // hopper
-        Creep.setup.hopper = load("creep.setup.hopper");
+        Task.installTask('hopper');
         Creep.behaviour.hopper = load("creep.behaviour.hopper");
         //sourceKiller
         Creep.action.sourceKiller = load("creep.action.sourceKiller");
@@ -40,10 +40,10 @@ mod.extend = function(){
         Creep.behaviour.trainHealer = load("creep.behaviour.trainHealer");
         Creep.behaviour.trainTurret = load("creep.behaviour.trainTurret");
 
-        Spawn.priorityLow.push(Creep.setup.hopper);
-        Spawn.priorityLow.unshift(Creep.setup.sourceKiller);
         Spawn.priorityLow.push(Creep.setup.trainDestroyer);
         Spawn.priorityLow.push(Creep.setup.trainHealer);
+        // attempt to get around merge conflict, remove once this is in /dev
+        if (!_.isUndefined(Creep.setup.sourceKiller)) Spawn.priorityLow.unshift(Creep.setup.sourceKiller);
         Spawn.priorityLow.push(Creep.setup.trainTurret);
 
         // combat effectiveness calc TODO Population.extend()
