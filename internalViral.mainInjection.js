@@ -26,7 +26,6 @@ mod.extend = function(){
         global.FLAG_COLOR.powerMining = { // triggers power mining task. Place ON the Power Bank. 
             color: COLOR_RED,
             secondaryColor: COLOR_BROWN,
-            filter: {'color': COLOR_RED, 'secondaryColor': COLOR_BROWN },
         };
         //powerMining
         Task.installTask('powerMining');
