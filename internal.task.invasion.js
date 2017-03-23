@@ -92,7 +92,7 @@ mod.checkPhase = flag => {
     // mid-phases
     
     // guards
-    if (flag.memory.phase === 1 || flag.memory.phase === 3) {
+    if (-1 < flag.memory.phase && flag.memory.phase < 4) {
         let removeFlags = true;
         if (room.hostiles && room.hostiles.length) {
             const hostiles = _.filter(room.hostiles, c => c.hasActiveBodyparts([ATTACK, RANGED_ATTACK, HEAL]));

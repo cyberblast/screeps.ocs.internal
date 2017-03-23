@@ -9,12 +9,8 @@ let mod = {
 		TRAIN_COUNT: 2, // amount of trains to spawn
 		ATTACK_CONTROLLER_COUNT: 1, // amount of attack controllers to spawn
 		ROBBER_COUNT: 2, // during phases 2 and 3, the invasion will spawn robbers to drain the room
-		GUARD_COUNT: (phase) => { // amount of guards to spawn. Number or function
-			if (phase === 1) return INVASION.HOPPER_COUNT;
-			if (phase === 2) return 0;
-			if (phase === 3) return 1;
-			return 0;
-		},
+        // amount of guards to spawn. Number or function
+		GUARD_COUNT: (phase) => [0, INVASION.HOPPER_COUNT, 0, 1][phase],
 	},
 };
 module.exports = mod;
