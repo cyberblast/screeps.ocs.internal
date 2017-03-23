@@ -23,6 +23,10 @@ mod.extend = function(){
             secondaryColor: COLOR_WHITE,
             filter: {'color': COLOR_RED, 'secondaryColor': COLOR_WHITE}
         };
+        global.FLAG_COLOR.invasion = {
+            color: COLOR_RED,
+            secondaryColor: COLOR_ORANGE,
+        };
         // warrior
         Creep.behaviour.warrior = load("creep.behaviour.warrior");
         // hopper
@@ -39,6 +43,8 @@ mod.extend = function(){
         Creep.behaviour.trainDestroyer = load("creep.behaviour.trainDestroyer");
         Creep.behaviour.trainHealer = load("creep.behaviour.trainHealer");
         Creep.behaviour.trainTurret = load("creep.behaviour.trainTurret");
+        
+        Task.installTask('invasion');
 
         Spawn.priorityLow.push(Creep.setup.trainDestroyer);
         Spawn.priorityLow.push(Creep.setup.trainHealer);
