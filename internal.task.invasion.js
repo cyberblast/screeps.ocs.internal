@@ -29,6 +29,13 @@ mod.checkPhase = flag => {
             name, type
         });
     };
+    const removeFlags = (type) => {
+        _(flag.memory.flags).filter({type: type}).forEach(f => {
+            Game.flags[f.name].remove();
+            let i = flag.memory.flags.indexOf(f);
+            flag.memory.flags.splice(i, 1);
+        });
+    };
     
     // start phase 1
     if (!(hoppers && hoppers.length && trains && trains.length && controllerAttackers && controllerAttackers.length)) {
@@ -58,7 +65,8 @@ mod.checkPhase = flag => {
         }
         
         if (flag.memory.phase === 2) {
-            // TODO: remove hopper flags
+            // remove hopper flags
+            removeFlags('hopper');
         }
     }
     
@@ -75,7 +83,8 @@ mod.checkPhase = flag => {
         }
         
         if (flag.memory.phase === 3) {
-            // TODO: remove train flags
+            // remove train flags
+            removeFlags('attackTrain');
         }
     }
     
@@ -85,7 +94,11 @@ mod.checkPhase = flag => {
             _.times(INVASION.ATTACK_CONTROLLER_COUNT, n => newFlag('invade.attackController'));
         } else {
             flag.memory.phase = 4; // finished
-            // TODO: remove flags
+            // remove flags
+            _(flag.memory.flags).forEach(f => {
+                Game.flags[f.name].remove();
+            });
+            flag.memory.flags = [];
         }
     }
     
@@ -93,19 +106,20 @@ mod.checkPhase = flag => {
     
     // guards
     if (-1 < flag.memory.phase && flag.memory.phase < 4) {
-        let removeFlags = true;
+        let removeGuards = true;
         if (room.hostiles && room.hostiles.length) {
             const hostiles = _.filter(room.hostiles, c => c.hasActiveBodyparts([ATTACK, RANGED_ATTACK, HEAL]));
-            removeFlags = false;
+            removeGuards = false;
             if (hostiles && hostiles.length && hostiles.length > 0) {
                 const guardCount = typeof INVASION.GUARD_COUNT === 'function' ? INVASION.GUARD_COUNT(flag.memory.phase) : INVASION.GUARD_COUNT;
                 _.times(guardCount, n => newFlag('defense'));
             } else {
-                removeFlags = true;
+                removeGuards = true;
             }
         }
-        if (removeFlags) {
-            // TODO: remove guard flags
+        if (removeGuards) {
+            // remove guard flags
+            removeFlags('defense');
         }
     }
     
@@ -118,7 +132,8 @@ mod.checkPhase = flag => {
         if (energy > 0) {
             _.times(INVASION.ROBBER_COUNT, n => newFlag('invade.robbing'));
         } else {
-            // TODO: remove robber flags
+            // remove robber flags
+            removeFlags('invade.robbing');
         }
     }
     
