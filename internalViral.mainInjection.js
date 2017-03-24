@@ -3,6 +3,10 @@ module.exports = mod;
 mod.extend = function(){
     try {
         // flags
+        global.FLAG_COLOR.powerMining = { // triggers power mining task. Place ON the Power Bank. 
+            color: COLOR_RED,
+            secondaryColor: COLOR_BROWN,
+        };
         global.FLAG_COLOR.hopper = { // the room where tower is
             color: COLOR_RED,
             secondaryColor: COLOR_PURPLE,
@@ -23,18 +27,14 @@ mod.extend = function(){
             secondaryColor: COLOR_WHITE,
             filter: {'color': COLOR_RED, 'secondaryColor': COLOR_WHITE}
         };
-        global.FLAG_COLOR.powerMining = { // triggers power mining task. Place ON the Power Bank. 
-            color: COLOR_RED,
-            secondaryColor: COLOR_BROWN,
-        };
+        // warrior
+        Creep.behaviour.warrior = load("creep.behaviour.warrior");
         //powerMining
         Task.installTask('powerMining');
         Creep.action.pickPower = load("creep.action.pickPower");
         Creep.behaviour.powerMiner = load("creep.behaviour.powerMiner");
         Creep.behaviour.powerHealer = load("creep.behaviour.powerHealer");
         Creep.behaviour.powerHauler = load("creep.behaviour.powerHauler");
-        // warrior
-        Creep.behaviour.warrior = load("creep.behaviour.warrior");
         // hopper
         Creep.setup.hopper = load("creep.setup.hopper");
         Creep.behaviour.hopper = load("creep.behaviour.hopper");
