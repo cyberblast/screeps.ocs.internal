@@ -1,0 +1,17 @@
+{
+  "ocs.internal": {
+    "reset": "upstream/dev",
+    "merge": [
+      "upstream/task/invasion"
+    ]
+  },
+  "ocs.public": {
+    "reset": "upstream/dev",
+    "merge": [
+      "upstream/change/infectObjects",
+      "upstream/feature/semiautoConstruction",
+      "upstream/feature/flagIs",
+      "upstream/change/observerRefactor"
+    ]
+  }
+}
