@@ -45,7 +45,8 @@ mod.checkPhase = flag => {
     }
     
     if (!flag.room) {
-        // TODO: Request room via. observers
+        // Request room via. observers
+        observerRequests = {roomName: flag.pos.roomName};
         return false; // we need vision after this point
     }
     
