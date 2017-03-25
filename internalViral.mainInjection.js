@@ -44,8 +44,8 @@ mod.extend = function(){
         Task.installTask('hopper');
         Creep.behaviour.hopper = load("creep.behaviour.hopper");
         //sourceKiller
+        Task.installTask('sourceKiller');
         Creep.action.sourceKiller = load("creep.action.sourceKiller");
-        Creep.setup.sourceKiller = load("creep.setup.sourceKiller");
         Creep.behaviour.sourceKiller = load("creep.behaviour.sourceKiller");
         // attackTrain
         Creep.setup.trainDestroyer = load("creep.setup.trainDestroyer");
@@ -62,8 +62,9 @@ mod.extend = function(){
         Spawn.priorityLow.push(Creep.setup.trainDestroyer);
         Spawn.priorityLow.push(Creep.setup.trainHealer);
         // attempt to get around merge conflict, remove once this is in /dev
-        if (!_.isUndefined(Creep.setup.sourceKiller)) Spawn.priorityLow.unshift(Creep.setup.sourceKiller);
         Spawn.priorityLow.push(Creep.setup.trainTurret);
+        // get around merge conflict, remove this line once merged into /dev
+        if (!_.isUndefined(Creep.setup.hopper)) Spawn.priorityLow.push(Creep.setup.hopper);
 
         StructureNuker.prototype.getNeeds = function(resourceType) {
             // if parameter is enabled then autofill nukers
