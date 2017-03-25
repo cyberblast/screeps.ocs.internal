@@ -87,13 +87,6 @@ mod.checkPhase = flag => {
     
     if (!flag.memory.flags) flag.memory.flags = [];
     
-    // check and run phase one
-    if (Task.invasion.checkPhaseOne(flag, params)) {
-        // not yet began
-        flag.memory.phase = 1;
-        _.times(INVASION.HOPPER_COUNT, n => newFlag('hopper'));
-    }
-    
     if (Task.invasion.phases[0].condition(flag, params)) {
         Task.invasion.phases[0].run(flag, params);
     }
