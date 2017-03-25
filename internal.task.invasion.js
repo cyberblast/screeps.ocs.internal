@@ -64,12 +64,14 @@ mod.phases_other = {
 };
 
 mod.register = () => {
-    Flag.found.on(Task.invasion.handleFlagFound);
+    if (_.isUndefined(Task.selfRegister)) {
+        Flag.found.on(Task.invasion.handleFlagFound);
+    }
 };
 
 mod.handleFlagFound = flag => {
     flag = Game.flags[flag.name];
-    if (flag.is(FLAG_COLOR.invasion)) {
+    if (flag.compareTo(FLAG_COLOR.invasion)) {
         Task.invasion.checkPhase(flag);
     }
 };
@@ -77,9 +79,9 @@ mod.handleFlagFound = flag => {
 mod.checkPhase = flag => {
     flag.memory.phase = flag.memory.phase || 0;
     const flags = flag.room.find(FIND_FLAGS);
-    const hoppers = _.filter(flags, f => f.is(FLAG_COLOR.hopper));
-    const trains = _.filter(flags, f => f.is(FLAG_COLOR.attackTrain));
-    const controllerAttackers = _.filter(flags, f => f.is(FLAG_COLOR.invade.attackController));
+    const hoppers = _.filter(flags, f => f.compareTo(FLAG_COLOR.hopper));
+    const trains = _.filter(flags, f => f.compareTo(FLAG_COLOR.attackTrain));
+    const controllerAttackers = _.filter(flags, f => f.compareTo(FLAG_COLOR.invade.attackController));
     
     const params = {hoppers, trains, controllerAttackers};
     
