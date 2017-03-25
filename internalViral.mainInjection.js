@@ -27,6 +27,11 @@ mod.extend = function(){
             secondaryColor: COLOR_WHITE,
             filter: {'color': COLOR_RED, 'secondaryColor': COLOR_WHITE}
         };
+        global.FLAG_COLOR.sequence = { // Place Grey/Grey flag on a structure, all Grey/X flags are changed to X/X flags when the structure is gone.
+            color: COLOR_GREY,
+            secondaryColor: COLOR_GREY,
+            filter: {'color': COLOR_GREY, 'secondaryColor': COLOR_GREY}
+        };
         // warrior
         Creep.behaviour.warrior = load("creep.behaviour.warrior");
         //powerMining
@@ -49,6 +54,10 @@ mod.extend = function(){
         Creep.behaviour.trainDestroyer = load("creep.behaviour.trainDestroyer");
         Creep.behaviour.trainHealer = load("creep.behaviour.trainHealer");
         Creep.behaviour.trainTurret = load("creep.behaviour.trainTurret");
+
+        Task.installTask(...[
+            "flagSequence",
+        ]);
 
         Spawn.priorityLow.push(Creep.setup.trainDestroyer);
         Spawn.priorityLow.push(Creep.setup.trainHealer);
