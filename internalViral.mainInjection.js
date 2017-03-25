@@ -3,6 +3,10 @@ module.exports = mod;
 mod.extend = function(){
     try {
         // flags
+        global.FLAG_COLOR.powerMining = { // triggers power mining task. Place ON the Power Bank.
+            color: COLOR_RED,
+            secondaryColor: COLOR_BROWN,
+        };
         global.FLAG_COLOR.hopper = { // the room where tower is
             color: COLOR_RED,
             secondaryColor: COLOR_PURPLE,
@@ -23,18 +27,29 @@ mod.extend = function(){
             secondaryColor: COLOR_WHITE,
             filter: {'color': COLOR_RED, 'secondaryColor': COLOR_WHITE}
         };
+        global.FLAG_COLOR.sequence = { // Place Grey/Grey flag on a structure, all Grey/X flags are changed to X/X flags when the structure is gone.
+            color: COLOR_GREY,
+            secondaryColor: COLOR_GREY,
+            filter: {'color': COLOR_GREY, 'secondaryColor': COLOR_GREY}
+        };
         global.FLAG_COLOR.invasion = {
             color: COLOR_RED,
             secondaryColor: COLOR_ORANGE,
         };
         // warrior
         Creep.behaviour.warrior = load("creep.behaviour.warrior");
+        //powerMining
+        Task.installTask('powerMining');
+        Creep.action.pickPower = load("creep.action.pickPower");
+        Creep.behaviour.powerMiner = load("creep.behaviour.powerMiner");
+        Creep.behaviour.powerHealer = load("creep.behaviour.powerHealer");
+        Creep.behaviour.powerHauler = load("creep.behaviour.powerHauler");
         // hopper
         Task.installTask('hopper');
         Creep.behaviour.hopper = load("creep.behaviour.hopper");
         //sourceKiller
+        Task.installTask('sourceKiller');
         Creep.action.sourceKiller = load("creep.action.sourceKiller");
-        Creep.setup.sourceKiller = load("creep.setup.sourceKiller");
         Creep.behaviour.sourceKiller = load("creep.behaviour.sourceKiller");
         // attackTrain
         Creep.setup.trainDestroyer = load("creep.setup.trainDestroyer");
@@ -46,11 +61,16 @@ mod.extend = function(){
         
         Task.installTask('invasion');
 
+        Task.installTask(...[
+            "flagSequence",
+        ]);
+
         Spawn.priorityLow.push(Creep.setup.trainDestroyer);
         Spawn.priorityLow.push(Creep.setup.trainHealer);
         // attempt to get around merge conflict, remove once this is in /dev
-        if (!_.isUndefined(Creep.setup.sourceKiller)) Spawn.priorityLow.unshift(Creep.setup.sourceKiller);
         Spawn.priorityLow.push(Creep.setup.trainTurret);
+        // get around merge conflict, remove this line once merged into /dev
+        if (!_.isUndefined(Creep.setup.hopper)) Spawn.priorityLow.push(Creep.setup.hopper);
 
         StructureNuker.prototype.getNeeds = function(resourceType) {
             // if parameter is enabled then autofill nukers
