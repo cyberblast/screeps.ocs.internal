@@ -58,11 +58,10 @@ mod.extend = function(){
         Creep.behaviour.trainDestroyer = load("creep.behaviour.trainDestroyer");
         Creep.behaviour.trainHealer = load("creep.behaviour.trainHealer");
         Creep.behaviour.trainTurret = load("creep.behaviour.trainTurret");
-        
-        Task.installTask('invasion');
 
         Task.installTask(...[
             "flagSequence",
+            'invasion',
         ]);
 
         Spawn.priorityLow.push(Creep.setup.trainDestroyer);
