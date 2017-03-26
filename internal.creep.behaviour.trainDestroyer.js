@@ -30,7 +30,11 @@ mod.nextAction = function(creep) {
         }
     } else if(creep.pos.roomName != target.pos.roomName) {
         Creep.action.travelling.assign(creep, target);
-    } else if(dismantleFlag) {
-        Creep.action.dismantling.assign(creep);
+    } else if(dismantleFlag && Creep.action.dismantling.assign(creep)) {
+        return;
+    } else if (target && creep.pos.getRangeTo(target) > 0) {
+        Creep.action.travelling.assign(creep, target);
+    } else {
+        Creep.action.idle.assign();
     }
 };
