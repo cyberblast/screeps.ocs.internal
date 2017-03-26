@@ -61,9 +61,8 @@ mod.extend = function(){
 
         Task.installTask(...[
             "flagSequence",
+            'invasion',
         ]);
-        
-        Task.installTask('invasion');
 
         Spawn.priorityLow.push(Creep.setup.trainDestroyer);
         Spawn.priorityLow.push(Creep.setup.trainHealer);

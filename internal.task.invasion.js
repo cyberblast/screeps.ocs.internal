@@ -3,7 +3,7 @@ module.exports = mod;
 
 mod.phases = [
     { // phase one
-        condition: Task.invasion.checkPhaseOne,
+        condition: mod.checkPhaseOne,
         run: function(flag, params) {
             // not yet begun
             flag.memory.phase = 1;
@@ -11,7 +11,7 @@ mod.phases = [
         },
     },
     { // phase two
-        condition: Task.invasion.checkPhaseTwo,
+        condition: mod.checkPhaseTwo,
         run: function(flag, params) {
             flag.memory.phase = 2;
             _.times(INVASION.TRAIN_COUNT, n => newFlag(flag, 'attackTrain'));
@@ -20,7 +20,7 @@ mod.phases = [
         },
     },
     { // phase three
-        condition: Task.invasion.checkPhaseThree,
+        condition: mod.checkPhaseThree,
         run: function(flag, params) {
             flag.memory.phase = 3;
             _.times(INVASION.ATTACK_CONTROLLER_COUNT, n => newFlag('invade.attackController'));
@@ -32,7 +32,7 @@ mod.phases = [
 
 mod.phases_other = {
     final: {
-        condition: Task.invasion.checkFinished,
+        condition: mod.checkFinished,
         run: function(flag, params) {
             flag.memory.phase = 4;
             _(flag.memory.flags).forEach(f => {
@@ -43,7 +43,7 @@ mod.phases_other = {
         },
     },
     guards: {
-        condition: Task.invasion.checkGuards,
+        condition: mod.checkGuards,
         run: function(flag, params) {
             const guardCount = typeof INVASION.GUARD_COUNT === 'function' ? INVASION.GUARD_COUNT(flag.memory.phase) : INVASION.GUARD_COUNT;
             _.times(guardCount, n => newFlag('defense'));
@@ -53,7 +53,7 @@ mod.phases_other = {
         },
     },
     robbers: {
-        condition: Task.invasion.checkRobbers,
+        condition: mod.checkRobbers,
         run: function(flag, params) {
             _.times(INVASION.ROBBER_COUNT, n => newFlag('invade.robbing'));
         },
