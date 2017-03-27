@@ -2,16 +2,7 @@ let mod = {};
 module.exports = mod;
 mod.minControllerLevel = 7;
 mod.name = 'powerMining';
-mod.register = () => {
-    // when a new flag has been found (occurs every tick, for each flag)
-    Flag.found.on( flag => Task.powerMining.handleFlagFound(flag) );
-    // when a flag has been removed
-    Flag.FlagRemoved.on( flagName => Task.powerMining.handleFlagRemoved(flagName) );
-    // a creep starts spawning
-    Creep.spawningStarted.on( params => Task.powerMining.handleSpawningStarted(params) );
-    Creep.spawningCompleted.on( creep => Task.powerMining.handleSpawningCompleted(creep) );
-    Creep.died.on( name => Task.powerMining.handleCreepDied(name));
-};
+mod.register = () => {};
 mod.checkFlag = (flag) => {
     if( flag.color == FLAG_COLOR.powerMining.color && flag.secondaryColor == FLAG_COLOR.powerMining.secondaryColor ) {
         flag.memory.roomName = flag.pos.roomName;

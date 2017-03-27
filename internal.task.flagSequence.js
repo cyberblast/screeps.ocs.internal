@@ -16,10 +16,7 @@ module.exports = mod;
 //      goal: (optional) the name of a goal flag.
 
 // hook into flag events
-mod.register = () => {
-    // flags found, every tick
-    Flag.found.on( flag => Task.flagSequence.handleFlagFound(flag) );
-};
+mod.register = () => {};
 
 // for each flag
 mod.handleFlagFound = flag => {
