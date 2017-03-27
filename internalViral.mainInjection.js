@@ -10,27 +10,22 @@ mod.extend = function(){
         global.FLAG_COLOR.hopper = { // the room where tower is
             color: COLOR_RED,
             secondaryColor: COLOR_PURPLE,
-            filter: {'color': COLOR_RED, 'secondaryColor': COLOR_PURPLE }
         };
         global.FLAG_COLOR.hopperHome = { // room to heal in
             color: COLOR_RED,
             secondaryColor: COLOR_BLUE,
-            filter: {'color': COLOR_RED, 'secondaryColor': COLOR_BLUE }
         };
         global.FLAG_COLOR.sourceKiller ={
             color: COLOR_YELLOW,
             secondaryColor: COLOR_RED,
-            filter: {'color': COLOR_YELLOW, 'secondaryColor': COLOR_RED }
         };
         global.FLAG_COLOR.attackTrain = { // placed in room to attack, once there will dismantle/attack orange/yellow flags
             color: COLOR_RED,
             secondaryColor: COLOR_WHITE,
-            filter: {'color': COLOR_RED, 'secondaryColor': COLOR_WHITE}
         };
         global.FLAG_COLOR.sequence = { // Place Grey/Grey flag on a structure, all Grey/X flags are changed to X/X flags when the structure is gone.
             color: COLOR_GREY,
             secondaryColor: COLOR_GREY,
-            filter: {'color': COLOR_GREY, 'secondaryColor': COLOR_GREY}
         };
         // warrior
         Creep.behaviour.warrior = load("creep.behaviour.warrior");
