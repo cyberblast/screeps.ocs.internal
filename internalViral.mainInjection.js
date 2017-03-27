@@ -49,6 +49,9 @@ mod.extend = function(){
         Creep.behaviour.trainDestroyer = load("creep.behaviour.trainDestroyer");
         Creep.behaviour.trainHealer = load("creep.behaviour.trainHealer");
         Creep.behaviour.trainTurret = load("creep.behaviour.trainTurret");
+        // remote mineral miner
+        Task.installTask('remoteMineralMiner');
+        Creep.behaviour.remoteMineralMiner = load('creep.behaviour.remoteMineralMiner');
 
         Task.installTask(...[
             "flagSequence",
