@@ -35,6 +35,6 @@ mod.nextAction = function(creep) {
     } else if (target && creep.pos.getRangeTo(target) > 0) {
         Creep.action.travelling.assign(creep, target);
     } else {
-        Creep.action.idle.assign();
+        Creep.action.idle.assign(creep);
     }
 };
