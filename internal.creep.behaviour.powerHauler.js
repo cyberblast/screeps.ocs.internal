@@ -56,7 +56,7 @@ mod.nextAction = function(creep){
         if( this.assign(creep, Creep.action.pickPower) ) return;
         // wait
         if ( creep.sum === 0 ) {
-            let target = FlagDir.find(FLAG_COLOR.invade.powerMining, creep.pos, true);
+            let target = FlagDir.find(FLAG_COLOR.powerMining, creep.pos, true);
             if (creep.room && target && creep.pos.getRangeTo(target) > 3) {
                 creep.data.travelRange = 3;
                 return Creep.action.travelling.assign(creep, target);
