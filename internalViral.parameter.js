@@ -14,6 +14,9 @@ let mod = {
 		ROBBER_COUNT: 2, // during phases 2 and 3, the invasion will spawn robbers to drain the room
 		// amount of guards to spawn. Number or function
 		GUARD_COUNT: (phase) => [0, INVASION.HOPPER_COUNT, 0, 1][phase],
+		NUKES: false, // whether to nuke during an invasion
+		// primary targets for a nuke. Array, STRUCTURE_*, or function
+		NUKE_TARGETS: [STRUCTURE_SPAWN, STRUCTURE_TOWER, STRUCTURE_STORAGE, STRUCTURE_TERMINAL],
 	},
 };
 module.exports = mod;

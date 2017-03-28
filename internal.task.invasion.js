@@ -60,7 +60,33 @@ mod.phases_other = {
         orElse: function(flag, params) {
             removeFlags('invade.robbing');
         },
-    }
+    },
+    nukes: {
+        condition: mod.checkNukes,
+        run: function(flag, params) {
+            if (flag.memory.nukeLaunched) return; // don't launch if one has already been launched
+            const targets = Array.isArray(INVASION.NUKE_TARGETS) ? INVASION.NUKE_TARGETS : [INVASION.NUKE_TARGETS];
+            const roomTargets = _(params.room.find(FIND_HOSTILE_STRUCTURES))
+                .filter(s => targets.includes(s.structureType))
+                .sortBy(s => targets.indexOf(s.structureType))
+                .value();
+            
+            // TODO: find target based on proximity to other structures
+            
+            const nukers = _(Game.rooms)
+                .filter(r => r.controller && r.my && r.structures.nuker && r.structures.nuker.cooldown === 0)
+                .filter(r => r.structures.nuker.energy === r.structures.nuker.energyCapacity)
+                .filter(r => r.structures.nuker.ghodium === r.structures.nuker.ghodiumCapacity)
+                .filter(r => Game.map.getRoomLinearDistance(params.room.name, r.name))
+                .map(r => r.structures.nuker)
+                .value();
+            
+            if (nukers && nukers.length && roomTargets) {
+                nukers[0].launchNuke(roomTargets[0].pos);
+                flag.memory.nukeLaunched = true;
+            }
+        },
+    },
 };
 
 mod.register = () => {
@@ -166,6 +192,10 @@ mod.checkRobbers = (flag, params) => {
     if (params.room.terminal) energy += params.room.terminal[RESOURCE_ENERGY];
     // must be phase 2 or 3 and total room energy > 0
     return [2, 3].includes(flag.memory.phase) && energy > 0;
+};
+
+mod.checkNukes = (flag, params) => {
+    return (flag.memory.phase === 1 || flag.memory.phase === 2) && INVASION.NUKES;
 };
 
 const newFlag = (flag, type) => {
