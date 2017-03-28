@@ -72,7 +72,8 @@ mod.phases_other = {
         condition: mod.checkNukes,
         run(flag, params) {
             if (flag.memory.nukeLaunched) return; // don't launch if one has already been launched
-            const targets = Array.isArray(INVASION.NUKE_TARGETS) ? INVASION.NUKE_TARGETS : [INVASION.NUKE_TARGETS];
+            let targets = Util.fieldOrFunction(INVASION.NUKE_TARGETS, flag, params);
+            targets = Array.isArray(targets) ? targets : [targets];
             const roomTargets = _(params.room.find(FIND_HOSTILE_STRUCTURES))
                 .filter(s => targets.includes(s.structureType))
                 .sortBy(s => targets.indexOf(s.structureType))
