@@ -4,36 +4,41 @@ module.exports = mod;
 mod.phases = [
     { // phase one
         condition: mod.checkPhaseOne,
-        run: function(flag, params) {
+        run(flag, params) {
             // not yet begun
             flag.memory.phase = 1;
             _.times(INVASION.HOPPER_COUNT, n => newFlag('hopper'));
         },
+        orElse(flag, params) {
+            removeFlags(flag, 'hopper');
+        }
     },
     { // phase two
         condition: mod.checkPhaseTwo,
-        run: function(flag, params) {
+        run(flag, params) {
             flag.memory.phase = 2;
             _.times(INVASION.TRAIN_COUNT, n => newFlag(flag, 'attackTrain'));
-            // remove hopper flags
-            removeFlags(flag, 'hopper');
         },
+        orElse(flag, params) {
+            removeFlags(flag, 'attackTrain');
+        }
     },
     { // phase three
         condition: mod.checkPhaseThree,
-        run: function(flag, params) {
+        run(flag, params) {
             flag.memory.phase = 3;
             _.times(INVASION.ATTACK_CONTROLLER_COUNT, n => newFlag('invade.attackController'));
-            // remove train flags
-            removeFlags('attackTrain');
         },
+        orElse(flag, params) {
+            removeFlags(flag, 'invade.attackController');
+        }
     },
 ];
 
 mod.phases_other = {
     final: {
         condition: mod.checkFinished,
-        run: function(flag, params) {
+        run(flag, params) {
             flag.memory.phase = 4;
             _(flag.memory.flags).forEach(f => {
                 Game.flags[f.name].remove();
@@ -44,26 +49,26 @@ mod.phases_other = {
     },
     guards: {
         condition: mod.checkGuards,
-        run: function(flag, params) {
+        run(flag, params) {
             const guardCount = typeof INVASION.GUARD_COUNT === 'function' ? INVASION.GUARD_COUNT(flag.memory.phase) : INVASION.GUARD_COUNT;
             _.times(guardCount, n => newFlag('defense'));
         },
-        orElse: function(flag, params) {
+        orElse(flag, params) {
             removeFlags('defense');
         },
     },
     robbers: {
         condition: mod.checkRobbers,
-        run: function(flag, params) {
+        run(flag, params) {
             _.times(INVASION.ROBBER_COUNT, n => newFlag('invade.robbing'));
         },
-        orElse: function(flag, params) {
+        orElse(flag, params) {
             removeFlags('invade.robbing');
         },
     },
     nukes: {
         condition: mod.checkNukes,
-        run: function(flag, params) {
+        run(flag, params) {
             if (flag.memory.nukeLaunched) return; // don't launch if one has already been launched
             const targets = Array.isArray(INVASION.NUKE_TARGETS) ? INVASION.NUKE_TARGETS : [INVASION.NUKE_TARGETS];
             const roomTargets = _(params.room.find(FIND_HOSTILE_STRUCTURES))
@@ -115,6 +120,8 @@ mod.checkPhase = flag => {
     
     if (Task.invasion.phases[0].condition(flag, params)) {
         Task.invasion.phases[0].run(flag, params);
+    } else if (Task.invasion.phases[0].orElse) {
+        Task.invasion.phases[0].orElse(flag, params);
     }
     
     if (!flag.room) {
@@ -130,8 +137,11 @@ mod.checkPhase = flag => {
     });
     
     for (let i = 1; i < Task.invasion.phases.length; i++) {
-        if (Task.invasion.phases[i].condition(flag, params)) {
-            Task.invasion.phases[i].run(flag, params);
+        const phase = Task.invasion.phase[i];
+        if (phase.condition(flag, params)) {
+            phase.run(flag, params);
+        } else if (phase.orElse) {
+            phase.orElse(flag, params);
         }
     }
     
@@ -139,7 +149,7 @@ mod.checkPhase = flag => {
         if (phase.condition(flag, params)) {
             phase.run(flag, params);
         } else if (phase.orElse) {
-            phase.orElse(flag, params)
+            phase.orElse(flag, params);
         }
     }
     
@@ -207,7 +217,7 @@ const newFlag = (flag, type) => {
     });
 };
 const removeFlags = (flag, type) => {
-    _(flag.memory.flags).filter({type: type}).forEach(f => {
+    _(flag.memory.flags).filter({type}).forEach(f => {
         Game.flags[f.name].remove();
         let i = flag.memory.flags.indexOf(f);
         flag.memory.flags.splice(i, 1);
