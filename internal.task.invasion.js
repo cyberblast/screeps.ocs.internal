@@ -109,20 +109,6 @@ mod.handleFlagFound = flag => {
 
 mod.checkPhase = flag => {
     flag.memory.phase = flag.memory.phase || 0;
-    const flags = flag.room.find(FIND_FLAGS);
-    const hoppers = _.filter(flags, f => f.compareTo(FLAG_COLOR.hopper));
-    const trains = _.filter(flags, f => f.compareTo(FLAG_COLOR.attackTrain));
-    const controllerAttackers = _.filter(flags, f => f.compareTo(FLAG_COLOR.invade.attackController));
-    
-    const params = {hoppers, trains, controllerAttackers};
-    
-    if (!flag.memory.flags) flag.memory.flags = [];
-    
-    if (Task.invasion.phases[0].condition(flag, params)) {
-        Task.invasion.phases[0].run(flag, params);
-    } else if (Task.invasion.phases[0].orElse) {
-        Task.invasion.phases[0].orElse(flag, params);
-    }
     
     if (!flag.room) {
         // Request room via. observers
@@ -132,11 +118,16 @@ mod.checkPhase = flag => {
     
     const room = flag.room;
     
-    _.assign(params, {
-        room,
-    });
+    const flags = room.find(FIND_FLAGS);
+    const hoppers = _.filter(flags, f => f.compareTo(FLAG_COLOR.hopper));
+    const trains = _.filter(flags, f => f.compareTo(FLAG_COLOR.attackTrain));
+    const controllerAttackers = _.filter(flags, f => f.compareTo(FLAG_COLOR.invade.attackController));
     
-    for (let i = 1; i < Task.invasion.phases.length; i++) {
+    const params = {hoppers, trains, controllerAttackers, room};
+    
+    if (!flag.memory.flags) flag.memory.flags = [];
+    
+    for (let i = 0; i < Task.invasion.phases.length; i++) {
         const phase = Task.invasion.phase[i];
         if (phase.condition(flag, params)) {
             phase.run(flag, params);
