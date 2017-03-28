@@ -7,7 +7,7 @@ mod.phases = [
         run(flag, params) {
             // not yet begun
             flag.memory.phase = 1;
-            _.times(INVASION.HOPPER_COUNT, n => newFlag('hopper'));
+            _.times(INVASION.HOPPER_COUNT - params.hoppers.length, n => newFlag('hopper'));
         },
         orElse(flag, params) {
             removeFlags(flag, 'hopper');
@@ -17,7 +17,7 @@ mod.phases = [
         condition: mod.checkPhaseTwo,
         run(flag, params) {
             flag.memory.phase = 2;
-            _.times(INVASION.TRAIN_COUNT, n => newFlag(flag, 'attackTrain'));
+            _.times(INVASION.TRAIN_COUNT - params.trains.length, n => newFlag(flag, 'attackTrain'));
         },
         orElse(flag, params) {
             removeFlags(flag, 'attackTrain');
@@ -27,7 +27,7 @@ mod.phases = [
         condition: mod.checkPhaseThree,
         run(flag, params) {
             flag.memory.phase = 3;
-            _.times(INVASION.ATTACK_CONTROLLER_COUNT, n => newFlag('invade.attackController'));
+            _.times(INVASION.ATTACK_CONTROLLER_COUNT - params.controllerAttackers.length, n => newFlag('invade.attackController'));
         },
         orElse(flag, params) {
             removeFlags(flag, 'invade.attackController');
@@ -50,8 +50,9 @@ mod.phases_other = {
     guards: {
         condition: mod.checkGuards,
         run(flag, params) {
-            const guardCount = typeof INVASION.GUARD_COUNT === 'function' ? INVASION.GUARD_COUNT(flag.memory.phase) : INVASION.GUARD_COUNT;
-            _.times(guardCount, n => newFlag('defense'));
+            const guardCount = Util.fieldOrFunction(INVASION.GUARD_COUNT, flag.memory.phase);
+            const existingGuardFlags = FlagDir.filter(FLAG_COLOR.defense, flag.pos, true).length;
+            _.times(guardCount - existingGuardFlags, n => newFlag('defense'));
         },
         orElse(flag, params) {
             removeFlags('defense');
@@ -60,7 +61,8 @@ mod.phases_other = {
     robbers: {
         condition: mod.checkRobbers,
         run(flag, params) {
-            _.times(INVASION.ROBBER_COUNT, n => newFlag('invade.robbing'));
+            const existingRobberFlags = FlagDir.filter(FLAG_COLOR.invade.robbing, flag.pos, true).length;
+            _.times(INVASION.ROBBER_COUNT - existingRobberFlags, n => newFlag('invade.robbing'));
         },
         orElse(flag, params) {
             removeFlags('invade.robbing');
@@ -109,6 +111,19 @@ mod.handleFlagFound = flag => {
 
 mod.checkPhase = flag => {
     flag.memory.phase = flag.memory.phase || 0;
+    const hoppers = FlagDir.filter(FLAG_COLOR.hopper, flag.pos, true);
+    const trains = FlagDir.filter(FLAG_COLOR.attackTrain, flag.pos, true);
+    const controllerAttackers = FlagDir.filter(FLAG_COLOR.invade.attackController, flag.pos, true);
+    
+    const params = {hoppers, trains, controllerAttackers};
+    
+    if (!flag.memory.flags) flag.memory.flags = [];
+    
+    if (Task.invasion.phases[0].condition(flag, params)) {
+        Task.invasion.phases[0].run(flag, params);
+    } else if (Task.invasion.phases[0].orElse) {
+        Task.invasion.phases[0].orElse(flag, params);
+    }
     
     if (!flag.room) {
         // Request room via. observers
@@ -118,16 +133,11 @@ mod.checkPhase = flag => {
     
     const room = flag.room;
     
-    const flags = room.find(FIND_FLAGS);
-    const hoppers = _.filter(flags, f => f.compareTo(FLAG_COLOR.hopper));
-    const trains = _.filter(flags, f => f.compareTo(FLAG_COLOR.attackTrain));
-    const controllerAttackers = _.filter(flags, f => f.compareTo(FLAG_COLOR.invade.attackController));
+    _.assign(params, {
+        room,
+    });
     
-    const params = {hoppers, trains, controllerAttackers, room};
-    
-    if (!flag.memory.flags) flag.memory.flags = [];
-    
-    for (let i = 0; i < Task.invasion.phases.length; i++) {
+    for (let i = 1; i < Task.invasion.phases.length; i++) {
         const phase = Task.invasion.phase[i];
         if (phase.condition(flag, params)) {
             phase.run(flag, params);
