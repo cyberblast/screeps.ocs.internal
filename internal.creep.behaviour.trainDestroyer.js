@@ -20,8 +20,8 @@ mod.nextAction = function(creep) {
     let trainHealer = Game.creeps[Creep.prototype.findGroupMemberByType("trainHealer", creep.data.flagName)];
     let trainTurret =Game.creeps[Creep.prototype.findGroupMemberByType("trainTurret", creep.data.flagName)];
 
-    if(!target) {
-        Creep.action.recycling.assign(creep);
+    if(!target && Creep.action.recycling.assign(creep)) {
+        return
     } else if(!trainHealer || !trainTurret) {
         if(creep.pos.roomName != creep.data.homeRoom) {
             Creep.action.travelling.assign(creep, Game.rooms[creep.data.homeRoom].controller);
