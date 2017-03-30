@@ -1,4 +1,4 @@
-const mod = {};
+const mod = new Task('remoteMineralMiner');
 module.exports = mod;
 mod.minControllerLevel = 2;
 mod.maxCount = flag => {
@@ -10,34 +10,12 @@ mod.maxCount = flag => {
     return max;
 };
 mod.name = 'remoteMineralMiner';
-mod.register = () => {
-    if (_.isUndefined(Task.selfRegister)) {
-        Flag.found.on(Task.remoteMineralMiner.handleFlagFound);
-        
-        Flag.FlagRemoved.on(Task.remoteMineralMiner.handleFlagRemoved);
-        
-        Creep.spawningStarted.on(Task.remoteMineralMiner.handleSpawningStarted);
-        Creep.spawningCompleted.on(Task.remoteMineralMiner.handleSpawningCompleted);
-        Creep.died.on(Task.remoteMineralMiner.handleCreepDied);
-    }
-};
 mod.checkValidRoom = flag => {
     return Room.isCenterNineRoom(flag.pos.roomName);
 };
 mod.handleFlagFound = flag => {
     if (Task.mining.checkFlag(flag) && Task.remoteMineralMiner.checkValidRoom(flag)) {
         Task.remoteMineralMiner.checkForRequiredCreeps(flag);
-    }
-};
-mod.handleFlagRemoved = flagName => {
-    const flagMem = Memory.flags[flagName];
-    
-    if (flagMem && flagMem.task === mod.name && flagMem.roomName) {
-        const flags = FlagDir.filter(FLAG_COLOR.claim.mining, new RoomPosition(25, 25, flagMem.roomName), true);
-        if (flags && flags.length > 0) {
-            return;
-        }
-        Task.clearMemory(mod.name, flagMem.roomName);
     }
 };
 mod.fieldOrFunction = (flag, value) => {

@@ -30,16 +30,13 @@ mod.extend = function(){
         // warrior
         Creep.behaviour.warrior = load("creep.behaviour.warrior");
         //powerMining
-        Task.installTask('powerMining');
         Creep.action.pickPower = load("creep.action.pickPower");
         Creep.behaviour.powerMiner = load("creep.behaviour.powerMiner");
         Creep.behaviour.powerHealer = load("creep.behaviour.powerHealer");
         Creep.behaviour.powerHauler = load("creep.behaviour.powerHauler");
         // hopper
-        Task.installTask('hopper');
         Creep.behaviour.hopper = load("creep.behaviour.hopper");
         //sourceKiller
-        Task.installTask('sourceKiller');
         Creep.action.sourceKiller = load("creep.action.sourceKiller");
         Creep.behaviour.sourceKiller = load("creep.behaviour.sourceKiller");
         // attackTrain
@@ -50,12 +47,7 @@ mod.extend = function(){
         Creep.behaviour.trainHealer = load("creep.behaviour.trainHealer");
         Creep.behaviour.trainTurret = load("creep.behaviour.trainTurret");
         // remote mineral miner
-        Task.installTask('remoteMineralMiner');
         Creep.behaviour.remoteMineralMiner = load('creep.behaviour.remoteMineralMiner');
-
-        Task.installTask(...[
-            "flagSequence",
-        ]);
 
         Spawn.priorityLow.push(Creep.setup.trainDestroyer);
         Spawn.priorityLow.push(Creep.setup.trainHealer);

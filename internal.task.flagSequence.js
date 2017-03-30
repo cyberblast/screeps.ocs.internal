@@ -1,6 +1,6 @@
 // This task will react on sequence goal flags (Gray/Gray), changing the color of trigger flags (Gray/x) to (x/x) flags.
 "use strict";
-let mod = {};
+let mod = new Task('flagSequence');
 module.exports = mod;
 
 // Goal flag: Gray/Gray, checks for a condition.
@@ -16,7 +16,6 @@ module.exports = mod;
 //      goal: (optional) the name of a goal flag.
 
 // hook into flag events
-mod.register = () => {};
 
 // for each flag
 mod.handleFlagFound = flag => {

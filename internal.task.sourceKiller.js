@@ -1,8 +1,6 @@
 // This task will react on sourceKiller flags
-let mod = {};
+let mod = new Task('sourceKiller');
 module.exports = mod;
-// hook into events
-mod.register = () => {};
 // for each flag
 mod.handleFlagFound = flag => {
     // if it is a sourceKiller flag

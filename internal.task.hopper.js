@@ -1,8 +1,6 @@
 // This task will react on hopper flags
-let mod = {};
+let mod = new Task('hopper');
 module.exports = mod;
-// hook into events
-mod.register = () => {};
 // for each flag
 mod.handleFlagFound = flag => {
     // if it is a hopper flag

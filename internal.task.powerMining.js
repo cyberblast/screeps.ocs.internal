@@ -1,8 +1,7 @@
-let mod = {};
+let mod = new Task('powerMining');
 module.exports = mod;
 mod.minControllerLevel = 7;
 mod.name = 'powerMining';
-mod.register = () => {};
 mod.checkFlag = (flag) => {
     if( flag.color == FLAG_COLOR.powerMining.color && flag.secondaryColor == FLAG_COLOR.powerMining.secondaryColor ) {
         flag.memory.roomName = flag.pos.roomName;
