@@ -97,12 +97,6 @@ mod.phases_other = {
     },
 };
 
-mod.register = () => {
-    if (_.isUndefined(Task.selfRegister)) {
-        Flag.found.on(mod.handleFlagFound);
-    }
-};
-
 mod.handleFlagFound = flag => {
     flag = Game.flags[flag.name];
     if (flag.compareTo(FLAG_COLOR.invasion)) {
