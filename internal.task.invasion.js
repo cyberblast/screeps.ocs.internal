@@ -99,14 +99,14 @@ mod.phases_other = {
 
 mod.register = () => {
     if (_.isUndefined(Task.selfRegister)) {
-        Flag.found.on(Task.invasion.handleFlagFound);
+        Flag.found.on(mod.handleFlagFound);
     }
 };
 
 mod.handleFlagFound = flag => {
     flag = Game.flags[flag.name];
     if (flag.compareTo(FLAG_COLOR.invasion)) {
-        Task.invasion.checkPhase(flag);
+        mod.checkPhase(flag);
     }
 };
 
@@ -120,10 +120,10 @@ mod.checkPhase = flag => {
     
     if (!flag.memory.flags) flag.memory.flags = [];
     
-    if (Task.invasion.phases[0].condition(flag, params)) {
-        Task.invasion.phases[0].run(flag, params);
-    } else if (Task.invasion.phases[0].orElse) {
-        Task.invasion.phases[0].orElse(flag, params);
+    if (mod.phases[0].condition(flag, params)) {
+        mod.phases[0].run(flag, params);
+    } else if (mod.phases[0].orElse) {
+        mod.phases[0].orElse(flag, params);
     }
     
     if (!flag.room) {
@@ -138,8 +138,8 @@ mod.checkPhase = flag => {
         room,
     });
     
-    for (let i = 1; i < Task.invasion.phases.length; i++) {
-        const phase = Task.invasion.phase[i];
+    for (let i = 1; i < mod.phases.length; i++) {
+        const phase = mod.phase[i];
         if (phase.condition(flag, params)) {
             phase.run(flag, params);
         } else if (phase.orElse) {
@@ -147,7 +147,7 @@ mod.checkPhase = flag => {
         }
     }
     
-    for (const phase of Task.invasion.phases_other) {
+    for (const phase of mod.phases_other) {
         if (phase.condition(flag, params)) {
             phase.run(flag, params);
         } else if (phase.orElse) {
@@ -186,7 +186,7 @@ mod.checkFinished = (flag, params) => {
 
 mod.checkGuards = (flag, params) => {
     // must be a legitimate phase
-    if (!(-1 < flag.memory.phase && flag.memory.phase < Task.invasion.phases.length)) return false;
+    if (!(-1 < flag.memory.phase && flag.memory.phase < mod.phases.length)) return false;
     // if hostiles in room
     if (params.room.hostiles && params.room.hostiles.length) {
         // and hostiles are of a combat variety
