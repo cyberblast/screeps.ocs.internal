@@ -338,8 +338,16 @@ mod.memory = key => {
 };
 mod.creep = {
     miner: {
-        fixedBody: [MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, MOVE],
-        sort: false,
+        fixedBody: {
+            [ATTACK]: 25,
+            [MOVE]: 25,
+        },
+        sort: (a, b) => {
+            const partsOrder = [MOVE, ATTACK];
+            const indexOfA = partsOrder.indexOf(a);
+            const indexOfB = partsOrder.indexOf(b);
+            return indexOfA - indexOfB;
+        },
         multiBody: [],
         maxMulti: 24,
         behaviour: 'powerMiner',
@@ -352,7 +360,10 @@ mod.creep = {
         queue: 'Medium'
     },
     healer: {
-        fixedBody: [MOVE, HEAL, MOVE, HEAL, MOVE, HEAL, MOVE, HEAL, MOVE, HEAL, MOVE, HEAL, MOVE, HEAL, MOVE, HEAL, MOVE, HEAL, MOVE, HEAL, MOVE, HEAL, MOVE, HEAL, MOVE, HEAL, MOVE, HEAL, MOVE, HEAL, MOVE, HEAL],
+        fixedBody: {
+            [HEAL]: 16,
+            [MOVE]: 16,
+        },
         multiBody: [], 
         behaviour: 'powerHealer',
         queue: 'Medium'

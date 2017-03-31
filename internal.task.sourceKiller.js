@@ -139,9 +139,18 @@ mod.memory = (flag) => {
 
 mod.creep = {
     sourceKiller: {
-        fixedBody: [MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,ATTACK,ATTACK,ATTACK,ATTACK,ATTACK,ATTACK,ATTACK,ATTACK,ATTACK,ATTACK,ATTACK,ATTACK,ATTACK,ATTACK,ATTACK,ATTACK,ATTACK,ATTACK,ATTACK,ATTACK,HEAL,HEAL,HEAL,HEAL,HEAL],
+        fixedBody: {
+            [ATTACK]: 20,
+            [HEAL]: 5,
+            [MOVE]: 25,
+        },
         multiBody: [],
-        sort: false,
+        sort: (a, b) => {
+            const partsOrder = [MOVE, ATTACK, HEAL];
+            const indexOfA = partsOrder.indexOf(a);
+            const indexOfB = partsOrder.indexOf(b);
+            return indexOfA - indexOfB;
+        },
         name: "sourceKiller", 
         behaviour: "sourceKiller", 
         queue: 'Low'

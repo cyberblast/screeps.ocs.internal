@@ -8,7 +8,11 @@ setup.maxCount = Creep.Setup.maxPerFlag(FLAG_COLOR.hopper, 3, false);
 
 setup.default = {
     fixedBody: [], 
-    multiBody: [TOUGH, MOVE, MOVE, HEAL], 
+    multiBody: {
+        [HEAL]: 1,
+        [MOVE]: 2,
+        [TOUGH]: 1,
+    },
     minAbsEnergyAvailable: 1080, 
     minEnergyAvailable: 0.4,
     maxMulti: 12, 
