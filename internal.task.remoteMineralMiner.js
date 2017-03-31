@@ -10,17 +10,7 @@ mod.maxCount = flag => {
     return max;
 };
 mod.name = 'remoteMineralMiner';
-mod.register = () => {
-    if (_.isUndefined(Task.selfRegister)) {
-        Flag.found.on(Task.remoteMineralMiner.handleFlagFound);
-        
-        Flag.FlagRemoved.on(Task.remoteMineralMiner.handleFlagRemoved);
-        
-        Creep.spawningStarted.on(Task.remoteMineralMiner.handleSpawningStarted);
-        Creep.spawningCompleted.on(Task.remoteMineralMiner.handleSpawningCompleted);
-        Creep.died.on(Task.remoteMineralMiner.handleCreepDied);
-    }
-};
+mod.register = () => {};
 mod.checkValidRoom = flag => {
     return Room.isCenterNineRoom(flag.pos.roomName);
 };
