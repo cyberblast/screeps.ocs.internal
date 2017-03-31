@@ -21,8 +21,8 @@ mod.nextAction = function(creep) {
     Population.registerCreepFlag(creep, target);
 
     const countExisting = type => {
-        const invalidEntry = false;
-        const running = _.map(memory.running[type], n => {
+        let invalidEntry = false;
+        let running = _.map(memory.running[type], n => {
             const c = Game.creeps[n];
             if (!c) invalidEntry = true;
             return c;
