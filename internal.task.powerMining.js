@@ -16,7 +16,7 @@ mod.handleFlagRemoved = flagName => {
     const flagMem = Memory.flags[flagName];
     if( flagMem && flagMem.task === mod.name && flagMem.roomName ){
         // if there is still a powerMining flag in that room ignore. 
-        const flags = FlagDir.filter(FLAG_COLOR.invade.powerMining, new RoomPosition(25,25,flagMem.roomName), true);
+        const flags = FlagDir.filter(FLAG_COLOR.powerMining, new RoomPosition(25,25,flagMem.roomName), true);
         if( flags && flags.length > 0 ) 
             return;
         else {
