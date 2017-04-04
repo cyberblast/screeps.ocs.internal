@@ -2,59 +2,53 @@ let mod = {};
 module.exports = mod;
 mod.newTargetNuker = function(creep) {
     let room = creep.room;
-    let data = room.memory;
     // check nukers for needs and make sure to empty the nuker before filling
-    if (data && data.nuker && data.nuker.length > 0) {
-        for (var i=0;i<data.nuker.length;i++) {
-            let d = data.nuker[i];
-            let nuker = Game.getObjectById(d.id);
-            if (!nuker) continue;
-            var amount = 0;
-            amount = nuker.getNeeds(RESOURCE_ENERGY);
-            if (amount > 0) {
-                // nuker needs energy so find a lower priority container with some
-                if (DEBUG && TRACE) trace('Action', { actionName: 'reallocating', roomName: room.name, creepName: creep.name, structureId: nuker.id, resourceType: RESOURCE_ENERGY, needs: amount });
-                if (room.storage && room.storage.charge > 0.5) {
-                    if (DEBUG && TRACE) trace('Action', { actionName: 'reallocating', roomName: room.name, creepName: creep.name, targetStructureId: room.storage.id, resourceType: RESOURCE_ENERGY, targetNeeds: room.storage.store[RESOURCE_ENERGY] });
-                    creep.data.reallocating = RESOURCE_ENERGY;
-                    return room.storage;
-                }
-                if (room.terminal && room.terminal.getNeeds(RESOURCE_ENERGY) < 0) {
-                    if (DEBUG && TRACE) trace('Action', { actionName: 'reallocating', roomName: room.name, creepName: creep.name, targetStructureId: room.terminal.id, resourceType: RESOURCE_ENERGY, targetNeeds: room.terminal.store[RESOURCE_ENERGY] });
-                    creep.data.reallocating = RESOURCE_ENERGY;
-                    return room.terminal;
-                }
-                let ret = null; //room.findContainerWith(RESOURCE_ENERGY);
-                if (ret) {
-                    if (DEBUG && TRACE) trace('Action', { actionName: 'reallocating', roomName: room.name, creepName: creep.name, targetStructureId: ret.structure.id, resourceType: RESOURCE_ENERGY, targetNeeds: ret.amount });
-                    creep.data.reallocating = RESOURCE_ENERGY;
-                    return ret.structure;
-                }
+    for (const nuker of room.structures.nukers.all) {
+        var amount = 0;
+        amount = nuker.getNeeds(RESOURCE_ENERGY);
+        if (amount > 0) {
+            // nuker needs energy so find a lower priority container with some
+            if (DEBUG && TRACE) trace('Action', { actionName: 'reallocating', roomName: room.name, creepName: creep.name, structureId: nuker.id, resourceType: RESOURCE_ENERGY, needs: amount });
+            if (room.storage && room.storage.charge > 0.5) {
+                if (DEBUG && TRACE) trace('Action', { actionName: 'reallocating', roomName: room.name, creepName: creep.name, targetStructureId: room.storage.id, resourceType: RESOURCE_ENERGY, targetNeeds: room.storage.store[RESOURCE_ENERGY] });
+                creep.data.reallocating = RESOURCE_ENERGY;
+                return room.storage;
             }
-            amount = nuker.getNeeds(RESOURCE_GHODIUM);
-            if (amount > 0) {
-                // nuker needs ghodium so find a lower priority container with some
-                if (DEBUG && TRACE) trace('Action', { actionName: 'reallocating', roomName: room.name, creepName: creep.name, structureId: nuker.id, resourceType: RESOURCE_GHODIUM, needs: amount });
-                if (room.storage && room.storage.store[RESOURCE_GHODIUM]) {
-                    if (DEBUG && TRACE) trace('Action', { actionName: 'reallocating', roomName: room.name, creepName: creep.name, targetStructureId: room.storage.id, resourceType: RESOURCE_GHODIUM, targetNeeds: room.storage.store[RESOURCE_GHODIUM] });
-                    creep.data.reallocating = RESOURCE_POWER;
-                    return room.storage;
-                }
-                if (room.terminal && room.terminal.getNeeds(RESOURCE_GHODIUM) < 0) {
-                    if (DEBUG && TRACE) trace('Action', { actionName: 'reallocating', roomName: room.name, creepName: creep.name, targetStructureId: room.terminal.id, resourceType: RESOURCE_GHODIUM, targetNeeds: room.terminal.store[RESOURCE_GHODIUM] });
-                    creep.data.reallocating = RESOURCE_POWER;
-                    return room.terminal;
-                }
-                let ret = null; //room.findContainerWith(RESOURCE_GHODIUM);
-                if (ret) {
-                    if (DEBUG && TRACE) trace('Action', { actionName: 'reallocating', roomName: room.name, creepName: creep.name, targetStructureId: ret.structure.id, resourceType: RESOURCE_GHODIUM, targetNeeds: ret.amount });
-                    creep.data.reallocating = RESOURCE_POWER;
-                    return ret.structure;
-                }
-                if (ROOM_TRADING) {
-                    if (DEBUG) logSystem(room.name, `${creep.name} started a room order of ${amount} ${RESOURCE_GHODIUM} for nuker ${nuker.id}`);
-                    room.placeRoomOrder(nuker.id,RESOURCE_GHODIUM,amount);
-                }
+            if (room.terminal && room.terminal.getNeeds(RESOURCE_ENERGY) < 0) {
+                if (DEBUG && TRACE) trace('Action', { actionName: 'reallocating', roomName: room.name, creepName: creep.name, targetStructureId: room.terminal.id, resourceType: RESOURCE_ENERGY, targetNeeds: room.terminal.store[RESOURCE_ENERGY] });
+                creep.data.reallocating = RESOURCE_ENERGY;
+                return room.terminal;
+            }
+            let ret = null; //room.findContainerWith(RESOURCE_ENERGY);
+            if (ret) {
+                if (DEBUG && TRACE) trace('Action', { actionName: 'reallocating', roomName: room.name, creepName: creep.name, targetStructureId: ret.structure.id, resourceType: RESOURCE_ENERGY, targetNeeds: ret.amount });
+                creep.data.reallocating = RESOURCE_ENERGY;
+                return ret.structure;
+            }
+        }
+        amount = nuker.getNeeds(RESOURCE_GHODIUM);
+        if (amount > 0) {
+            // nuker needs ghodium so find a lower priority container with some
+            if (DEBUG && TRACE) trace('Action', { actionName: 'reallocating', roomName: room.name, creepName: creep.name, structureId: nuker.id, resourceType: RESOURCE_GHODIUM, needs: amount });
+            if (room.storage && room.storage.store[RESOURCE_GHODIUM]) {
+                if (DEBUG && TRACE) trace('Action', { actionName: 'reallocating', roomName: room.name, creepName: creep.name, targetStructureId: room.storage.id, resourceType: RESOURCE_GHODIUM, targetNeeds: room.storage.store[RESOURCE_GHODIUM] });
+                creep.data.reallocating = RESOURCE_POWER;
+                return room.storage;
+            }
+            if (room.terminal && room.terminal.getNeeds(RESOURCE_GHODIUM) < 0) {
+                if (DEBUG && TRACE) trace('Action', { actionName: 'reallocating', roomName: room.name, creepName: creep.name, targetStructureId: room.terminal.id, resourceType: RESOURCE_GHODIUM, targetNeeds: room.terminal.store[RESOURCE_GHODIUM] });
+                creep.data.reallocating = RESOURCE_POWER;
+                return room.terminal;
+            }
+            let ret = null; //room.findContainerWith(RESOURCE_GHODIUM);
+            if (ret) {
+                if (DEBUG && TRACE) trace('Action', { actionName: 'reallocating', roomName: room.name, creepName: creep.name, targetStructureId: ret.structure.id, resourceType: RESOURCE_GHODIUM, targetNeeds: ret.amount });
+                creep.data.reallocating = RESOURCE_POWER;
+                return ret.structure;
+            }
+            if (ROOM_TRADING) {
+                if (DEBUG) logSystem(room.name, `${creep.name} started a room order of ${amount} ${RESOURCE_GHODIUM} for nuker ${nuker.id}`);
+                room.placeRoomOrder(nuker.id,RESOURCE_GHODIUM,amount);
             }
         }
     }
@@ -64,65 +58,69 @@ mod.findNeeding = function(room, resourceType, amountMin, structureId){
     if (!amountMin) amountMin = 1;
 //    if (!RESOURCES_ALL.find((r)=>{r==resourceType;})) return ERR_INVALID_ARGS;
 
-    let data = room.memory;
-    if (data) {
-        if (data.labs && data.labs.length > 0) {
-            for (var i=0;i<data.labs.length;i++) {
-                let d = data.labs[i];
-                let lab = Game.getObjectById(d.id);
-                var amount = 0;
-                if (lab) amount = lab.getNeeds(resourceType);
-                if (amount >= amountMin && (lab.mineralAmount == 0 || lab.mineralType == resourceType || resourceType == RESOURCE_ENERGY) && d.id != structureId)
-                    return { structure: lab, amount: amount};
-            }
-        }
-        if (data.powerSpawn && data.powerSpawn.length > 0) {
-            for (var i=0;i<data.powerSpawn.length;i++) {
-                let d = data.powerSpawn[i];
-                let powerSpawn = Game.getObjectById(d.id);
-                var amount = 0;
-                if (powerSpawn) amount = powerSpawn.getNeeds(resourceType);
-                if (amount >= amountMin && (resourceType == RESOURCE_POWER || resourceType == RESOURCE_ENERGY) && d.id != structureId)
-                    return { structure: powerSpawn, amount: amount};
-            }
-        }
-        if (data.nuker && data.nuker.length > 0) {
-            for (var i=0;i<data.nuker.length;i++) {
-                let d = data.nuker[i];
-                let nuker = Game.getObjectById(d.id);
-                var amount = 0;
-                if (nuker) amount = nuker.getNeeds(resourceType);
-                if (amount >= amountMin && (resourceType == RESOURCE_GHODIUM || resourceType == RESOURCE_ENERGY) && d.id != structureId)
-                    return { structure: nuker, amount: amount};
-            }
-        }
-        if (data.container && data.container.length > 0) {
-            for (var i=0;i<data.container.length;i++) {
-                let d = data.container[i];
-                let container = Game.getObjectById(d.id);
-                var amount = 0;
-                if (container) amount = container.getNeeds(resourceType);
-                if (amount >= amountMin && d.id != structureId) return { structure: container, amount: amount };
+    const labs = room.structures.labs.all;
+    if (labs.length > 0) {
+        for (let i = 0; i < labs.length; i++) {
+            const lab = Game.getObjectById(labs[i].id);
+            let amount = 0;
+            if (lab) amount = lab.getNeeds(resourceType);
+            if (amount >= amountMin && (lab.mineralAmount === 0 || lab.mineralType == resourceType || resourceType == RESOURCE_ENERGY) && lab.id != structureId) {
+                return { structure: lab, amount: amount};
             }
         }
     }
-    let terminal = room.terminal;
+    const powerSpawns = room.structures.powerSpawns.all;
+    if (powerSpawns.length > 0) {
+        for (let i = 0; i < powerSpawns.length; i++) {
+            const powerSpawn = Game.getObjectById(powerSpawns[i].id);
+            let amount = 0;
+            if (powerSpawn) amount = powerSpawn.getNeeds(resourceType);
+            if (amount >= amountMin && (resourceType == RESOURCE_POWER || resourceType == RESOURCE_ENERGY) && powerSpawn.id != structureId) {
+                return { structure: powerSpawn, amount: amount};
+            }
+        }
+    }
+    for (const nuker of room.structures.nukers.all) {
+        let amount = 0;
+        if (nuker) amount = nuker.getNeeds(resourceType);
+        if (amount >= amountMin && (resourceType == RESOURCE_POWER || resourceType == RESOURCE_ENERGY) && nuker.id != structureId) {
+            return { structure: nuker, amount: amount};
+        }
+    }
+    const containers = room.structures.container.all;
+    if (containers.length > 0) {
+        for (let i = 0; i < containers.length; i++) {
+            const container = Game.getObjectById(containers[i].id);
+            let amount = 0;
+            if (container) amount = container.getNeeds(resourceType);
+            if (amount >= amountMin && container.id != structureId) {
+                return { structure: container, amount: amount };   
+            }
+        }
+    }
+    const terminal = room.terminal;
     if (terminal) {
         let amount = terminal.getNeeds(resourceType);
-        if (amount >= amountMin && terminal.id != structureId) return { structure: terminal, amount: amount };
+        if (amount >= amountMin && terminal.id != structureId) {
+            return { structure: terminal, amount: amount };
+        }
     }
     let storage = room.storage;
     if (storage) {
         let amount = storage.getNeeds(resourceType);
-        if (amount >= amountMin && storage.id != structureId) return { structure: storage, amount: amount };
+        if (amount >= amountMin && storage.id != structureId) {
+            return { structure: storage, amount: amount };
+        }
     }
 
     // no specific needs found ... check for overflow availability
-    if (storage && (resourceType == RESOURCE_ENERGY || resourceType == RESOURCE_POWER) && storage.storeCapacity-storage.sum > amountMin)
+    if (storage && (resourceType == RESOURCE_ENERGY || resourceType == RESOURCE_POWER) && storage.storeCapacity-storage.sum > amountMin) {
         return { structure: storage, amount: 0 };
-    if (terminal && resourceType != RESOURCE_ENERGY && resourceType != RESOURCE_POWER && terminal.storeCapacity-terminal.sum > amountMin)
+    }
+    if (terminal && resourceType != RESOURCE_ENERGY && resourceType != RESOURCE_POWER && terminal.storeCapacity-terminal.sum > amountMin) {
         return { structure: terminal, amount: 0 };
-
+    }
+    
     // no destination found
     return null;
 };
