@@ -148,6 +148,14 @@ mod.phases_other = {
     },
 };
 
+mod.handlePhase = (phase, flag, params) => {
+    if (phase.condition(flag, params)) {
+        phase.run(flag, params);
+    } else {
+        Util.callIfExists(phase.orElse, flag, params);
+    }
+};
+
 mod.handleFlagFound = flag => {
     flag = Game.flags[flag.name];
     if (flag.compareTo(FLAG_COLOR.invasion)) {
@@ -157,19 +165,6 @@ mod.handleFlagFound = flag => {
 
 mod.checkPhase = flag => {
     flag.memory.phase = Util.get(flag.memory, 'phase', 0);
-    const hoppers = FlagDir.filter(FLAG_COLOR.hopper, flag.pos);
-    const trains = FlagDir.filter(FLAG_COLOR.attackTrain, flag.pos);
-    const controllerAttackers = FlagDir.filter(FLAG_COLOR.invade.attackController, flag.pos);
-    
-    const params = {hoppers, trains, controllerAttackers};
-    
-    Util.set(flag.memory, 'flags', []);
-    
-    if (mod.phases[0].condition(flag, params)) {
-        mod.phases[0].run(flag, params);
-    } else if (mod.phases[0].orElse) {
-        mod.phases[0].orElse(flag, params);
-    }
     
     if (!flag.room) {
         // Request room via. observers
@@ -179,25 +174,20 @@ mod.checkPhase = flag => {
     
     const room = flag.room;
     
-    _.assign(params, {
-        room,
-    });
+    const hoppers = FlagDir.filter(FLAG_COLOR.hopper, flag.pos);
+    const trains = FlagDir.filter(FLAG_COLOR.attackTrain, flag.pos);
+    const controllerAttackers = FlagDir.filter(FLAG_COLOR.invade.attackController, flag.pos);
     
-    for (let i = 1; i < mod.phases.length; i++) {
-        const phase = mod.phase[i];
-        if (phase.condition(flag, params)) {
-            phase.run(flag, params);
-        } else if (phase.orElse) {
-            phase.orElse(flag, params);
-        }
+    const params = {hoppers, trains, controllerAttackers, room};
+    
+    Util.set(flag.memory, 'flags', []);
+    
+    for (const phase of mod.phases) {
+        mod.handlePhase(phase, flag, params);
     }
     
     for (const phase of mod.phases_other) {
-        if (phase.condition(flag, params)) {
-            phase.run(flag, params);
-        } else if (phase.orElse) {
-            phase.orElse(flag, params);
-        }
+        mod.handlePhase(phase, flag, params);
     }
     
     return true;
