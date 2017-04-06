@@ -166,17 +166,17 @@ mod.handleFlagFound = flag => {
 mod.checkPhase = flag => {
     flag.memory.phase = Util.get(flag.memory, 'phase', 0);
     
-    if (!flag.room) {
+    const room = flag.room;
+    
+    if (!room) {
         // Request room via. observers
         observerRequests = {roomName: flag.pos.roomName};
         return false; // we need vision after this point
     }
     
-    const room = flag.room;
-    
-    const hoppers = FlagDir.filter(FLAG_COLOR.hopper, flag.pos);
-    const trains = FlagDir.filter(FLAG_COLOR.attackTrain, flag.pos);
-    const controllerAttackers = FlagDir.filter(FLAG_COLOR.invade.attackController, flag.pos);
+    const hoppers = FlagDir.filter(FLAG_COLOR.hopper, room);
+    const trains = FlagDir.filter(FLAG_COLOR.attackTrain, room);
+    const controllerAttackers = FlagDir.filter(FLAG_COLOR.invade.attackController, room);
     
     const params = {hoppers, trains, controllerAttackers, room};
     
