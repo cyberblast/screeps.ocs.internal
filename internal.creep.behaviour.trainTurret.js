@@ -41,8 +41,8 @@ mod.nextAction = function(creep){
 
     let target = Game.creeps[Creep.prototype.findGroupMemberByType("trainHealer", creep.data.flagName)];
 
-    if(!flag) {
-        Creep.action.recycling.assign(creep);
+    if(!flag && Creep.action.recycling.assign(creep)) {
+        return;
     } else if(!target) {
         if(creep.pos.roomName != creep.data.homeRoom) {
             return Creep.action.travelling.assignRoom(creep, creep.data.homeRoom);
