@@ -1,6 +1,6 @@
 let mod = {};
 module.exports = mod;
-mod.name = 'warrior';
+mod.name = 'sourceKiller';
 mod.run = function(creep) {
     if (creep.flag && !creep.data.predictedRenewal) {
         creep.data.predictedRenewal = creep.data.spawningTime + 50 + 50 * routeRange(creep.data.homeRoom, creep.flag.pos.roomName);
@@ -12,9 +12,6 @@ mod.run = function(creep) {
     let oldTargetId = creep.data.targetId;
     if( creep.action == null || creep.action.name == 'idle' || ( creep.action.name == 'sourceKiller' && (!creep.flag || creep.flag.pos.roomName == creep.pos.roomName ) ) ) {
         this.nextAction(creep);
-    }
-    if( creep.data.targetId != oldTargetId ) {
-        delete creep.data.path;
     }
     // Do some work
     if( creep.action && creep.target ) {

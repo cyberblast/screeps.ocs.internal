@@ -1,10 +1,10 @@
 var setup = new Creep.Setup('trainDestroyer');
 module.exports = setup;
-setup.minControllerLevel = 7;
+setup.minControllerLevel = 5;
 setup.globalMeasurement = true;
 setup.measureByHome = false;
 
-setup.maxCount = Creep.Setup.maxPerFlag(FLAG_COLOR.attackTrain, 3, setup.measureByHome);
+setup.maxCount = Creep.Setup.maxPerFlag(FLAG_COLOR.attackTrain, 10, setup.measureByHome);
 
 setup.default = {
     fixedBody: [],

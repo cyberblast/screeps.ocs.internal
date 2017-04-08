@@ -23,7 +23,7 @@ mod.getCombatStats = function(body) {
 
     if (i === body.length - 1) {
         for (; i >= 0; i--) {
-            if (!Population.stats.creep.coreParts[body[i].type]) {
+            if (body[i].type !== MOVE && !Population.stats.creep.coreParts[body[i].type]) {
                 break;
             }
             armor = armor - 100;
