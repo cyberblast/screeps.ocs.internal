@@ -227,6 +227,14 @@ mod.extend = function(){
             [MOVE]: true,
             [HEAL]: true,
         };
+        Creep.action.defending.defaultStrategy.targetFilter = function(creep) {
+            return function(hostile) {
+                if (hostile.owner.username === 'Source Keeper') {
+                    return creep.pos.getRangeTo(hostile) <= 5;
+                }
+                return true;
+            }
+        };
     }
     catch(e){
         console.log(e.stack || e);
