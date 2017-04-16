@@ -3,14 +3,6 @@ module.exports = mod;
 mod.minControllerLevel = 7;
 mod.name = 'powerMining';
 mod.register = () => {};
-mod.checkFlag = (flag) => {
-    if( flag.color == FLAG_COLOR.powerMining.color && flag.secondaryColor == FLAG_COLOR.powerMining.secondaryColor ) {
-        flag.memory.roomName = flag.pos.roomName;
-        flag.memory.task = mod.name;
-        return true;
-    }
-    return false;
-};
 mod.handleFlagRemoved = flagName => {
     // check flag
     const flagMem = Memory.flags[flagName];
@@ -28,7 +20,9 @@ mod.handleFlagRemoved = flagName => {
 };
 mod.handleFlagFound = flag => {
     // Analyze Flag
-    if( Task.powerMining.checkFlag(flag) ){
+    if (flag.compareTo(FLAG_COLOR.powerMining) && Task.nextCreepCheck(flag, mod.name)){
+        flag.memory.roomName = flag.pos.roomName;
+        flag.memory.task = mod.name;
         // check if a new creep has to be spawned
         Task.powerMining.checkForRequiredCreeps(flag);
     }
@@ -37,39 +31,16 @@ mod.handleFlagFound = flag => {
 mod.handleSpawningStarted = params => {
     if ( !params.destiny || !params.destiny.task || params.destiny.task != mod.name )
         return;
-    const memory = Task.powerMining.memory(params.destiny.room);
-    if( memory.queued[params.destiny.type] ) memory.queued[params.destiny.type].pop();
-    else if( params.destiny.role ) {
-        // temporary migration
-        if( params.destiny.role == "powerHauler" ) params.destiny.type = 'powerHauler';
-        else if( params.destiny.role == "powerMiner" ) params.destiny.type = 'powerMiner';
-        else if( params.destiny.role == "powerHealer" ) params.destiny.type = 'powerHealer';
-        memory.queued[params.destiny.type].pop();
+    const flag = Game.flags[params.destiny.targetName];
+    if (flag) {
+        const memory = Task.powerMining.memory(params.destiny.room);
+        const priority = _.find(Task.powerMining.creep, {behaviour: params.destiny.type}).queue;
+        Task.validateQueued(memory, flag, mod.name, {subKey: params.destiny.type, queues: [priority]});
+
+        if (params.body) params.body = _.countBy(params.body);
+        // save spawning creep to task memory
+        memory.spawning[params.destiny.type].push(params);
     }
-    if (params.body) params.body = _.countBy(params.body);
-    // save spawning creep to task memory
-    memory.spawning[params.destiny.type].push(params);
-    // set a timer to make sure we re-validate this spawning entry if it still remains after the creep has spawned
-    const nextCheck = memory.nextSpawnCheck[params.destiny.type];
-    if (!nextCheck || (Game.time + params.spawnTime) < nextCheck) memory.nextSpawnCheck[params.destiny.type] = Game.time + params.spawnTime + 1;
-};
-mod.validateSpawning = (roomName, type) => {
-    const memory = Task.powerMining.memory(roomName);
-    let spawning = [];
-    let minRemaining;
-    let _validateSpawning = o => {
-        let spawn = Game.spawns[o.spawn];
-        if( spawn && ((spawn.spawning && spawn.spawning.name == o.name) || (spawn.newSpawn && spawn.newSpawn.name == o.name))) {
-            minRemaining = (!minRemaining || spawn.spawning.remainingTime < minRemaining) ? spawn.spawning.remainingTime : minRemaining;
-            spawning.push(o);
-        }
-    };
-    if (memory.spawning[type]) {
-        memory.spawning[type].forEach(_validateSpawning);
-    }
-    memory.spawning[type] = spawning;
-    // if we get to this tick without nextCheck getting updated (by handleSpawningCompleted) we need to validate again, it might be stuck.
-    memory.nextSpawnCheck[type] = minRemaining ? Game.time + minRemaining : 0;
 };
 mod.handleSpawningCompleted = creep => {
     if ( !creep.data.destiny || !creep.data.destiny.task || creep.data.destiny.task != mod.name )
@@ -77,36 +48,18 @@ mod.handleSpawningCompleted = creep => {
     if( creep.data.destiny.homeRoom ) {
         creep.data.homeRoom = creep.data.destiny.homeRoom;
     }
-    // calculate & set time required to spawn and send next substitute creep
-    // TODO: implement better distance calculation
-    creep.data.predictedRenewal = creep.data.spawningTime + (routeRange(creep.data.homeRoom, creep.data.destiny.room)*50);
-    // get task memory
-    const memory = Task.powerMining.memory(creep.data.destiny.room);
-    // save running creep to task memory
-    memory.running[creep.data.destiny.type].push(creep.name);
-    // clean/validate task memory spawning creeps
-    Task.powerMining.validateSpawning(creep.data.destiny.room, creep.data.destiny.type);
-};
-mod.validateRunning = (roomName, type, name) => {
-    // get task memory
-    let memory = Task.powerMining.memory(roomName);
-    let running = [];
-    let _validateRunning = o => {
-        // invalidate dead or old creeps for predicted spawning
-        let creep = Game.creeps[o];
-        if( !creep || !creep.data ) return;
-        // invalidate old creeps for predicted spawning
-        // TODO: better distance calculation
-        let prediction;
-        if( creep.data.predictedRenewal ) prediction = creep.data.predictedRenewal;
-        else if( creep.data.spawningTime ) prediction = (creep.data.spawningTime + (routeRange(creep.data.homeRoom, roomName)*50));
-        else prediction = (routeRange(creep.data.homeRoom, roomName)+1) * 50;
-        if( ( !name || creep.name !== name ) && creep.ticksToLive > prediction ) running.push(o);
-    };
-    if( memory.running[type] ) {
-        memory.running[type].forEach(_validateRunning);
+    const flag = Game.flags[creep.data.destiny.targetName];
+    if (flag) {
+        // calculate & set time required to spawn and send next substitute creep
+        // TODO: implement better distance calculation
+        creep.data.predictedRenewal = creep.data.spawningTime + (routeRange(creep.data.homeRoom, creep.data.destiny.room)*50);
+        // get task memory
+        const memory = Task.powerMining.memory(creep.data.destiny.room);
+        // save running creep to task memory
+        memory.running[creep.data.destiny.type].push(creep.name);
+        // clean/validate task memory spawning creeps
+        Task.validateSpawning(memory, flag, mod.name, {roomName: creep.data.destiny.room, subKey: creep.data.destiny.type});
     }
-    memory.running[type] = running;
 };
 // when a creep died (or will die soon)
 mod.handleCreepDied = name => {
@@ -115,8 +68,17 @@ mod.handleCreepDied = name => {
     // ensure it is a creep which has been requested by this task (else return)
     if (!mem || !mem.destiny || !mem.destiny.task || mem.destiny.task != mod.name)
         return;
-    // clean/validate task memory running creeps
-    Task.powerMining.validateRunning(mem.destiny.room, mem.creepType, name);
+    const flag = Game.flags[mem.destiny.targetName];
+    if (flag) {
+        // clean/validate task memory running creeps
+        const memory = Task.powerMining.memory(mem.destiny.room);
+        Task.validateRunning(memory, flag, mod.name, {roomName: mem.destiny.room, subKey: mem.creepType, deadCreep: name});
+    }
+};
+// this only exists so action.harvestPower can work, once that is refactored not to look at the task it can be removed
+mod.validateRunning = function(roomName, type) {
+    const memory = Task.powerMining.memory(roomName);
+    Task.validateRunning(memory, null, mod.name, {roomName, subKey: type});
 };
 mod.needsReplacement = (creep) => {
     // (c.ticksToLive || CREEP_LIFE_TIME) < (50 * travel - 40 + c.data.spawningTime)
@@ -124,41 +86,22 @@ mod.needsReplacement = (creep) => {
 };
 // check if a new creep has to be spawned
 mod.checkForRequiredCreeps = (flag) => {
+    // console.log(mod.name, flag.name, 'checkRequired');
     const roomName = flag.pos.roomName;
     const room = Game.rooms[roomName];
     // Use the roomName as key in Task.memory?
     // Prevents accidentally processing same room multiple times if flags > 1
-    let memory = Task.powerMining.memory(roomName);
+    const memory = Task.powerMining.memory(roomName);
 
-    let trainCount = memory.trainCount || 1;
-   
-    // do we need to validate our spawning entries?
-    for (const type of ['powerHauler', 'powerMiner', 'powerHealer']) {
-        if (memory.nextSpawnCheck[type] && Game.time > memory.nextSpawnCheck[type]) {
-            if( DEBUG && TRACE ) trace('Task', {Task:mod.name, roomName, flagName:flag.name, [mod.name]:'Flag.found', 'Flag.found':'revalidating', revalidating:type});
-            Task.powerMining.validateSpawning(roomName, type);
-        }
-    }
-
+    const trainCount = memory.trainCount || 1;
     let countExisting = type => {
-        let invalidEntry = false;
-        let running = _.map(memory.running[type], n => {
-            let c = Game.creeps[n];
-            if (!c) invalidEntry = true;
-            return c;
-        });
-        if (invalidEntry) {
-            if( DEBUG && TRACE ) trace('Task', {Task:mod.name, roomName, flagName:flag.name, [mod.name]:'Flag.found', 'Flag.found':'revalidating', revalidating:type});
-            mod.validateRunning(roomName, type);
-            running = _.map(memory.running[type], n => Game.creeps[n]);
-        }
-        let runningCount = _.filter(running, c => !Task.powerMining.needsReplacement(c)).length;
-        return memory.queued[type].length + memory.spawning[type].length + runningCount;
+        const priority = _.find(Task.powerMining.creep, {behaviour: type}).queue;
+        Task.validateAll(memory, flag, mod.name, {roomName, subKey: type, queues: [priority], checkValid: true});
+        return memory.queued[type].length + memory.spawning[type].length + memory.running[type].length;
     };
-
-    let haulerCount = countExisting('powerHauler');
-    let minerCount = countExisting('powerMiner');
-    let healerCount = countExisting('powerHealer');
+    const haulerCount = countExisting('powerHauler');
+    const minerCount = countExisting('powerMiner');
+    const healerCount = countExisting('powerHealer');
 
    // console.log('haul '+haulerCount + ' miner ' + minerCount+' healer '+healerCount)
     if( DEBUG && TRACE ) trace('Task', {Task:mod.name, flagName:flag.name, trainCount, haulerCount, minerCount, healerCount, [mod.name]:'Flag.found'}, 'checking flag@', flag.pos);
@@ -191,8 +134,8 @@ mod.checkForRequiredCreeps = (flag) => {
             );
         }
     }
-    //spawn 2 healers after powerMiner queued 
-    let maxHealers = minerCount * 2;
+    // spawn 2 healers after powerMiner queued, but not more than the number we want
+    let maxHealers = Math.min(trainCount, minerCount) * 2;
     if(healerCount < maxHealers ) {
         for(let i = healerCount; i < maxHealers; i++) {
             Task.spawn(
@@ -313,9 +256,6 @@ mod.memory = key => {
             powerHauler: Task.powerMining.findRunning(key, 'powerHauler'),
             powerHealer: Task.powerMining.findRunning(key, 'powerHealer')
         };
-    }
-    if( !memory.hasOwnProperty('nextSpawnCheck') ){
-        memory.nextSpawnCheck = {};
     }
     if( !memory.hasOwnProperty('trainCount') ){
         memory.trainCount = 1;
