@@ -10,7 +10,7 @@ mod.run = function(creep) {
     creep.attackingRanged = false;
     // Assign next Action
     let oldTargetId = creep.data.targetId;
-    if( creep.action == null || creep.action.name == 'idle' || ( creep.action.name == 'sourceKiller' && (!creep.flag || creep.flag.pos.roomName == creep.pos.roomName ) ) ) {
+    if( creep.action == null || creep.action.name == 'idle' ) {
         this.nextAction(creep);
     }
     // Do some work
