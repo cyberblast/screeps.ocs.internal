@@ -128,7 +128,7 @@ mod.phases_other = {
                 x: k.charCodeAt(0) - 32,
                 y: k.charCodeAt(0) - 32,
             })), 'n');
-            const target = new RoomPosition(targetObj.x, targetObj.y, params.room.name);
+            const target = params.room.getPositionAt(targetObj.x, targetObj.y);
             
             const nukers = _(Game.rooms)
                 .filter(r => r.controller && r.my && r.structures.nuker && r.structures.nuker.cooldown === 0)
