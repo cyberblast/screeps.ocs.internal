@@ -37,7 +37,7 @@ const mod = {
                                 let initValue = 0;
                                 initValue += INVASION.HOSTILE_STRUCTURE_MATRIX[s.structureType] || INVASION.HOSTILE_STRUCTURE_MATRIX.default;
                                 matrix[key] = (matrix[key] || 0) + initValue;
-                                s.pos.radius(4).forEach(pos => {
+                                s.pos.radius(3).forEach(pos => {
                                     const key = getKey(pos);
                                     matrix[key] = (matrix[key] || 0) + (initValue - Util.getDistance(s.pos, pos));
                                 });
