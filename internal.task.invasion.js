@@ -123,14 +123,12 @@ mod.phases_other = {
         condition: mod.checkNukes,
         run(flag, params) {
             if (flag.memory.nukeLaunched) return; // don't launch if one has already been launched
-            let targets = Util.fieldOrFunction(INVASION.NUKE_TARGETS, flag, params);
-            targets = Array.isArray(targets) ? targets : [targets];
-            const roomTargets = _(params.room.find(FIND_HOSTILE_STRUCTURES))
-                .filter(s => targets.includes(s.structureType))
-                .sortBy(s => targets.indexOf(s.structureType))
-                .value();
-            
-            // TODO: find target based on proximity to other structures
+            const targetObj = _.max(Object.keys(params.room.hostileStructureMatrix).map(k => ({
+                n: params.room.hostileStructureMatrix[k],
+                x: k.charCodeAt(0) - 32,
+                y: k.charCodeAt(0) - 32,
+            })), 'n');
+            const target = new RoomPosition(targetObj.x, targetObj.y, params.room.name);
             
             const nukers = _(Game.rooms)
                 .filter(r => r.controller && r.my && r.structures.nuker && r.structures.nuker.cooldown === 0)
@@ -140,8 +138,8 @@ mod.phases_other = {
                 .map(r => r.structures.nuker)
                 .value();
             
-            if (nukers && nukers.length && roomTargets) {
-                nukers[0].launchNuke(roomTargets[0].pos);
+            if (nukers && nukers.length && target) {
+                nukers[0].launchNuke(target);
                 flag.memory.nukeLaunched = true;
             }
         },

@@ -23,6 +23,28 @@ const mod = {
                     return this._casualties;
                 }
             },
+            hostileStructureMatrix: {
+                configurable: true,
+                get: function() {
+                    return Util.get(this, '_hostileStructureMatrix', () => {
+                        if (Task.reputation.allyOwner(this)) return {};
+                        const matrix = {};
+                        const getKey = pos => `${String.fromCharCode(32 + pos.x)}${String.fromCharCode(32 + pos.y)}_x${pos.x}-y${pos.y}`;
+                        _(this.structures.all)
+                            .filter(s => [STRUCTURE_SPAWN, STRUCTURE_TOWER, STRUCTURE_EXTENSION, STRUCTURE_STORAGE, STRUCTURE_TERMINAL, STRUCTURE_LAB, STRUCTURE_LINK].includes(s.structureType))
+                            .forEach(s => {
+                                const key = getKey(s.pos);
+                                let initValue = 0;
+                                initValue += INVASION.HOSTILE_STRUCTURE_MATRIX[s.structureType] || INVASION.HOSTILE_STRUCTURE_MATRIX.default;
+                                matrix[key] = (matrix[key] || 0) + initValue;
+                                s.pos.radius(4).forEach(pos => {
+                                    matrix[key] = (matrix[key] || 0) + (initValue - Util.getDistance(s.pos, pos));
+                                });
+                            });
+                        return matrix;
+                    });
+                },
+            },
         });
     
         Room.prototype.checkPowerBank = function() {

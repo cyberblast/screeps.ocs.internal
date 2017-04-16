@@ -15,8 +15,13 @@ let mod = {
 		// amount of guards to spawn. Number or function
 		GUARD_COUNT: (phase) => [0, INVASION.HOPPER_COUNT, 0, 1][phase],
 		NUKES: false, // whether to nuke during an invasion
-		// primary targets for a nuke. Array, STRUCTURE_*, or function
-		NUKE_TARGETS: [STRUCTURE_SPAWN, STRUCTURE_TOWER, STRUCTURE_STORAGE, STRUCTURE_TERMINAL],
+		HOSTILE_STRUCTURE_MATRIX: {
+			[STRUCTURE_SPAWN]: 20,
+			[STRUCTURE_TERMINAL]: 15,
+			[STRUCTURE_STORAGE]: 15,
+			[STRUCTURE_TOWER]: 15,
+			default: 8,
+		},
 	},
 };
 module.exports = mod;
