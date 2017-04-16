@@ -23,6 +23,9 @@ mod.run = function(creep) {
     Creep.behaviour.ranger.heal(creep);
 };
 mod.nextAction = function(creep){
+    const flag = creep.flag || Game.flags[creep.data.destiny.targetName];
+    if (!flag) return Creep.action.recycling.assign(creep);
+    if (creep.pos.roomName !== flag.pos.roomName) return Creep.action.travelling.assignRoom(creep, flag.pos.roomName);
     let priority = [
         Creep.action.defending,
         Creep.action.sourceKiller,
