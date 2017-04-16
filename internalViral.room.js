@@ -41,7 +41,7 @@ const mod = {
                                     const key = getKey(pos);
                                     matrix[key] = (matrix[key] || 0) + (initValue - Util.getDistance(s.pos, pos));
                                 });
-                            });
+                            }).commit();
                         return matrix;
                     });
                 },
