@@ -139,16 +139,16 @@ mod.memory = (flag) => {
 
 mod.creep = {
     hopper: {
-        fixedBody: {
-            [HEAL]: 1,
-            [MOVE]: 2,
-            [TOUGH]: 1,
-        },
+        fixedBody: [], 
         multiBody: {
             [HEAL]: 1,
             [MOVE]: 2,
             [TOUGH]: 1,
         },
+        minAbsEnergyAvailable: 1080, 
+        minEnergyAvailable: 0.4,
+        maxMulti: 12, 
+        minMulti: 3, 
         name: "hopper", 
         behaviour: "hopper", 
         queue: 'Low'
