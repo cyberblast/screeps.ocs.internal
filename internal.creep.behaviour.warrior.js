@@ -30,6 +30,7 @@ mod.nextAction = function(creep){
     let priority = [
         Creep.action.invading,
         Creep.action.defending,
+        Creep.action.healing,
         Creep.action.guarding,
         Creep.action.idle
     ];

@@ -31,7 +31,11 @@ mod.extend = function(){
         Creep.behaviour.warrior = load("creep.behaviour.warrior");
         //powerMining
         Task.installTask('powerMining');
-        Creep.action.pickPower = load("creep.action.pickPower");
+        _.assign(Creep.action, {
+            diplomacy: load('creep.action.diplomacy'),
+            harvestPower: load('creep.action.harvestPower'),
+            pickPower: load('creep.action.pickPower'),
+        });
         Creep.behaviour.powerMiner = load("creep.behaviour.powerMiner");
         Creep.behaviour.powerHealer = load("creep.behaviour.powerHealer");
         Creep.behaviour.powerHauler = load("creep.behaviour.powerHauler");

@@ -11,37 +11,44 @@ mod.run = function(creep) {
         logError('Creep without action/activity!\nCreep: ' + creep.name + '\ndata: ' + JSON.stringify(creep.data));
     }
 
-    if(creep.data.body.heal !== undefined){
-        // Heal self
-        if( creep.hits < creep.hitsMax ){
-            creep.heal(creep);
-        }
-        // Heal other
-        else if(creep.room.casualties.length > 0 ) {
-            const injured = creep.pos.findInRange(creep.room.casualties, 3);
-            if( injured.length > 0 ){
-                const closest = creep.pos.findClosestByRange(injured);
-                if(creep.pos.isNearTo(closest)) {
-                    creep.heal(closest);
-                } else {
-                    creep.rangedHeal(injured[0]);
-                }
-            }
-        }
-    }
+    Creep.behaviour.ranger.heal(creep);
 };
 mod.nextAction = function(creep){
     const flag = mod.getFlag(creep);
-    if (!flag) return Creep.action.recycling.assign(creep);
+    let miner = Game.getObjectById(creep.data.miner);
+    if (!flag) {
+        // flag is gone, do we still need to heal our miner?
+        if (!miner || miner.hits === miner.hitsMax) {
+            return Creep.action.recycling.assign(creep);
+        } else if (!creep.pos.isNearTo(miner)) {
+            creep.data.ignoreCreeps = false;
+            return Creep.action.travelling.assign(creep, miner);
+        } else {
+            return Creep.action.idle.assign(creep);
+        }
+    }
 
     Population.registerCreepFlag(creep, flag);
-    let miner = Game.creeps[Creep.prototype.findGroupMemberByType("powerMiner", flag.name)];
-    if(!miner || creep.pos.getRangeTo(flag) > 2) { // get to the flag
-        creep.data.travelRange = 2;
-        return Creep.action.travelling.assign(creep, flag);
-    } else if (miner.pos.roomName === flag.pos.roomName && creep.pos.getRangeTo(miner) > 1) { // near the flag, now find the miner
+    if (!miner) {
+        miner = Game.creeps[Creep.prototype.findGroupMemberByType("powerMiner", flag.name)];
+        if (miner && miner.targetOf && miner.targetOf.length >= 2) { // try to find another miner with less than two healers
+            const otherMiners = creep.room.creeps.filter(c => c.data && c.data.creepType === 'powerMiner' && c.targetOf.length < 2);
+            if (otherMiners.length) {
+                miner = otherMiners[0];
+            }
+        }
+        creep.data.miner = miner && miner.id;
+    }
+
+    if (miner) Util.get(miner, 'targetOf', []).push(creep); // initialize if undefined, and register it as our target
+
+    // if the miner is next to the flag (working presumably) but we are not next to the miner
+    if (miner && miner.pos.isNearTo(flag) && !creep.pos.isNearTo(miner)) {
         creep.data.ignoreCreeps = false;
         return Creep.action.travelling.assign(creep, miner);
+    } else if (creep.pos.getRangeTo(flag) > 2) {
+        creep.data.travelRange = 2;
+        return Creep.action.travelling.assign(creep, flag);        
     }
     return Creep.action.idle.assign(creep);
 };
@@ -54,8 +61,6 @@ mod.strategies = {
     defaultStrategy: {
         name: `default-${mod.name}`,
         moveOptions: function(options) {
-            // allow routing in and through hostile rooms
-            if (_.isUndefined(options.allowHostile)) options.allowHostile = true;
             return options;
         }
     }

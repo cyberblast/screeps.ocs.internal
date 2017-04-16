@@ -27,14 +27,15 @@ const mod = {
     
         Room.prototype.checkPowerBank = function() {
             if (!this.powerBank) return; // no power bank in room
+            if (this.powerBank.cloak) return;
             const currentFlags = FlagDir.count(FLAG_COLOR.powerMining, this.powerBank.pos, false);
             const flagged = FlagDir.find(FLAG_COLOR.powerMining, this.powerBank.pos, false);
             if (!flagged && currentFlags < MAX_AUTO_POWER_MINING_FLAGS) {
                 if (this.powerBank.power > 2500 && this.powerBank.ticksToDecay > 4500) {
-                    this.powerBank.pos.createFlag(null, FLAG_COLOR.powerMining.color, FLAG_COLOR.powerMining.secondaryColor);
+                    this.powerBank.pos.newFlag(FLAG_COLOR.powerMining, this.name + '-PM');
                 }
             }
-        }
+        };
     },
     
     analyze() {

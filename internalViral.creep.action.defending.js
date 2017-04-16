@@ -34,20 +34,11 @@ mod.run = {
         }
     },
     sourceKiller: function(creep) {
-        if( !creep.flee && creep.pos.getRangeTo(creep.target) > 1 ){
+        const range = creep.pos.getRangeTo(creep.target);
+        if (!creep.flee && ((creep.hits === creep.hitsMax || range < 3) || range > 4)) {
             creep.travelTo(creep.target);
         }
         // attack
-        let keeperLair = [];
-        let keeperFind = creep.room.find(FIND_STRUCTURES, {
-                filter: (structure) => structure.structureType == STRUCTURE_KEEPER_LAIR
-        });
-        for(let index in keeperFind){
-            keeperLair.push(keeperFind[index]);
-        }
-        let lowLair = keeperFind.sort( (a, b) => a.ticksToSpawn - b.ticksToSpawn);
-        creep.memory.lairs = lowLair[0];
-
         let attacking = creep.attack(creep.target);
         if( attacking == ERR_NOT_IN_RANGE ) {
             let targets = creep.pos.findInRange(creep.room.hostiles, 1);
