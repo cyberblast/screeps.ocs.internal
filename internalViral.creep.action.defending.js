@@ -123,13 +123,13 @@ mod.run = {
         }
     }
 };
-mod.install = function() {
-    this.defaultStrategy.targetFilter = function(creep) {
-        return function(hostile) {
+mod.defaultStrategy = {
+    targetFilter: function(creep) {
+        return function (hostile) {
             if (hostile.owner.username === 'Source Keeper') {
                 return creep.pos.getRangeTo(hostile) <= 5;
             }
             return true;
         }
-    };
+    }
 };
