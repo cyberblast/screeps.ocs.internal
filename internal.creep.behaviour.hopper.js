@@ -33,10 +33,7 @@ mod.run = function(creep) {
     Creep.behaviour.ranger.heal(creep);
 };
 mod.goTo = function(creep, flag) {
-    if (creep.pos.roomName !== flag.pos.roomName) {
-        creep.data.travelRange = 23; // stay next to the border
-        return Creep.action.travelling.assignRoom(creep, flag.pos.roomName);
-    } else if (creep.pos.getRangeTo(flag) > 0) {
+    if (creep.pos.getRangeTo(flag) > 0) {
         creep.data.travelRange = 0;
         return Creep.action.travelling.assign(creep, flag);
     } else {
