@@ -23,6 +23,14 @@ mod.extend = function(){
             color: COLOR_RED,
             secondaryColor: COLOR_WHITE,
         };
+        global.FLAG_COLOR.trainHeal = { // spawns destroyer/heal/heal train
+            color: COLOR_BLUE,
+            secondaryColor: COLOR_GREEN,
+        };
+        global.FLAG_COLOR.trainTurret = { // spawns destroyer/heal/turret train
+            color: COLOR_BLUE,
+            secondaryColor: COLOR_WHITE,
+        };
         global.FLAG_COLOR.sequence = { // Place Grey/Grey flag on a structure, all Grey/X flags are changed to X/X flags when the structure is gone.
             color: COLOR_GREY,
             secondaryColor: COLOR_GREY,
@@ -46,13 +54,11 @@ mod.extend = function(){
         Task.installTask('sourceKiller');
         Creep.action.sourceKiller = load("creep.action.sourceKiller");
         Creep.behaviour.sourceKiller = load("creep.behaviour.sourceKiller");
-        // attackTrain
-        Creep.setup.trainDestroyer = load("creep.setup.trainDestroyer");
-        Creep.setup.trainHealer = load("creep.setup.trainHealer");
-        Creep.setup.trainTurret = load("creep.setup.trainTurret");
-        Creep.behaviour.trainDestroyer = load("creep.behaviour.trainDestroyer");
-        Creep.behaviour.trainHealer = load("creep.behaviour.trainHealer");
-        Creep.behaviour.trainTurret = load("creep.behaviour.trainTurret");
+        // train task
+        Task.installTask('train');
+        Creep.behaviour.trainLeader = load("creep.behaviour.trainLeader");
+        Creep.behaviour.trainMedic = load("creep.behaviour.trainMedic");
+        Creep.behaviour.trainRanged = load("creep.behaviour.trainRanged");        
         // remote mineral miner
         Task.installTask('remoteMineralMiner');
         Creep.behaviour.remoteMineralMiner = load('creep.behaviour.remoteMineralMiner');
@@ -61,10 +67,6 @@ mod.extend = function(){
             "flagSequence",
         ]);
 
-        Spawn.priorityLow.push(Creep.setup.trainDestroyer);
-        Spawn.priorityLow.push(Creep.setup.trainHealer);
-        // attempt to get around merge conflict, remove once this is in /dev
-        Spawn.priorityLow.push(Creep.setup.trainTurret);
         // get around merge conflict, remove this line once merged into /dev
         if (!_.isUndefined(Creep.setup.hopper)) Spawn.priorityLow.push(Creep.setup.hopper);
 
