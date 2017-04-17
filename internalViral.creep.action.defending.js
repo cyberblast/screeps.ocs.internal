@@ -35,7 +35,7 @@ mod.run = {
     },
     sourceKiller: function(creep) {
         const range = creep.pos.getRangeTo(creep.target);
-        if (!creep.flee && ((creep.hits === creep.hitsMax || range < 3) || range > 4)) {
+        if (!creep.flee && ((creep.hits === creep.hitsMax || range <= 3) || range > 4)) {
             creep.travelTo(creep.target);
         }
         // attack
