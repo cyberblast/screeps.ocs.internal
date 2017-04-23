@@ -16,7 +16,7 @@ action.newTarget = function(creep) {
         .filter(creep => {
             return creep.owner.username !== Task.reputation.myName() && Task.reputation.allyOwner(creep);
         })
-        .find(creep => creep.getActiveBodyparts(ATTACK) >= 20);
+        .find(creep => creep.getBodyparts(ATTACK) >= 20);
 };
 
 action.step = function(creep) {
