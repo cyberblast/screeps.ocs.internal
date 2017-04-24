@@ -1,3 +1,4 @@
+global._ME = _(Game.rooms).map('controller').filter('my').map('owner.username').first();
 let mod = {
 	FILL_NUKER: false,
 	CONTROLLER_SIGN: true,
