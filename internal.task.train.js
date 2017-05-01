@@ -4,7 +4,13 @@ mod.minControllerLevel = 7;
 mod.name = 'train';
 mod.register = () => {};
 mod.checkFlag = (flag) => { 
-    // 2xhealer flag - flag.compareTo(FLAG_COLOR.trainHeal) 
+    // 2xhealer flag - flag.compareTo(FLAG_COLOR.trainHeal)
+    if (flag.compareTo(FLAG_COLOR.trainHeal)) {
+        Util.set(flag.memory, 'task', 'train');
+        Util.set(flag.memory, 'type', 'trainHeal');
+        Util.set(flag.memory, 'trainCount', 1);
+        return true;
+    }
     if (flag.compareTo(FLAG_COLOR.trainTurret)) {
         Util.set(flag.memory, 'task', 'train');
         Util.set(flag.memory, 'type', 'trainTurret');
@@ -168,6 +174,12 @@ mod.members = {
         'trainLeader',
         'trainMedic',
         'trainRanged'
+    ],
+    trainHeal: [
+        'trainLeader',
+        'trainMedic',
+        'trainMedic',
+        'trainMedic',
     ],
 };
 mod.creep = {
