@@ -32,7 +32,7 @@ mod.heal = function(roomName, partChange) {
 mod.strategies = {
     miner: {
         setup: function (roomName) {
-            return Task.mining.setupCreep(roomName, Room.isCenterNineRoom(roomName) ? mod.creep.SKMiner : Task.mining.creep.miner);
+            return Task.mining.setupCreep(roomName, Room.isCenterNineRoom(roomName) ? Task.mining.creep.SKMiner : Task.mining.creep.miner);
         }
     },
     hauler: {
