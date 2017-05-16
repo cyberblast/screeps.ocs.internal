@@ -43,6 +43,10 @@ mod.nextAction = function(creep){
 mod.strategies = {
     defaultStrategy: {
         name: `default-${mod.name}`,
+        moveOptions: function(options) {
+            options.avoidSKCreeps = false;
+            return options;
+        },
     },
     defending: {
         targetFilter: function(creep) {
