@@ -3,6 +3,7 @@ module.exports = mod;
 mod.name = 'remoteMineralMiner';
 mod.minControllerLevel = 2;
 mod.maxCount = flag => {
+    if (flag.memory.noMineralMiners) return 0;
     if (!flag.room) return 1;
     let max = 0;
     flag.room.minerals.forEach(mineral => {
