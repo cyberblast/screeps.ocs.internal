@@ -1,24 +1,15 @@
-let mod = {};
+const mod = new Creep.Behaviour('trainMedic');
 module.exports = mod;
-mod.name = 'trainMedic';
+const super_run = mod.run;
 mod.run = function(creep) {
-    if (!creep.action || creep.action.name === 'idle') {
-        // Assign next Action
-        this.nextAction(creep);
-    }
-    // Do some work
-    if( creep.action && creep.target ) {
-        creep.action.step(creep);
-    } else {
-        logError('Creep without action/activity!\nCreep: ' + creep.name + '\ndata: ' + JSON.stringify(creep.data));
-    }
-    Creep.behaviour.ranger.heal(creep);
+    super_run.call(this, creep);
+    Creep.behaviour.ranger.heal.call(this, creep);
 };
 mod.nextAction = function(creep) {
     const rallyFlag = Game.flags[creep.data.destiny.targetName];
     const attackFlag = FlagDir.find(FLAG_COLOR.attackTrain, creep.pos, false);
     if (!rallyFlag) {
-        return Creep.action.recycling.assign(creep);
+        return this.assignAction(creep, 'recycling');
     }
     Population.registerCreepFlag(creep, rallyFlag);
     // find the creep ahead of us in the train
@@ -30,13 +21,13 @@ mod.nextAction = function(creep) {
         if (creep.pos.roomName !== rallyRoom) {
             Creep.action.travelling.assignRoom(creep, rallyRoom);
         } else if (creep.pos.getRangeTo(rallyFlag) > 1) {
-            Creep.action.travelling.assign(creep, rallyFlag);
+            this.assignAction(creep, 'travelling', rallyFlag);
         } else {
-            Creep.action.idle.assign(creep);
+            this.assignAction(creep, 'idle');
         }
     } else if (creep.pos.getRangeTo(leadingCreep) > 1) {
-        Creep.action.travelling.assign(creep, leadingCreep);
+        this.assignAction(creep, 'travelling', leadingCreep);
     } else {
-        Creep.action.idle.assign(creep);
+        this.assignAction(creep, 'idle');
     }
 };

@@ -1,6 +1,15 @@
-const mod = Object.create(Creep.behaviour.remoteMiner);
+const mod = new Creep.Behaviour('remoteMineralMiner');
 module.exports = mod;
-mod.name = 'remoteMineralMiner';
-mod.mine = function(creep) {
-    return Creep.behaviour.miner.run(creep, {remote: true, approach: mod.approach, determineTarget: Creep.behaviour.mineralMiner.determineTarget});
+mod.actions = function(creep) {
+    return Creep.behaviour.miner.actions.call(this, creep);
 };
+mod.run = function(creep) {
+    return Creep.behaviour.remoteMiner.run.call(this, creep);
+};
+mod.getEnergy = function(creep) {
+    return Creep.behaviour.miner.getEnergy.call(this, creep);
+};
+mod.maintain = function(creep) {
+    return Creep.behaviour.miner.maintain.call(this, creep);
+};
+mod.strategies.mining = Creep.behaviour.mineralMiner.strategies.mining;

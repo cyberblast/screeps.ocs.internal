@@ -1,21 +1,6 @@
-let mod = {};
+const mod = new Creep.Behaviour('powerHauler');
 module.exports = mod;
-mod.name = 'powerHauler';
-mod.run = function(creep) {
-    // Assign next Action
-    let oldTargetId = creep.data.targetId;
-    if( creep.action == null || creep.action.name == 'idle' ) {
-        this.nextAction(creep);
-    }
-    
-    // Do some work
-    if( creep.action && creep.target ) {
-        creep.action.step(creep);
-    } else {
-        logError('Creep without action/activity!\nCreep: ' + creep.name + '\ndata: ' + JSON.stringify(creep.data));
-    }
-};
-mod.nextAction = function(creep){
+mod.nextAction = function(creep) {
     // at home
     if( creep.pos.roomName == creep.data.homeRoom ){
         // carrier filled
@@ -27,14 +12,14 @@ mod.nextAction = function(creep){
             // Choose the closest
             if( deposit.length > 0 ){
                 let target = creep.pos.findClosestByRange(deposit);
-                if( target.structureType == STRUCTURE_STORAGE && this.assign(creep, Creep.action.storing) ) return;
-                else if( this.assign(creep, Creep.action.charging, target) ) return;
+                if( target.structureType == STRUCTURE_STORAGE && this.assignAction(creep, 'storing') ) return;
+                else if( this.assignAction(creep, 'charging', target) ) return;
             }
-            if( this.assign(creep, Creep.action.charging) ) return;
+            if( this.assignAction(creep, 'charging') ) return;
             // no deposit :/ 
             // try spawn & extensions
-            if( this.assign(creep, Creep.action.feeding) ) return;
-            this.assign(creep, Creep.action.dropping);
+            if( this.assignAction(creep, 'feeding') ) return;
+            this.assignAction(creep, 'dropping');
             return;
         }
         // empty
@@ -44,25 +29,22 @@ mod.nextAction = function(creep){
         }
     }
     // at target room
- else if( creep.data.destiny.room == creep.pos.roomName ){
+ else if (creep.data.destiny.room == creep.pos.roomName) {
         // TODO: This should perhaps check which distance is greater and make this decision based on that plus its load size
-        if( creep.sum / creep.carryCapacity > 0.01) {
+        if (creep.sum / creep.carryCapacity > 0.01) {
             this.goHome(creep);
             return;
         }
-        // picking last until we have strategies that can compare cost vs benefit otherwise remoteHaulers bounce between piles of dropped energy
-        //if( this.assign(creep, Creep.action.uncharging) ) return;
-        // if( this.assign(creep, Creep.action.robbing) ) return;
-        if( this.assign(creep, Creep.action.pickPower) ) return;
+        if (this.assignAction(creep, 'pickPower')) return;
         // wait
         if ( creep.sum === 0 ) {
             let target = FlagDir.find(FLAG_COLOR.powerMining, creep.pos, true);
             if (creep.room && target && creep.pos.getRangeTo(target) > 3) {
                 creep.data.travelRange = 3;
-                return Creep.action.travelling.assign(creep, target);
+                return this.assignAction(creep, 'travelling', target);
             }
         }
-        return this.assign(creep, Creep.action.idle);
+        return this.assignAction(creep, 'idle');
     }
     // somewhere
     else {
@@ -80,16 +62,13 @@ mod.nextAction = function(creep){
     // recycle self
     let mother = Game.spawns[creep.data.motherSpawn];
     if( mother ) {
-        this.assign(creep, Creep.action.recycling, mother);
+        this.assignAction(creep, 'recycling', mother);
     }
-};
-mod.assign = function(creep, action, target){        
-    return (action.isValidAction(creep) && action.isAddableAction(creep) && action.assign(creep, target));
 };
 mod.gotoTargetRoom = function(creep){
     const targetFlag = creep.data.destiny ? Game.flags[creep.data.destiny.targetName] : null;
     if (targetFlag) return Creep.action.travelling.assignRoom(creep, targetFlag.pos.roomName);
 };
 mod.goHome = function(creep){
-    return Creep.action.travelling.assign(creep, Game.rooms[creep.data.homeRoom].storage);
+    return this.assignAction(creep, 'travelling', Game.rooms[creep.data.homeRoom].storage);
 };

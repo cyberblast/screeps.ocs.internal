@@ -1,7 +1,6 @@
 const mod = {};
 module.exports = mod;
-mod.run = function(creep, params) {
-    Creep.behaviour.ranger.heal(creep);
-
-    return this.baseOf.internalViral.run.apply(this, [creep, params]);
+mod.run = function(creep) {
+    Creep.behaviour.ranger.heal.call(this, creep);
+    return this.baseOf.internalViral.run.call(this, creep);
 };

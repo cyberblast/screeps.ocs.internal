@@ -1,6 +1,6 @@
 let mod = {};
 module.exports = mod;
-mod.heal = function(creep){
+mod.heal = function(creep) {
     if( creep.data.body.heal !== undefined  ) {
         const mustHealSelf = creep.hits < creep.data.hullHits;
         if( mustHealSelf || creep.hits < creep.hitsMax ){

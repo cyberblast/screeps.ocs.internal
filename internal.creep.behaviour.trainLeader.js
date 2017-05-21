@@ -1,24 +1,15 @@
-let mod = {};
+const mod = new Creep.Behaviour('trainLeader');
 module.exports = mod;
-mod.name = 'trainLeader';
-mod.run = function(creep) {
+const super_invalidAction = mod.invalidAction;
+mod.invalidAction = function(creep) {
     const attackFlag = FlagDir.find(FLAG_COLOR.attackTrain, creep.pos, false);
-    if (!creep.action || creep.action.name === 'idle' ||
-        (creep.action.name === 'dismantling' && creep.pos.roomName !== attackFlag.pos.roomName)) {
-        // Assign next Action
-        this.nextAction(creep);
-    }
-    // Do some work
-    if( creep.action && creep.target ) {
-        creep.action.step(creep);
-    } else {
-        logError('Creep without action/activity!\nCreep: ' + creep.name + '\ndata: ' + JSON.stringify(creep.data));
-    }
+    return super_invalidAction.call(this, creep) || 
+        (creep.action.name === 'dismantling' && creep.pos.roomName !== attackFlag.pos.roomName);
 };
 mod.nextAction = function(creep) {
     const rallyFlag = Game.flags[creep.data.destiny.targetName];
     if (!rallyFlag) {
-        return Creep.action.recycling.assign(creep);
+        return this.assignAction(creep, 'recycling');
     }
     const attackFlag = FlagDir.find(FLAG_COLOR.attackTrain, creep.pos, false);
     const dismantleFlag = FlagDir.find(FLAG_COLOR.destroy.dismantle, creep.pos);
@@ -37,18 +28,18 @@ mod.nextAction = function(creep) {
         if (creep.pos.roomName !== rallyRoom) {
             Creep.action.travelling.assignRoom(creep, rallyRoom);
         } else if (creep.pos.getRangeTo(rallyFlag) > 1) {
-            Creep.action.travelling.assign(creep, rallyFlag);
+            this.assignAction(creep, 'travelling', rallyFlag);
         } else {
-            Creep.action.idle.assign(creep);
+            this.assignAction(creep, 'idle');
         }
     } else if (creep.pos.roomName !== attackRoom) {
         Creep.action.travelling.assignRoom(creep, attackRoom);
     } else if (dismantleFlag) {
-        Creep.action.dismantling.assign(creep);
+        this.assignAction(creep, 'dismantling');
     } else if (creep.pos.getRangeTo(attackFlag) > 0) {
         creep.data.travelRange = 0;
-        Creep.action.travelling.assign(creep, attackFlag);
+        this.assignAction(creep, 'travelling', attackFlag);
     } else {
-        Creep.action.idle.assign(creep);
+        this.assignAction(creep, 'idle');
     }
 };

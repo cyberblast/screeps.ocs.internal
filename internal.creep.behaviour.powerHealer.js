@@ -1,30 +1,22 @@
-let mod = {};
+const mod = new Creep.Behaviour('powerHealer');
 module.exports = mod;
-mod.name = 'powerHealer';
+const super_run = mod.run;
 mod.run = function(creep) {
-    // Assign next Action
-    if (!creep.action || creep.action.name === 'idle') this.nextAction(creep);
-    // Do some work
-    if( creep.action ) {
-        creep.action.step(creep);
-    } else {
-        logError('Creep without action/activity!\nCreep: ' + creep.name + '\ndata: ' + JSON.stringify(creep.data));
-    }
-
-    Creep.behaviour.ranger.heal(creep);
+    super_run.call(this, creep);
+    Creep.behaviour.ranger.heal.call(this, creep);
 };
-mod.nextAction = function(creep){
-    const flag = mod.getFlag(creep);
+mod.nextAction = function(creep) {
+    const flag = this.getFlag(creep);
     let miner = Game.getObjectById(creep.data.miner);
     if (!flag) {
         // flag is gone, do we still need to heal our miner?
         if (!miner || miner.hits === miner.hitsMax) {
-            return Creep.action.recycling.assign(creep);
+            return this.assignAction(creep, 'recycling');
         } else if (!creep.pos.isNearTo(miner)) {
             creep.data.ignoreCreeps = false;
-            return Creep.action.travelling.assign(creep, miner);
+            return this.assignAction(creep, 'travelling', miner);
         } else {
-            return Creep.action.idle.assign(creep);
+            return this.assignAction(creep, 'idle');
         }
     }
 
@@ -45,26 +37,15 @@ mod.nextAction = function(creep){
     // if the miner is next to the flag (working presumably) but we are not next to the miner
     if (miner && miner.pos.isNearTo(flag) && !creep.pos.isNearTo(miner)) {
         creep.data.ignoreCreeps = false;
-        return Creep.action.travelling.assign(creep, miner);
+        return this.assignAction(creep, 'travelling', miner);
     } else if (creep.pos.getRangeTo(flag) > 2) {
         creep.data.travelRange = 2;
-        return Creep.action.travelling.assign(creep, flag);        
+        return this.assignAction(creep, 'travelling', flag);        
     }
-    return Creep.action.idle.assign(creep);
+    return this.assignAction(creep, 'idle');
 };
 mod.getFlag = function(creep) {
     let flag = creep.data.destiny && Game.flags[creep.data.destiny.targetName];
     if (flag) return flag;
     else return FlagDir.find(FLAG_COLOR.powerMining, creep.pos, false);
-};
-mod.strategies = {
-    defaultStrategy: {
-        name: `default-${mod.name}`,
-        moveOptions: function(options) {
-            return options;
-        }
-    }
-};
-mod.selectStrategies = function(actionName) {
-    return [mod.strategies.defaultStrategy, mod.strategies[actionName]];
 };
