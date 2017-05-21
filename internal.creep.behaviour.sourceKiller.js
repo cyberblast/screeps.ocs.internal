@@ -1,6 +1,6 @@
 let mod = {};
 module.exports = mod;
-mod.name = 'warrior';
+mod.name = 'sourceKiller';
 mod.run = function(creep) {
     if (creep.flag && !creep.data.predictedRenewal) {
         creep.data.predictedRenewal = creep.data.spawningTime + 50 + 50 * routeRange(creep.data.homeRoom, creep.flag.pos.roomName);
@@ -10,11 +10,8 @@ mod.run = function(creep) {
     creep.attackingRanged = false;
     // Assign next Action
     let oldTargetId = creep.data.targetId;
-    if( creep.action == null || creep.action.name == 'idle' || ( creep.action.name == 'sourceKiller' && (!creep.flag || creep.flag.pos.roomName == creep.pos.roomName ) ) ) {
+    if( creep.action == null || creep.action.name == 'idle' ) {
         this.nextAction(creep);
-    }
-    if( creep.data.targetId != oldTargetId ) {
-        delete creep.data.path;
     }
     // Do some work
     if( creep.action && creep.target ) {
@@ -26,6 +23,9 @@ mod.run = function(creep) {
     Creep.behaviour.ranger.heal(creep);
 };
 mod.nextAction = function(creep){
+    const flag = creep.flag || Game.flags[creep.data.destiny.targetName];
+    if (!flag) return Creep.action.recycling.assign(creep);
+    if (creep.pos.roomName !== flag.pos.roomName) return Creep.action.travelling.assignRoom(creep, flag.pos.roomName);
     let priority = [
         Creep.action.defending,
         Creep.action.sourceKiller,

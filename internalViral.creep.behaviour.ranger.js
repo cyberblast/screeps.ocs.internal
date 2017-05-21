@@ -13,7 +13,7 @@ mod.heal = function(creep){
         else if( creep.room.casualties.length > 0 ){
             let injured = creep.pos.findInRange(creep.room.casualties, 3);
             if( injured.length > 0 ){
-                const target = injured[0];
+                const target = creep.pos.findClosestByRange(injured);
                 const canHeal = creep.pos.isNearTo(target) && !mustHealSelf;
                 const shouldHeal = target.data && target.hits < target.data.hullHits;
                 // Heal other if not attacking or they are badly hurt
