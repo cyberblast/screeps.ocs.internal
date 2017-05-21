@@ -41,3 +41,17 @@ mod.getCombatStats = function(body) {
 
     return { armor, hullHits, hull, coreHits };
 };
+
+mod.stats = {
+    creep: {
+        armorParts: { // combat buffer
+            [TOUGH]: true,
+            [MOVE]: true,
+            [CARRY]: true,
+        },
+        coreParts: { // run away
+            [MOVE]: true,
+            [HEAL]: true,
+        },
+    },
+};
